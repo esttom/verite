@@ -1,0 +1,13 @@
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color: #696c7a;
+  background: linear-gradient(45deg, #E3F2FD, #F3E5F5);
+}
+
+html.dark {
+  background: #121212;
+}
