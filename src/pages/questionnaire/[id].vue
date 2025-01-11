@@ -1,21 +1,29 @@
 <script setup lang="ts">
-const baseId = useRoute('/questionnaire/[id]').params.id
-const router = useRouter()
-const { select, listen, insert, update } = useSupabaseQuestionnaireDetail()
-const { loading, withLoadingFn } = useLoading()
-const { loading: favoriteLoading, withLoadingFn: favoriteWithLoadingFn } = useLoading()
+import { QuestionFilled } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 
-const scrollbarRef = ref()
-const enableScroll = ref(false)
-const questionText = ref('')
-
-const list = ref<{
+interface QuestionnaireDetailRecord {
   id: string
   content: string
   favorite: number
   clicked: boolean
   loading: boolean
-}[]>([])
+  fixed: boolean
+}
+
+const baseId = useRoute('/questionnaire/[id]').params.id
+const router = useRouter()
+const { isAuth } = useUserContext()
+const { select, listen, insert, updateFavorite, updateFixed } = useSupabaseQuestionnaireDetail()
+const { loading, withLoadingFn } = useLoading()
+const { loading: favoriteLoading, withLoadingFn: favoriteWithLoadingFn } = useLoading()
+
+const enableFixMessage = isAuth()
+const scrollbarRef = ref()
+const enableScroll = ref(true)
+const questionText = ref('')
+
+const list = ref<QuestionnaireDetailRecord[]>([])
 
 withLoadingFn(async () => {
   const data = await select(baseId)
@@ -24,6 +32,8 @@ withLoadingFn(async () => {
     d.loading = false
     return d
   })
+  clearFixedMessage()
+  list.value.filter(l => l.fixed).forEach(l => setFixedMessage(l))
 })
 
 listen((record) => {
@@ -44,7 +54,14 @@ listen((record) => {
     const item = list.value[index]
     item.favorite = record.favorite
     item.loading = false
+    item.fixed = record.fixed
     list.value.splice(index, 1, item)
+    if (record.fixed) {
+      setFixedMessage(record)
+    }
+    else {
+      clearFixedMessage()
+    }
   }
 })
 
@@ -70,7 +87,7 @@ async function onFavoriteUpdate(id: string, favorite: number, clicked: boolean) 
     return item
   })
   favoriteWithLoadingFn(async () => {
-    await update({ id, favorite: favorite + (clicked ? -1 : 1) })
+    await updateFavorite({ id, favorite: favorite + (clicked ? -1 : 1) })
     const index = list.value.findIndex(item => item.id === id)
     if (index >= 0) {
       const item = list.value[index]
@@ -80,9 +97,32 @@ async function onFavoriteUpdate(id: string, favorite: number, clicked: boolean) 
   })
 }
 
+function onClickFixMessage(id: string, fixed: boolean) {
+  updateFixed({ id, fixed: !fixed })
+}
+
 function home() {
   router.push('/admin/dashboard')
 }
+
+function setFixedMessage(record: QuestionnaireDetailRecord) {
+  ElMessage({
+    type: 'success',
+    icon: QuestionFilled,
+    message: record.content,
+    showClose: true,
+    duration: 0,
+    customClass: 'whitespace-pre-wrap text-2xl pa-3 left-auto pos-right-32px transform-none',
+  })
+}
+
+function clearFixedMessage() {
+  ElMessage.closeAll()
+}
+
+onUnmounted(() => {
+  clearFixedMessage()
+})
 </script>
 
 <template>
@@ -114,6 +154,9 @@ function home() {
             <div w-full flex py-3 pr-3 items="center" class="card" style="background: rgba(255, 255, 255, 0.8)" border="rounded">
               <div w="full" style="text-overflow: auto; white-space: pre-wrap">
                 {{ item.content }}
+              </div>
+              <div v-if="enableFixMessage">
+                <div class="i-carbon-attachment" :class="item.fixed ? 'text-orange' : 'text-gray'" ml-1 mr-1 cursor="pointer" @click="onClickFixMessage(item.id, item.fixed)" />
               </div>
               <div v-loading="item.loading" class="flex" items="center">
                 <div :class="item.clicked ? 'i-carbon-favorite-filled' : 'i-carbon-favorite'" ml-1 mr-1 text-pink cursor="pointer" @click="onFavoriteUpdate(item.id, item.favorite, item.clicked)" />

@@ -5,9 +5,14 @@ interface QuestionnaireDetailInsertParam {
   content: string
 }
 
-interface QuestionnaireDetailUpdateParam {
+interface QuestionnaireDetailUpdateFavoriteParam {
   id: string
   favorite: number
+}
+
+interface QuestionnaireDetailUpdateFixedParam {
+  id: string
+  fixed: boolean
 }
 
 export function useSupabaseQuestionnaireDetail() {
@@ -57,12 +62,24 @@ export function useSupabaseQuestionnaireDetail() {
     return data
   }
 
-  const update = async (param: QuestionnaireDetailUpdateParam) => {
+  const updateFavorite = async (param: QuestionnaireDetailUpdateFavoriteParam) => {
     const { data, error } = await client.from('questionnaire_detail').update({ favorite: param.favorite }).eq('id', param.id)
     if (error) {
       ElMessage({
         type: 'error',
-        message: 'update message failed',
+        message: 'update favorite failed',
+      })
+      throw new Error(error.message)
+    }
+    return data
+  }
+
+  const updateFixed = async (param: QuestionnaireDetailUpdateFixedParam) => {
+    const { data, error } = await client.from('questionnaire_detail').update({ fixed: param.fixed }).eq('id', param.id)
+    if (error) {
+      ElMessage({
+        type: 'error',
+        message: 'update fixed failed',
       })
       throw new Error(error.message)
     }
@@ -83,7 +100,8 @@ export function useSupabaseQuestionnaireDetail() {
 
   return {
     select,
-    update,
+    updateFavorite,
+    updateFixed,
     listen,
     insert,
     remove,
