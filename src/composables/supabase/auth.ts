@@ -28,7 +28,7 @@ export function useSupabaseAuth() {
     if (error) {
       ElMessage({
         type: 'error',
-        message: 'invalid sign in',
+        message: 'session error',
       })
       throw new Error(error.message)
     }

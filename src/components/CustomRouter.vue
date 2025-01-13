@@ -1,18 +1,21 @@
 <script setup lang="ts">
 const router = useRouter()
+const { isAuth } = useUserContext()
 const { setContext } = useUserContext()
 const { getSession } = useSupabaseAuth()
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to) => {
   if (to.meta.requiresAuth) {
-    const session = await getSession()
-    if (!session) {
-      next('/')
-      return
+    if (!isAuth()) {
+      const session = await getSession()
+      if (session) {
+        setContext(session.user.id)
+      }
+      else {
+        return '/'
+      }
     }
-    setContext(session.user.id)
   }
-  next()
 })
 </script>
 
