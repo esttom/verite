@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { QuestionFilled } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, type MessageHandler } from 'element-plus'
 
 interface QuestionnaireDetailRecord {
   id: string
@@ -19,6 +19,8 @@ const { loading, withLoadingFn } = useLoading()
 const { loading: favoriteLoading, withLoadingFn: favoriteWithLoadingFn } = useLoading()
 
 const enableFixMessage = isAuth()
+const fixMessagesHandler: Record<string, MessageHandler['close']> = {}
+
 const scrollbarRef = ref()
 const enableScroll = ref(true)
 const questionText = ref('')
@@ -32,7 +34,6 @@ withLoadingFn(async () => {
     d.loading = false
     return d
   })
-  clearFixedMessage()
   list.value.filter(l => l.fixed).forEach(l => setFixedMessage(l))
 })
 
@@ -52,16 +53,17 @@ listen((record) => {
   const index = list.value.findIndex(item => item.id === record.id)
   if (index >= 0) {
     const item = list.value[index]
+    if (record.fixed) {
+      setFixedMessage(record)
+    }
+    if (item.fixed && !record.fixed) {
+      fixMessagesHandler[item.id]?.()
+    }
+
     item.favorite = record.favorite
     item.loading = false
     item.fixed = record.fixed
     list.value.splice(index, 1, item)
-    if (record.fixed) {
-      setFixedMessage(record)
-    }
-    else {
-      clearFixedMessage()
-    }
   }
 })
 
@@ -106,22 +108,22 @@ function home() {
 }
 
 function setFixedMessage(record: QuestionnaireDetailRecord) {
-  ElMessage({
+  const { close } = ElMessage({
     type: 'success',
+    plain: true,
     icon: QuestionFilled,
     message: record.content,
     showClose: true,
     duration: 0,
     customClass: 'whitespace-pre-wrap text-2xl pa-3 left-auto pos-right-32px transform-none',
   })
-}
-
-function clearFixedMessage() {
-  ElMessage.closeAll()
+  fixMessagesHandler[record.id] = close
 }
 
 onUnmounted(() => {
-  clearFixedMessage()
+  for (const key in fixMessagesHandler) {
+    fixMessagesHandler[key]()
+  }
 })
 </script>
 
