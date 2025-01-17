@@ -9,7 +9,7 @@ import Components from 'unplugin-vue-components/vite'
 import { VueRouterAutoImports } from 'unplugin-vue-router'
 import VueRouter from 'unplugin-vue-router/vite'
 import { defineConfig } from 'vite'
-import viteCompression from 'vite-plugin-compression';
+import viteCompression from 'vite-plugin-compression'
 
 export default defineConfig({
   resolve: {
@@ -52,7 +52,7 @@ export default defineConfig({
     // see uno.config.ts for config
     UnoCSS(),
 
-    viteCompression()
+    viteCompression(),
   ],
 
   // https://github.com/vitest-dev/vitest
