@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { QuestionFilled } from '@element-plus/icons-vue'
+import { Delete, QuestionFilled } from '@element-plus/icons-vue'
 import { ElMessage, type MessageHandler } from 'element-plus'
 
 interface QuestionnaireDetailRecord {
@@ -18,9 +18,11 @@ const { select, listen, insert, updateFavorite, updateFixed } = useSupabaseQuest
 const { loading, withLoadingFn } = useLoading()
 const { loading: favoriteLoading, withLoadingFn: favoriteWithLoadingFn } = useLoading()
 
-const enableFixMessage = isAuth()
+const authenticated = isAuth()
 const fixMessagesHandler: Record<string, MessageHandler['close']> = {}
 
+const questionTitle = ref('')
+const questions = ref<string[]>(['', ''])
 const scrollbarRef = ref()
 const enableScroll = ref(true)
 const questionText = ref('')
@@ -153,11 +155,11 @@ onUnmounted(() => {
             <div flex p="1" mr="4" items="center" align="center" border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
               <div i-carbon-chat-bot color="white" text-2xl />
             </div>
-            <div w-full flex py-3 pr-3 items="center" class="card" style="background: rgba(255, 255, 255, 0.8)" border="rounded">
+            <div items="center" class="card" w-full flex bg-slate-50 py-3 pr-3 border="rounded">
               <div w="full" style="text-overflow: auto; white-space: pre-wrap">
                 {{ item.content }}
               </div>
-              <div v-if="enableFixMessage">
+              <div v-if="authenticated">
                 <div class="i-carbon-attachment" :class="item.fixed ? 'text-orange' : 'text-gray'" ml-1 mr-1 cursor="pointer" @click="onClickFixMessage(item.id, item.fixed)" />
               </div>
               <div v-loading="item.loading" class="flex" items="center">
@@ -172,19 +174,50 @@ onUnmounted(() => {
       </Transition>
     </el-scrollbar>
 
-    <div w="full" max-w="768px" justify="center" items="center" flex pt-2>
+    <div class="bottom-container" w="full" max-w="768px" justify="center" items="center" flex flex-col bg-white pa-2 b="1px solid #e5e5e5 rounded-xl">
       <el-input
         v-model="questionText"
-        :autosize="{ minRows: 1, maxRows: 5 }"
-        input-style="padding: 12px; border-radius: 8px"
+        :autosize="{ minRows: 1, maxRows: 8 }"
+        input-style="padding: 5px; box-shadow: none; background-color: white;"
         type="textarea"
         resize="none"
-        outline="none active:none"
         placeholder="Write a message..."
         @keydown.ctrl.enter.prevent="onSubmit"
       />
-      <div bg="#8a8bf9" p="1" border="rounded" ml--8 mt--8 class="relative bottom--4 right-2 text-lg">
-        <div i-carbon-send-filled text="white" cursor="pointer" @click="onSubmit" />
+      <div mt-1 w-full flex justify="between" items="center">
+        <div>
+          <el-popover v-if="authenticated" :width="400" trigger="click">
+            <template #reference>
+              <div p="1">
+                <QuestionFilled w="22px" cursor="pointer" />
+              </div>
+            </template>
+            <div mb-2>
+              <el-input v-model="questionTitle" placeholder="Your question" />
+            </div>
+            <div v-for="(_, idx) in questions" :key="idx" mb-2>
+              <el-input v-model="questions[idx]">
+                <template #prepend>
+                  {{ idx + 1 }}
+                </template>
+                <template #append>
+                  <el-button :icon="Delete" @click="questions.splice(idx, 1)" />
+                </template>
+              </el-input>
+            </div>
+            <div flex justify="between">
+              <el-button @click="questions.push('')">
+                Add
+              </el-button>
+              <el-button type="primary" @click="questions.push('')">
+                Send
+              </el-button>
+            </div>
+          </el-popover>
+        </div>
+        <div bg="#8a8bf9" p="1" border="rounded">
+          <div i-carbon-send-filled text="md white" cursor="pointer" @click="onSubmit" />
+        </div>
       </div>
     </div>
     <div max-w="768px" w-full flex justify="end" class="text-gray-500">
@@ -194,6 +227,9 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.bottom-container:has(.el-textarea__inner:focus) {
+  border-color: rgba(0, 0, 0, 0.36);
+}
 .card {
   overflow-wrap: anywhere;
   word-break: normal;
@@ -207,7 +243,7 @@ onUnmounted(() => {
   width: 0;
   height: 0;
   border: 10px solid transparent;
-  border-right-color: rgba(255, 255, 255, 0.8);
+  border-right-color: #f8fafc;
 }
 
 .v-enter-active,
