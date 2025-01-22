@@ -61,42 +61,49 @@ async function submit(formEl: FormInstance | undefined) {
 </script>
 
 <template>
-  <el-card v-loading="loading" justify="center" items="center" w-full flex max-w="480px">
-    <div class="mb-2 mt-3 flex justify-center">
-      <img src="/logo.png" alt="logo" cursor="pointer" width="48px" text="center">
-    </div>
-    <h2 class="mb-2 text-center text-2xl font-bold">
-      Sign in
-    </h2>
-    <p class="mb-8 text-center text-sm text-gray-500">
-      Sign in to access to your dashboard.
-    </p>
-    <el-form ref="loginFormRef" :model="loginForm" label-position="left" w="380px" status-icon :rules="loginFormRules" @submit.prevent>
-      <el-form-item prop="email">
-        <el-input v-model="loginForm.email" placeholder="email">
-          <template #prepend>
-            <el-icon>
-              <Message />
-            </el-icon>
-          </template>
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="password">
-        <el-input v-model="loginForm.password" type="password" show-password placeholder="password">
-          <template #prepend>
-            <el-icon>
-              <Key />
-            </el-icon>
-          </template>
-        </el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-col class="text-center" mb-3 mt-3>
-          <el-button color="#626aef" @click="submit(loginFormRef)">
-            Sign in
-          </el-button>
-        </el-col>
-      </el-form-item>
-    </el-form>
-  </el-card>
+  <div h-full flex items-center>
+    <el-card v-loading="loading" justify="center" items="center" max-w="480px" h-fit w-full flex p="12px">
+      <div class="mb-4 mt-1 flex justify-center">
+        <img src="/logo.png" alt="logo" cursor="pointer" width="48px" text="center">
+      </div>
+      <h2 class="mb-2 text-center text-2xl font-bold">
+        Sign in
+      </h2>
+      <p class="mb-8 text-center text-sm text-gray-500">
+        Sign in to access to your dashboard.
+      </p>
+      <el-form ref="loginFormRef" :model="loginForm" label-position="left" w="380px" status-icon :rules="loginFormRules" @submit.prevent="submit(loginFormRef)">
+        <el-form-item prop="email">
+          <el-input v-model="loginForm.email" placeholder="email">
+            <template #prepend>
+              <el-icon>
+                <Message />
+              </el-icon>
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input v-model="loginForm.password" type="password" show-password placeholder="password">
+            <template #prepend>
+              <el-icon>
+                <Key />
+              </el-icon>
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-col class="text-center" mt-3>
+            <el-button color="#626aef" @click="submit(loginFormRef)">
+              Sign in
+            </el-button>
+            <div h="0" w="0">
+              <button type="submit" style="visibility: hidden">
+                submit
+              </button>
+            </div>
+          </el-col>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </div>
 </template>
