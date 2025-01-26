@@ -3,6 +3,18 @@ import { ElMessage } from 'element-plus'
 export function useSupabaseAuth() {
   const client = useSupabase()
 
+  const setLoginedFlag = () => {
+    sessionStorage.setItem('login', '1')
+  }
+
+  const getLoginedFlag = () => {
+    return sessionStorage.getItem('login')
+  }
+
+  const isLogined = () => {
+    return getLoginedFlag() === '1'
+  }
+
   const signIn = async (email: string, password: string) => {
     const { data, error } = await client.auth.signInWithPassword({
       email,
@@ -15,6 +27,9 @@ export function useSupabaseAuth() {
       })
       throw new Error(error.message)
     }
+
+    setLoginedFlag()
+
     return data
   }
 
@@ -36,6 +51,7 @@ export function useSupabaseAuth() {
   }
 
   return {
+    isLogined,
     signIn,
     signOut,
     getSession,
