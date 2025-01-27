@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Delete, QuestionFilled } from '@element-plus/icons-vue'
-import { ElMessage, type MessageHandler } from 'element-plus'
+import { ElNotification, type NotificationHandle } from 'element-plus'
 
 interface QuestionnaireDetailRecord {
   id: string
@@ -19,7 +19,7 @@ const { loading, withLoadingFn } = useLoading()
 const { loading: favoriteLoading, withLoadingFn: favoriteWithLoadingFn } = useLoading()
 
 const authenticated = isAuth()
-const fixMessagesHandler: Record<string, MessageHandler['close']> = {}
+const fixMessagesHandler: Record<string, NotificationHandle['close']> = {}
 
 const questionTitle = ref('')
 const questions = ref<string[]>(['', ''])
@@ -110,14 +110,11 @@ function home() {
 }
 
 function setFixedMessage(record: QuestionnaireDetailRecord) {
-  const { close } = ElMessage({
-    type: 'success',
-    plain: true,
+  const { close } = ElNotification({
     icon: QuestionFilled,
     message: record.content,
-    showClose: true,
     duration: 0,
-    customClass: 'whitespace-pre-wrap text-2xl pa-3 left-auto pos-right-32px transform-none',
+    customClass: 'whitespace-pre-wrap text-blue-400',
   })
   fixMessagesHandler[record.id] = close
 }
