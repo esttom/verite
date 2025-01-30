@@ -47,6 +47,11 @@ async function moveToRoom(row: any) {
 }
 
 async function deleteData(row: any) {
+  // eslint-disable-next-line no-alert
+  if (!window.confirm('Are you sure you want to delete?')) {
+    return
+  }
+
   withLoadingFn(async () => {
     await removeDetail(row.id)
     await remove(row.id)
