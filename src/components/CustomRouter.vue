@@ -5,14 +5,14 @@ const { isLogined, getSession } = useSupabaseAuth()
 
 router.beforeEach(async (to) => {
   if (!isAuth()) {
-    if (isLogined() || to.meta.requiresAuth) {
+    if (isLogined()) {
       const session = await getSession()
       if (session) {
         setContext(session.user.id)
       }
-      else {
-        return '/'
-      }
+    }
+    if (!isAuth() && to.meta.requiresAuth) {
+      return '/'
     }
   }
 })
