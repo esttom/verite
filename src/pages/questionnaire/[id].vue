@@ -110,13 +110,15 @@ function home() {
 }
 
 function setFixedMessage(record: QuestionnaireDetailRecord) {
-  const { close } = ElNotification({
-    icon: QuestionFilled,
-    message: record.content,
-    duration: 0,
-    customClass: 'whitespace-pre-wrap text-blue-400',
-  })
-  fixMessagesHandler[record.id] = close
+  setTimeout(() => {
+    const { close } = ElNotification({
+      icon: QuestionFilled,
+      message: record.content,
+      duration: 0,
+      customClass: 'whitespace-pre-wrap text-blue-400',
+    })
+    fixMessagesHandler[record.id] = close
+  }, 0)
 }
 
 onUnmounted(() => {
