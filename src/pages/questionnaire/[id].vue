@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Delete, QuestionFilled } from '@element-plus/icons-vue'
+import { ChatDotRound, QuestionFilled } from '@element-plus/icons-vue'
 import { ElNotification, type NotificationHandle } from 'element-plus'
 
 interface QuestionnaireDetailRecord {
@@ -9,6 +9,9 @@ interface QuestionnaireDetailRecord {
   clicked: boolean
   loading: boolean
   fixed: boolean
+  showReply: boolean
+  replyText: string
+  replies: string[]
 }
 
 const baseId = useRoute('/questionnaire/[id]').params.id
@@ -21,8 +24,6 @@ const { loading: favoriteLoading, withLoadingFn: favoriteWithLoadingFn } = useLo
 const authenticated = isAuth()
 const fixMessagesHandler: Record<string, NotificationHandle['close']> = {}
 
-const questionTitle = ref('')
-const questions = ref<string[]>(['', ''])
 const scrollbarRef = ref()
 const enableScroll = ref(true)
 const questionText = ref('')
@@ -31,10 +32,21 @@ const list = ref<QuestionnaireDetailRecord[]>([])
 
 withLoadingFn(async () => {
   const data = await select(baseId)
-  list.value = data.map((d) => {
+  list.value = data.filter(d => !d.reply).map((d) => {
     d.clicked = false
     d.loading = false
+    d.showReply = false
+    d.replyText = ''
+    d.replies = []
     return d
+  })
+  data.filter(d => d.reply).forEach((d) => {
+    const index = list.value.findIndex(item => item.id === d.reply)
+    if (index >= 0) {
+      const item = list.value[index]
+      item.replies.push(d.content)
+      list.value.splice(index, 1, item)
+    }
   })
   list.value.filter(l => l.fixed).forEach(l => setFixedMessage(l))
 })
@@ -42,14 +54,28 @@ withLoadingFn(async () => {
 listen((record) => {
   record.clicked = false
   record.loading = false
-  list.value.push(record)
-  if (enableScroll.value) {
-    setTimeout(() => {
-      scrollbarRef.value.scrollTo({
-        top: scrollbarRef.value.wrapRef.scrollHeight,
-        behavior: 'smooth',
+  record.showReply = false
+  record.replyText = ''
+
+  if (record.reply) {
+    const index = list.value.findIndex(item => item.id === record.reply)
+    if (index >= 0) {
+      const item = list.value[index]
+      item.replies.push(record.content)
+      list.value.splice(index, 1, item)
+    }
+  }
+  else {
+    record.replies = []
+    list.value.push(record)
+    if (enableScroll.value) {
+      setTimeout(() => {
+        scrollbarRef.value.scrollTo({
+          top: scrollbarRef.value.wrapRef.scrollHeight,
+          behavior: 'smooth',
+        })
       })
-    })
+    }
   }
 }, (record) => {
   const index = list.value.findIndex(item => item.id === record.id)
@@ -65,19 +91,17 @@ listen((record) => {
     item.favorite = record.favorite
     item.loading = false
     item.fixed = record.fixed
+    item.replyText = ''
     list.value.splice(index, 1, item)
   }
 })
 
-async function onSubmit() {
-  if (questionText.value.trimEnd() === '' || questionText.value.replaceAll('\n', '').trimEnd() === '') {
-    return
-  }
+async function sendFn(text: string, reply?: string) {
   await insert({
     base_id: baseId,
-    content: questionText.value.trimEnd(),
+    content: text,
+    reply: reply ?? null,
   })
-  questionText.value = ''
 }
 
 async function onFavoriteUpdate(id: string, favorite: number, clicked: boolean) {
@@ -99,6 +123,15 @@ async function onFavoriteUpdate(id: string, favorite: number, clicked: boolean) 
       list.value.splice(index, 1, item)
     }
   })
+}
+
+function toggleShowReply(id: string) {
+  const index = list.value.findIndex(item => item.id === id)
+  if (index >= 0) {
+    const item = list.value[index]
+    item.showReply = !item.showReply
+    list.value.splice(index, 1, item)
+  }
 }
 
 function onClickFixMessage(id: string, fixed: boolean) {
@@ -151,20 +184,57 @@ onUnmounted(() => {
       <Transition>
         <div v-if="list.length > 0" w-full max-w="768px">
           <div v-for="item in list" :key="item.id" items="center" mb-3 w-full flex>
-            <div flex p="1" mr="4" items="center" align="center" border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
-              <div i-carbon-chat-bot color="white" text-2xl />
-            </div>
-            <div items="center" class="card" w-full flex bg-slate-50 py-3 pr-3 border="rounded">
-              <div w="full" style="text-overflow: auto; white-space: pre-wrap">
-                {{ item.content }}
+            <div w-full flex flex-col>
+              <div w-full flex items-center>
+                <div p="1" mr="4" h-fit border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
+                  <div i-carbon-chat-bot text-2xl color="white" />
+                </div>
+                <div w-full flex flex-col>
+                  <div items="center" class="card" w-full flex bg-slate-50 py-3 pr-3 border="rounded">
+                    <div w="full" whitespace-pre-wrap>
+                      {{ item.content }}
+                    </div>
+                    <div flex items-center>
+                      <div v-if="authenticated">
+                        <div class="i-carbon-attachment" :class="item.fixed ? 'text-orange' : 'text-slate-400'" ml-1 mr-1 cursor="pointer" @click="onClickFixMessage(item.id, item.fixed)" />
+                      </div>
+                      <div ml-1 mr-1 w-22px text-slate-400 cursor="pointer" @click="toggleShowReply(item.id)">
+                        <ChatDotRound />
+                      </div>
+                      <div v-loading="item.loading" class="flex" items="center">
+                        <div :class="item.clicked ? 'i-carbon-favorite-filled' : 'i-carbon-favorite'" ml-1 mr-1 text-pink cursor="pointer" @click="onFavoriteUpdate(item.id, item.favorite, item.clicked)" />
+                        <div align="left" w-16px text-sm>
+                          {{ item.favorite }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div v-if="authenticated">
-                <div class="i-carbon-attachment" :class="item.fixed ? 'text-orange' : 'text-gray'" ml-1 mr-1 cursor="pointer" @click="onClickFixMessage(item.id, item.fixed)" />
-              </div>
-              <div v-loading="item.loading" class="flex" items="center">
-                <div :class="item.clicked ? 'i-carbon-favorite-filled' : 'i-carbon-favorite'" ml-1 mr-1 text-pink cursor="pointer" @click="onFavoriteUpdate(item.id, item.favorite, item.clicked)" />
-                <div align="left" w-16px text-sm>
-                  {{ item.favorite }}
+              <div flex>
+                <div w-52px />
+                <div w-full pl-1>
+                  <div v-if="item.replies.length > 0" items="center" cursor="pointer" flex pa-1 @click="toggleShowReply(item.id)">
+                    <div text="sm color-#8a8bf9" font-bold>
+                      {{ `${item.replies.length} reply ` }}
+                    </div>
+                    <div class="i-carbon-chevron-down" ml-0.5 mt-1 text-xs text="color-#8a8bf9" />
+                  </div>
+                  <div v-if="item.showReply" mb-1 mt-2 border-l-3 border-slate-300 p-l-6>
+                    <div v-for="(reply, idx) in item.replies" :key="idx" mb-2>
+                      <div flex items-center>
+                        <div p="1" mr="4" h-fit border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
+                          <div i-carbon-chat-bot text-sm color="white" />
+                        </div>
+                        <div items="center" class="card" w-full flex bg-slate-50 py-1.5 pr-2 border="rounded">
+                          <div w="full" whitespace-pre-wrap>
+                            {{ reply }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <QuestionText v-model="item.replyText" placeholder="reply..." min :send-fn="(text) => sendFn(text, item.id)" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -173,62 +243,11 @@ onUnmounted(() => {
       </Transition>
     </el-scrollbar>
 
-    <div class="bottom-container" w="full" max-w="768px" justify="center" items="center" flex flex-col bg-white pa-2 b="1px solid #e5e5e5 rounded-xl">
-      <el-input
-        v-model="questionText"
-        :autosize="{ minRows: 1, maxRows: 8 }"
-        input-style="padding: 5px; box-shadow: none; background-color: white;"
-        type="textarea"
-        resize="none"
-        placeholder="Write a message..."
-        @keydown.ctrl.enter.prevent="onSubmit"
-      />
-      <div mt-1 w-full flex justify="between" items="center">
-        <div>
-          <el-popover v-if="authenticated" :width="400" trigger="click">
-            <template #reference>
-              <div p="1">
-                <QuestionFilled w="22px" cursor="pointer" />
-              </div>
-            </template>
-            <div mb-2>
-              <el-input v-model="questionTitle" placeholder="Your question" />
-            </div>
-            <div v-for="(_, idx) in questions" :key="idx" mb-2>
-              <el-input v-model="questions[idx]">
-                <template #prepend>
-                  {{ idx + 1 }}
-                </template>
-                <template #append>
-                  <el-button :icon="Delete" @click="questions.splice(idx, 1)" />
-                </template>
-              </el-input>
-            </div>
-            <div flex justify="between">
-              <el-button @click="questions.push('')">
-                Add
-              </el-button>
-              <el-button type="primary" @click="questions.push('')">
-                Send
-              </el-button>
-            </div>
-          </el-popover>
-        </div>
-        <div bg="#8a8bf9" p="1" border="rounded">
-          <div i-carbon-send-filled text="md white" cursor="pointer" @click="onSubmit" />
-        </div>
-      </div>
-    </div>
-    <div max-w="768px" w-full flex justify="end" class="text-gray-500">
-      <em text-xs op75>Ctrl + Enter</em>
-    </div>
+    <QuestionText v-model="questionText" placeholder="Write a message..." :send-fn="(text) => sendFn(text)" />
   </div>
 </template>
 
 <style scoped>
-.bottom-container:has(.el-textarea__inner:focus) {
-  border-color: rgba(0, 0, 0, 0.36);
-}
 .card {
   overflow-wrap: anywhere;
   word-break: normal;

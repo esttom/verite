@@ -3,6 +3,7 @@ import { ElMessage } from 'element-plus'
 interface QuestionnaireDetailInsertParam {
   base_id: string
   content: string
+  reply: string | null
 }
 
 interface QuestionnaireDetailUpdateFavoriteParam {
