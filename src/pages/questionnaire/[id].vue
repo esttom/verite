@@ -215,12 +215,12 @@ onUnmounted(() => {
                 <div w-52px />
                 <div w-full pl-1>
                   <div v-if="item.replies.length > 0" items="center" cursor="pointer" flex pa-1 @click="toggleShowReply(item.id)">
-                    <div text="sm color-#8a8bf9" font-bold>
+                    <div text="sm color-#8a8bf9">
                       {{ `${item.replies.length} reply ` }}
                     </div>
                     <div class="i-carbon-chevron-down" ml-0.5 mt-1 text-xs text="color-#8a8bf9" />
                   </div>
-                  <div v-if="item.showReply" mb-1 mt-2 border-l-3 border-slate-300 p-l-6>
+                  <div v-if="item.showReply" mt-1 border-l-3 border-slate-300 p-l-6>
                     <div v-for="(reply, idx) in item.replies" :key="idx" mb-2>
                       <div flex items-center>
                         <div p="1" mr="4" h-fit border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
@@ -233,7 +233,9 @@ onUnmounted(() => {
                         </div>
                       </div>
                     </div>
-                    <QuestionText v-model="item.replyText" placeholder="reply..." min :send-fn="(text) => sendFn(text, item.id)" />
+                    <div mt-4>
+                      <QuestionText v-model="item.replyText" placeholder="reply..." min :send-fn="(text) => sendFn(text, item.id)" />
+                    </div>
                   </div>
                 </div>
               </div>
