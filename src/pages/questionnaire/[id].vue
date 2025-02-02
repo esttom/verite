@@ -12,12 +12,13 @@ interface QuestionnaireDetailRecord {
   showReply: boolean
   replyText: string
   replies: string[]
+  stamp: boolean
 }
 
 const baseId = useRoute('/questionnaire/[id]').params.id
 const router = useRouter()
 const { isAuth } = useUserContext()
-const { select, listen, insert, updateFavorite, updateFixed } = useSupabaseQuestionnaireDetail()
+const { select, listen, updateFavorite, updateFixed } = useSupabaseQuestionnaireDetail()
 const { loading, withLoadingFn } = useLoading()
 const { loading: favoriteLoading, withLoadingFn: favoriteWithLoadingFn } = useLoading()
 
@@ -95,14 +96,6 @@ listen((record) => {
     list.value.splice(index, 1, item)
   }
 })
-
-async function sendFn(text: string, reply?: string) {
-  await insert({
-    base_id: baseId,
-    content: text,
-    reply: reply ?? null,
-  })
-}
 
 async function onFavoriteUpdate(id: string, favorite: number, clicked: boolean) {
   if (favoriteLoading.value) {
@@ -189,7 +182,9 @@ onUnmounted(() => {
                 <div p="1" mr="4" h-fit border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
                   <div i-carbon-chat-bot text-2xl color="white" />
                 </div>
-                <div w-full flex flex-col>
+
+                <img v-if="item.stamp" :src="item.content" w-96px>
+                <div v-else w-full flex flex-col>
                   <div items="center" class="card" w-full flex bg-slate-50 py-3 pr-3 border="rounded">
                     <div w="full" whitespace-pre-wrap>
                       {{ item.content }}
@@ -234,7 +229,7 @@ onUnmounted(() => {
                       </div>
                     </div>
                     <div mt-4>
-                      <QuestionText v-model="item.replyText" placeholder="reply..." min :send-fn="(text) => sendFn(text, item.id)" />
+                      <QuestionText v-model="item.replyText" placeholder="reply..." :reply="item.id" />
                     </div>
                   </div>
                 </div>
@@ -245,7 +240,7 @@ onUnmounted(() => {
       </Transition>
     </el-scrollbar>
 
-    <QuestionText v-model="questionText" placeholder="Write a message..." :send-fn="(text) => sendFn(text)" />
+    <QuestionText v-model="questionText" placeholder="Write a message..." />
   </div>
 </template>
 

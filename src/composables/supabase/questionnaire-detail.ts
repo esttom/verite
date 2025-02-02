@@ -4,6 +4,7 @@ interface QuestionnaireDetailInsertParam {
   base_id: string
   content: string
   reply: string | null
+  stamp: boolean
 }
 
 interface QuestionnaireDetailUpdateFavoriteParam {
