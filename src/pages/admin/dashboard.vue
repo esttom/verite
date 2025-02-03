@@ -28,6 +28,12 @@ const headers = [
   },
   {
     prop: 'action',
+    label: 'Copy',
+    width: '80',
+    action: copyToClipboard,
+  },
+  {
+    prop: 'action',
     label: 'Delete',
     width: '90',
     action: deleteData,
@@ -68,6 +74,51 @@ function onCreate() {
 async function selectData() {
   const data = await select()
   contents.value = data
+}
+
+// from vitepress
+function copyToClipboard(row: any) {
+  const url = `${window.location.origin}/questionnaire/${row.id}`
+  try {
+    return navigator.clipboard.writeText(url)
+  }
+  catch {
+    const element = document.createElement('textarea')
+    const previouslyFocusedElement = document.activeElement
+
+    element.value = url
+
+    // Prevent keyboard from showing on mobile
+    element.setAttribute('readonly', '')
+
+    element.style.contain = 'strict'
+    element.style.position = 'absolute'
+    element.style.left = '-9999px'
+    element.style.fontSize = '12pt' // Prevent zooming on iOS
+
+    const selection = document.getSelection()
+    const originalRange = selection ? selection.rangeCount > 0 && selection.getRangeAt(0) : null
+
+    document.body.appendChild(element)
+    element.select()
+
+    // Explicit selection workaround for iOS
+    element.selectionStart = 0
+    element.selectionEnd = url.length
+
+    document.execCommand('copy')
+    document.body.removeChild(element)
+
+    if (originalRange) {
+      selection!.removeAllRanges() // originalRange can't be truthy when selection is falsy
+      selection!.addRange(originalRange)
+    }
+
+    // Get the focus back on the previously focused element, if any
+    if (previouslyFocusedElement) {
+      (previouslyFocusedElement as HTMLElement).focus()
+    }
+  }
 }
 </script>
 
