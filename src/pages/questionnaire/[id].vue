@@ -167,7 +167,7 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <el-scrollbar ref="scrollbarRef" class="w-full" wrap-class="w-full" view-class="w-full flex flex-grow justify-center pb-4">
+    <el-scrollbar ref="scrollbarRef" class="w-full" wrap-class="w-full" view-class="w-full flex flex-grow justify-center">
       <div v-if="list.length === 0 && !loading">
         <img src="/undraw_faq_re_31cw.svg" alt="faq" mt-4 max-width="480px">
         <div text-ld mt-4 text-center op-80>
@@ -183,7 +183,9 @@ onUnmounted(() => {
                   <div i-carbon-chat-bot text-2xl color="white" />
                 </div>
 
-                <img v-if="item.stamp" :src="item.content" w-96px>
+                <template v-if="item.stamp">
+                  <img :src="item.content" w-72px>
+                </template>
                 <div v-else w-full flex flex-col>
                   <div items="center" class="card" w-full flex bg-slate-50 py-3 pr-3 border="rounded">
                     <div w="full" whitespace-pre-wrap>
@@ -228,7 +230,7 @@ onUnmounted(() => {
                         </div>
                       </div>
                     </div>
-                    <div mt-4>
+                    <div mt-2>
                       <QuestionText v-model="item.replyText" placeholder="reply..." :reply="item.id" />
                     </div>
                   </div>
@@ -239,7 +241,6 @@ onUnmounted(() => {
         </div>
       </Transition>
     </el-scrollbar>
-
     <QuestionText v-model="questionText" placeholder="Write a message..." />
   </div>
 </template>
