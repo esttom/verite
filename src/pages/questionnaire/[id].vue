@@ -220,18 +220,20 @@ onUnmounted(() => {
                     <div class="i-carbon-chevron-down" ml-0.5 mt-1 text-xs text="color-#8a8bf9" />
                   </div>
                   <div v-if="item.showReply" mt-1 border-l-3 border-slate-300 p-l-6>
-                    <div v-for="(reply, idx) in item.replies" :key="idx" mb-2>
-                      <div flex items-center>
-                        <div p="1" mr="4" h-fit border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
-                          <div i-carbon-chat-bot text-sm color="white" />
-                        </div>
-                        <div items="center" class="card" w-full flex bg-slate-50 py-1.5 pr-2 border="rounded">
-                          <div w="full" whitespace-pre-wrap>
-                            {{ reply }}
+                    <TransitionGroup name="list" tag="div">
+                      <div v-for="(reply, idx) in item.replies" :key="idx" mb-2>
+                        <div flex items-center>
+                          <div p="1" mr="4" h-fit border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
+                            <div i-carbon-chat-bot text-sm color="white" />
+                          </div>
+                          <div items="center" class="card" w-full flex bg-slate-50 py-1.5 pr-2 border="rounded">
+                            <div w="full" whitespace-pre-wrap>
+                              {{ reply }}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </TransitionGroup>
                     <div mt-2>
                       <QuestionText v-model="item.replyText" placeholder="reply..." :reply="item.id" />
                     </div>
@@ -272,5 +274,12 @@ onUnmounted(() => {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+.list-enter-active {
+  transition: all 0.3s ease;
+}
+.list-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>
