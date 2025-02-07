@@ -34,12 +34,14 @@ const list = ref<QuestionnaireDetailRecord[]>([])
 withLoadingFn(async () => {
   const data = await select(baseId)
   list.value = data.filter(d => !d.reply).map((d) => {
-    d.clicked = false
-    d.loading = false
-    d.showReply = false
-    d.replyText = ''
-    d.replies = []
-    return d
+    return {
+      ...d,
+      clicked: false,
+      loading: false,
+      showReply: false,
+      replyText: '',
+      replies: [],
+    }
   })
   data.filter(d => d.reply).forEach((d) => {
     const index = list.value.findIndex(item => item.id === d.reply)

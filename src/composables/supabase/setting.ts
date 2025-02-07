@@ -1,10 +1,11 @@
 import type { InjectionKey } from 'vue'
-import { createClient, type SupabaseClient } from '@supabase/supabase-js'
+import type { Database } from './database.types'
+import { createClient } from '@supabase/supabase-js'
 
-const SUPABASE_KEY = Symbol('supabase client key') as InjectionKey<SupabaseClient<any, 'public', any>>
+const SUPABASE_KEY = Symbol('supabase client key') as InjectionKey<ReturnType<typeof createClient<Database>>>
 
 export function provideSupabase() {
-  const client = createClient(
+  const client = createClient<Database>(
     import.meta.env.VITE_SUPABASE_URI,
     import.meta.env.VITE_SUPABASE_ANON_KEY,
   )
