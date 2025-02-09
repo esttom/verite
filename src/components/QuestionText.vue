@@ -25,6 +25,8 @@ const stamps = [
 const baseId = useRoute('/questionnaire/[id]').params.id
 const { insert } = useSupabaseQuestionnaireDetail()
 
+const stampPopVisible = ref(false)
+
 async function send(stampUrl?: string) {
   if (!stampUrl) {
     if (questionText.value.trimEnd() === '' || questionText.value.replaceAll('\n', '').trimEnd() === '') {
@@ -37,7 +39,13 @@ async function send(stampUrl?: string) {
     reply: props.reply ?? null,
     stamp: !!stampUrl,
   })
-  questionText.value = ''
+
+  if (stampUrl) {
+    stampPopVisible.value = false
+  }
+  else {
+    questionText.value = ''
+  }
 }
 </script>
 
@@ -54,16 +62,16 @@ async function send(stampUrl?: string) {
     />
     <div v-if="!props.reply" mt-1 w-full flex justify="between" items="center">
       <el-popover
-        width="230px"
+        :visible="stampPopVisible"
+        width="260px"
         placement="top"
-        trigger="click"
       >
         <template #reference>
-          <div class="i-carbon-stamp" text-xl text-gray cursor="pointer" />
+          <div class="i-carbon-stamp" text-xl text-gray cursor="pointer" @click="stampPopVisible = !stampPopVisible" />
         </template>
 
         <div grid grid-cols-4 gap-8px>
-          <div v-for="stamp in stamps" :key="stamp" cursor="pointer" @dblclick="send(stamp)">
+          <div v-for="stamp in stamps" :key="stamp" cursor="pointer" @click="send(stamp)">
             <img :src="stamp">
           </div>
         </div>

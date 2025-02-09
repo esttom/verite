@@ -24,6 +24,7 @@ declare module 'vue' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     QuestionDialog: typeof import('./src/components/QuestionDialog.vue')['default']
     QuestionResult: typeof import('./src/components/QuestionResult.vue')['default']
+    QuestionStamp: typeof import('./src/components/QuestionStamp.vue')['default']
     QuestionText: typeof import('./src/components/QuestionText.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

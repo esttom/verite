@@ -28,7 +28,9 @@ const fixMessagesHandler: Record<string, NotificationHandle['close']> = {}
 const scrollbarRef = ref()
 const enableScroll = ref(true)
 const questionText = ref('')
-
+const stampScrollbarRef = ref()
+const stampPopupVisible = ref(false)
+const newStampSrc = ref<string | undefined>(undefined)
 const list = ref<QuestionnaireDetailRecord[]>([])
 
 withLoadingFn(async () => {
@@ -71,14 +73,26 @@ listen((record) => {
   else {
     record.replies = []
     list.value.push(record)
-    if (enableScroll.value) {
+    if (enableScroll.value && !record.stamp) {
       setTimeout(() => {
         scrollbarRef.value.scrollTo({
           top: scrollbarRef.value.wrapRef.scrollHeight,
           behavior: 'smooth',
         })
-      })
+      }, 200)
     }
+  }
+
+  if (record.stamp) {
+    newStampSrc.value = record.content
+    stampPopupVisible.value = true
+    setTimeout(() => {
+      stampScrollbarRef.value.scrollTo({
+        left: stampScrollbarRef.value.wrapRef.scrollWidth,
+        behavior: 'smooth',
+      })
+    }, 200)
+    setTimeout(() => stampPopupVisible.value = false, 3000)
   }
 }, (record) => {
   const index = list.value.findIndex(item => item.id === record.id)
@@ -162,13 +176,6 @@ onUnmounted(() => {
       <img src="/logo.png" alt="logo" cursor="pointer" width="48px" text="center">
     </div>
 
-    <div v-if="list.length > 0" max-w="768px" justify="end" mb-1 w-full flex>
-      <div flex items="center">
-        <em mr-2 text-xs text-gray-500 op75>auto-scroll</em>
-        <el-switch v-model="enableScroll" style="--el-switch-on-color: #8a8bf9" />
-      </div>
-    </div>
-
     <el-scrollbar ref="scrollbarRef" class="w-full" wrap-class="w-full" view-class="w-full flex flex-grow justify-center">
       <div v-if="list.length === 0 && !loading">
         <img src="/undraw_faq_re_31cw.svg" alt="faq" mt-4 max-width="480px">
@@ -179,16 +186,17 @@ onUnmounted(() => {
       <Transition>
         <div v-if="list.length > 0" w-full max-w="768px">
           <div v-for="item in list" :key="item.id" items="center" mb-3 w-full flex>
-            <div w-full flex flex-col>
+            <template v-if="item.stamp">
+              <Teleport to="#stamp-container" defer>
+                <QuestionStamp :src="item.content" />
+              </Teleport>
+            </template>
+            <div v-else w-full flex flex-col>
               <div w-full flex items-center>
                 <div p="1" mr="4" h-fit border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
                   <div i-carbon-chat-bot text-2xl color="white" />
                 </div>
-
-                <template v-if="item.stamp">
-                  <img :src="item.content" w-72px>
-                </template>
-                <div v-else w-full flex flex-col>
+                <div w-full flex flex-col>
                   <div items="center" class="card" w-full flex bg-slate-50 py-3 pr-3 border="rounded">
                     <div w="full" whitespace-pre-wrap>
                       {{ item.content }}
@@ -245,6 +253,29 @@ onUnmounted(() => {
         </div>
       </Transition>
     </el-scrollbar>
+
+    <div v-if="list.length > 0" max-w="768px" justify="between" items="center" mb-1 w-full flex>
+      <div border="rounded-2xl" w-full flex items="center" bg-slate-100 pl-2 pr-2 style="overflow-x: auto;">
+        <el-popover :visible="stampPopupVisible" placement="top">
+          <template #reference>
+            <div mb-10px mr-1 mt-10px bg-slate-400 pa-1 border="rounded-md">
+              <div i-carbon-stamp h-20px w-20px text="md white" />
+            </div>
+          </template>
+          <div flex justify-center>
+            <img :src="newStampSrc" w-84px>
+          </div>
+        </el-popover>
+        <el-scrollbar ref="stampScrollbarRef" class="w-full" wrap-class="w-full" view-class="w-full flex flex-grow">
+          <div id="stamp-container" flex />
+        </el-scrollbar>
+      </div>
+      <div items="center" flex>
+        <em ml-4 mr-2 text-xs text-gray-500 op75>scroll</em>
+        <el-switch v-model="enableScroll" style="--el-switch-on-color: #8a8bf9" />
+      </div>
+    </div>
+
     <QuestionText v-model="questionText" placeholder="Write a message..." />
   </div>
 </template>
