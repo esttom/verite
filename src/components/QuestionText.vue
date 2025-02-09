@@ -23,36 +23,43 @@ const stamps = [
 ]
 
 const baseId = useRoute('/questionnaire/[id]').params.id
-const { insert } = useSupabaseQuestionnaireDetail()
 
 const popoverRef = ref()
+
+const { insert } = useSupabaseQuestionnaireDetail()
+const { loading: messageLoading, withLoadingFn: messageLoadingFn } = useLoading()
+const { loading: stampLoading, withLoadingFn: stampLoadingFn } = useLoading()
 
 async function sendMessage() {
   if (questionText.value.trimEnd() === '' || questionText.value.replaceAll('\n', '').trimEnd() === '') {
     return
   }
-  await insert({
-    base_id: baseId,
-    content: questionText.value,
-    reply: props.reply ?? null,
-    stamp: false,
+  messageLoadingFn(async () => {
+    await insert({
+      base_id: baseId,
+      content: questionText.value,
+      reply: props.reply ?? null,
+      stamp: false,
+    })
+    questionText.value = ''
   })
-  questionText.value = ''
 }
 
 async function sendStamp(stampUrl: string) {
-  await insert({
-    base_id: baseId,
-    content: stampUrl,
-    reply: props.reply ?? null,
-    stamp: true,
+  stampLoadingFn(async () => {
+    await insert({
+      base_id: baseId,
+      content: stampUrl,
+      reply: props.reply ?? null,
+      stamp: true,
+    })
+    popoverRef.value.hide()
   })
-  popoverRef.value.hide()
 }
 </script>
 
 <template>
-  <div class="text-container" w="full" max-w="768px" justify="center" items="center" flex flex-col bg-white pa-2 b="1px solid #e5e5e5 rounded-xl">
+  <div v-loading="messageLoading" class="text-container" w="full" max-w="768px" justify="center" items="center" flex flex-col bg-white pa-2 b="1px solid #e5e5e5 rounded-xl">
     <el-input
       v-model="questionText"
       :autosize="{ minRows: 1, maxRows: 8 }"
@@ -73,7 +80,7 @@ async function sendStamp(stampUrl: string) {
           <div class="i-carbon-stamp" text-xl text-gray cursor="pointer" />
         </template>
 
-        <div grid grid-cols-4 gap-8px>
+        <div v-loading="stampLoading" grid grid-cols-4 gap-8px>
           <div v-for="stamp in stamps" :key="stamp" cursor="pointer" @click="sendStamp(stamp)">
             <img :src="stamp">
           </div>
