@@ -3,7 +3,7 @@ defineProps<{ src: string }>()
 </script>
 
 <template>
-  <el-popover placement="top" trigger="hover" :show-after="400">
+  <el-popover placement="top" trigger="click">
     <template #reference>
       <img :src="src" ml-1 w-48px>
     </template>
