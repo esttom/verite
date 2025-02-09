@@ -1,13 +1,11 @@
 <script setup lang="ts">
 defineProps<{ src: string }>()
-
-const visible = ref(false)
 </script>
 
 <template>
-  <el-popover :visible="visible" placement="top">
+  <el-popover placement="top" trigger="hover" :show-after="400">
     <template #reference>
-      <img :src="src" ml-1 w-48px @mouseover="visible = true" @mouseleave="visible = false">
+      <img :src="src" ml-1 w-48px>
     </template>
     <div flex justify-center>
       <img :src="src" w-84px>
