@@ -9,12 +9,12 @@ const stamps = [
   '/stamp/tanosimi-hiyoko.png',
   '/stamp/yokuaru.png',
   '/stamp/nice-hiyoko.png',
-  '/stamp/pen-light-piyo.png',
+  '/stamp/chimeisho.png',
+  '/stamp/kiokuni.png',
+  '/stamp/onegaishimasu-hiyoko.png',
+  '/stamp/otukare-hiyoko.png',
   '/stamp/arigatou.gif',
-  '/stamp/fumifumi-hiyoko.gif',
-  '/stamp/nanimoshitenai.gif',
   '/stamp/repost-iine-hiyokoo.gif',
-  '/stamp/pckatakata.gif',
   '/stamp/shimaenaga-cheer.png',
   '/stamp/harinezumi-heart.png',
   '/stamp/hirameki-kuma.png',
@@ -25,27 +25,29 @@ const stamps = [
 const baseId = useRoute('/questionnaire/[id]').params.id
 const { insert } = useSupabaseQuestionnaireDetail()
 
-const stampPopVisible = ref(false)
+const popoverRef = ref()
 
-async function send(stampUrl?: string) {
-  if (!stampUrl) {
-    if (questionText.value.trimEnd() === '' || questionText.value.replaceAll('\n', '').trimEnd() === '') {
-      return
-    }
+async function sendMessage() {
+  if (questionText.value.trimEnd() === '' || questionText.value.replaceAll('\n', '').trimEnd() === '') {
+    return
   }
   await insert({
     base_id: baseId,
-    content: stampUrl ?? questionText.value,
+    content: questionText.value,
     reply: props.reply ?? null,
-    stamp: !!stampUrl,
+    stamp: false,
   })
+  questionText.value = ''
+}
 
-  if (stampUrl) {
-    stampPopVisible.value = false
-  }
-  else {
-    questionText.value = ''
-  }
+async function sendStamp(stampUrl: string) {
+  await insert({
+    base_id: baseId,
+    content: stampUrl,
+    reply: props.reply ?? null,
+    stamp: true,
+  })
+  popoverRef.value.hide()
 }
 </script>
 
@@ -58,27 +60,28 @@ async function send(stampUrl?: string) {
       type="textarea"
       resize="none"
       :placeholder="props.placeholder"
-      @keydown.ctrl.enter.prevent="send()"
+      @keydown.ctrl.enter.prevent="sendMessage()"
     />
     <div v-if="!props.reply" mt-1 w-full flex justify="between" items="center">
       <el-popover
-        :visible="stampPopVisible"
-        width="260px"
+        ref="popoverRef"
+        width="280px"
         placement="top"
+        trigger="click"
       >
         <template #reference>
-          <div class="i-carbon-stamp" text-xl text-gray cursor="pointer" @click="stampPopVisible = !stampPopVisible" />
+          <div class="i-carbon-stamp" text-xl text-gray cursor="pointer" />
         </template>
 
         <div grid grid-cols-4 gap-8px>
-          <div v-for="stamp in stamps" :key="stamp" cursor="pointer" @click="send(stamp)">
+          <div v-for="stamp in stamps" :key="stamp" cursor="pointer" @click="sendStamp(stamp)">
             <img :src="stamp">
           </div>
         </div>
       </el-popover>
 
       <div bg="#8a8bf9" p="1" border="rounded">
-        <div i-carbon-send-filled text="md white" cursor="pointer" @click="send()" />
+        <div i-carbon-send-filled text="md white" cursor="pointer" @click="sendMessage()" />
       </div>
     </div>
   </div>
