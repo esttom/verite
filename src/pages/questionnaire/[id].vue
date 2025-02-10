@@ -56,7 +56,7 @@ withLoadingFn(async () => {
   list.value.filter(l => l.fixed).forEach(l => setFixedMessage(l))
 })
 
-listen((record) => {
+listen(baseId, (record) => {
   record.clicked = false
   record.loading = false
   record.showReply = false

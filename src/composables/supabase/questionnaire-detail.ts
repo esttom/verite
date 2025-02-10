@@ -32,9 +32,9 @@ export function useSupabaseQuestionnaireDetail() {
     return data
   }
 
-  const listen = (insertHandler: (record: any) => void, updateHandler: (record: any) => void) => {
+  const listen = (baseId: string, insertHandler: (record: any) => void, updateHandler: (record: any) => void) => {
     client.channel('questionnaire_detail')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'questionnaire_detail' }, (payload) => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'questionnaire_detail', filter: `base_id=eq.${baseId}` }, (payload) => {
         if (payload.errors) {
           ElMessage({
             type: 'error',
