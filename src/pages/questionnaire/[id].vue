@@ -185,13 +185,13 @@ onUnmounted(() => {
       </div>
       <Transition>
         <div v-if="list.length > 0" w-full max-w="768px">
-          <div v-for="item in list" :key="item.id" items="center" mb-3 w-full flex>
+          <template v-for="item in list" :key="item.id">
             <template v-if="item.stamp">
               <Teleport to="#stamp-container" defer>
                 <QuestionStamp :src="item.content" />
               </Teleport>
             </template>
-            <div v-else w-full flex flex-col>
+            <div v-else mb-3 w-full flex flex-col>
               <div w-full flex items-center>
                 <div p="1" mr="4" h-fit border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
                   <div i-carbon-chat-bot text-2xl color="white" />
@@ -221,7 +221,7 @@ onUnmounted(() => {
               <div flex>
                 <div w-52px />
                 <div w-full pl-1>
-                  <div v-if="item.replies.length > 0" items="center" cursor="pointer" flex pa-1 @click="toggleShowReply(item.id)">
+                  <div v-if="item.replies.length > 0" items="center" cursor="pointer" flex pl-1 pt-1 @click="toggleShowReply(item.id)">
                     <div text="sm color-#8a8bf9">
                       {{ `${item.replies.length} reply ` }}
                     </div>
@@ -234,7 +234,7 @@ onUnmounted(() => {
                           <div p="1" mr="4" h-fit border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
                             <div i-carbon-chat-bot text-sm color="white" />
                           </div>
-                          <div items="center" class="card" w-full flex bg-slate-50 py-1.5 pr-2 border="rounded">
+                          <div items="center" class="card" w-full flex bg-slate-50 py-2 pr-2 border="rounded">
                             <div w="full" whitespace-pre-wrap>
                               {{ reply }}
                             </div>
@@ -249,7 +249,7 @@ onUnmounted(() => {
                 </div>
               </div>
             </div>
-          </div>
+          </template>
         </div>
       </Transition>
     </el-scrollbar>
