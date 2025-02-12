@@ -178,10 +178,7 @@ onUnmounted(() => {
 
     <el-scrollbar ref="scrollbarRef" class="w-full" wrap-class="w-full" view-class="w-full flex flex-grow justify-center">
       <div v-if="list.length === 0 && !loading">
-        <img src="/undraw_faq_re_31cw.svg" alt="faq" mt-4 max-width="480px">
-        <div text-ld mt-4 text-center op-80>
-          No questions yet. <br>If you have any questions about what you are interested in, feel free to ask!
-        </div>
+        <el-empty />
       </div>
       <Transition>
         <div v-if="list.length > 0" w-full max-w="768px">
