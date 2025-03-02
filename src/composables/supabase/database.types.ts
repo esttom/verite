@@ -72,6 +72,51 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz: {
+        Row: {
+          base_id: string
+          created_at: string
+          id: string
+          questions: string[] | null
+          title: string
+        }
+        Insert: {
+          base_id: string
+          created_at?: string
+          id?: string
+          questions?: string[] | null
+          title: string
+        }
+        Update: {
+          base_id?: string
+          created_at?: string
+          id?: string
+          questions?: string[] | null
+          title?: string
+        }
+        Relationships: []
+      }
+      quiz_detail: {
+        Row: {
+          answer: number
+          base_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          answer: number
+          base_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          answer?: number
+          base_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
