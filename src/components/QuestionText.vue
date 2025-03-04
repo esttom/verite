@@ -40,6 +40,7 @@ async function sendMessage() {
       content: questionText.value,
       reply: props.reply ?? null,
       stamp: false,
+      quiz_id: null,
     })
     questionText.value = ''
   })
@@ -52,6 +53,7 @@ async function sendStamp(stampUrl: string) {
       content: stampUrl,
       reply: props.reply ?? null,
       stamp: true,
+      quiz_id: null,
     })
     popoverRef.value.hide()
   })

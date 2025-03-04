@@ -28,6 +28,12 @@ const headers = [
   },
   {
     prop: 'action',
+    label: 'Quiz',
+    width: '80',
+    action: moveToQuiz,
+  },
+  {
+    prop: 'action',
     label: 'Copy',
     width: '80',
     action: copyToClipboard,
@@ -50,6 +56,10 @@ withLoadingFn(async () => {
 
 async function moveToRoom(row: any) {
   router.push(`/questionnaire/${row.id}`)
+}
+
+async function moveToQuiz(row: any) {
+  router.push(`/quiz/${row.id}`)
 }
 
 async function deleteData(row: any) {

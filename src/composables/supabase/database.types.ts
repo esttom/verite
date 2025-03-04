@@ -75,6 +75,7 @@ export type Database = {
       quiz: {
         Row: {
           base_id: string
+          close: boolean
           created_at: string
           id: string
           questions: string[] | null
@@ -82,6 +83,7 @@ export type Database = {
         }
         Insert: {
           base_id: string
+          close?: boolean
           created_at?: string
           id?: string
           questions?: string[] | null
@@ -89,6 +91,7 @@ export type Database = {
         }
         Update: {
           base_id?: string
+          close?: boolean
           created_at?: string
           id?: string
           questions?: string[] | null

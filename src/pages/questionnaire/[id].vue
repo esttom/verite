@@ -13,6 +13,7 @@ interface QuestionnaireDetailRecord {
   replyText: string
   replies: string[]
   stamp: boolean
+  quiz_id: string | null
 }
 
 const baseId = useRoute('/questionnaire/[id]').params.id
@@ -20,7 +21,10 @@ const router = useRouter()
 const { isAuth } = useUserContext()
 const { select, listen, updateFavorite, updateFixed } = useSupabaseQuestionnaireDetail()
 const { loading, withLoadingFn } = useLoading()
+const { loading: listenLoading } = useLoading()
 const { loading: favoriteLoading, withLoadingFn: favoriteWithLoadingFn } = useLoading()
+
+listenLoading.value = true
 
 const authenticated = isAuth()
 const fixMessagesHandler: Record<string, NotificationHandle['close']> = {}
@@ -111,6 +115,8 @@ listen(baseId, (record) => {
     item.replyText = ''
     list.value.splice(index, 1, item)
   }
+}, () => {
+  listenLoading.value = false
 })
 
 async function onFavoriteUpdate(id: string, favorite: number, clicked: boolean) {
@@ -188,6 +194,9 @@ onUnmounted(() => {
                 <QuestionStamp :src="item.content" />
               </Teleport>
             </template>
+            <div v-else-if="item.quiz_id">
+              <QuizCard :quiz-id="item.quiz_id" />
+            </div>
             <div v-else mb-3 w-full flex flex-col>
               <div w-full flex items-center>
                 <div p="1" mr="4" h-fit border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
@@ -273,7 +282,7 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <QuestionText v-model="questionText" placeholder="Write a message..." />
+    <QuestionText v-model="questionText" v-loading="listenLoading" placeholder="Write a message..." />
   </div>
 </template>
 
