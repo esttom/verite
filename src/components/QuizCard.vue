@@ -60,18 +60,17 @@ function setPercentage() {
 </script>
 
 <template>
-  <el-card v-loading="loading" class="progress-card mb-3 max-w-420px" h-fit>
-    <template #header>
-      <div class="text-bold flex items-center text-#8a8bf9">
-        <QuestionFilled w="24px" mr-1 />
-        <span>{{ title }}</span>
-      </div>
-    </template>
+  <div v-loading="loading" class="mb-3 max-w-420px border-1 border-[#8a8bf9] rounded-xl bg-white pa-3" h-fit>
+    <div class="mb-3 flex items-center border-b-1 text-#8a8bf9 font-bold">
+      <QuestionFilled class="mr-1 w-[18px]" />
+      <span class="text-sm">{{ title }}</span>
+    </div>
+
     <template v-if="close">
       <div class="space-y-2">
         <div v-for="(question, idx) in questions" :key="idx" class="relative w-full overflow-hidden rounded-2xl bg-gray-400">
           <div class="absolute left-0 top-0 h-full bg-[#8a8bf9]" :style="`width: ${question.percentage}%`" />
-          <div class="relative z-10 px-3 py-1 text-sm text-white">
+          <div class="relative z-10 px-3 py-[1px] text-sm text-white">
             {{ question.text }} - {{ question.percentage }}%
           </div>
         </div>
@@ -83,7 +82,7 @@ function setPercentage() {
           <button
             v-for="(question, idx) in questions"
             :key="idx"
-            class="w-full transform rounded-2xl bg-[#8a8bf9] py-1 text-white shadow-md transition hover:scale-102 hover:bg-[#7a7be0]"
+            class="w-full transform border-1 border-[#8a8bf9] rounded-2xl py-[1px] text-sm text-[#8a8bf9] shadow-sm hover:bg-[#7a7be0] hover:text-white"
             @click="sendAnswer(idx)"
           >
             {{ question.text }}
@@ -91,7 +90,7 @@ function setPercentage() {
         </div>
       </div>
     </template>
-  </el-card>
+  </div>
 </template>
 
 <style scoped>
