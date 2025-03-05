@@ -6,6 +6,17 @@ interface QuizInsertParam {
   questions: string[]
 }
 
+interface QuizUpdateQuestionParam {
+  id: string
+  title: string
+  questions: string[]
+}
+
+interface QuizUpdateCloseParam {
+  id: string
+  close: boolean
+}
+
 export function useSupabaseQuiz() {
   const client = useSupabase()
 
@@ -45,6 +56,32 @@ export function useSupabaseQuiz() {
     return data
   }
 
+  const updateQuestion = async (param: QuizUpdateQuestionParam) => {
+    const { id, title, questions } = param
+    const { data, error } = await client.from('quiz').update({ title, questions }).eq('id', id)
+    if (error) {
+      ElMessage({
+        type: 'error',
+        message: 'update quiz failed',
+      })
+      throw new Error(error.message)
+    }
+    return data
+  }
+
+  const updateClose = async (param: QuizUpdateCloseParam) => {
+    const { id, close } = param
+    const { data, error } = await client.from('quiz').update({ close }).eq('id', id)
+    if (error) {
+      ElMessage({
+        type: 'error',
+        message: 'update quiz failed',
+      })
+      throw new Error(error.message)
+    }
+    return data
+  }
+
   const remove = async (id: string) => {
     const { data, error } = await client.from('quiz').delete().eq('id', id)
     if (error) {
@@ -61,6 +98,8 @@ export function useSupabaseQuiz() {
     select,
     selectById,
     insert,
+    updateQuestion,
+    updateClose,
     remove,
   }
 }

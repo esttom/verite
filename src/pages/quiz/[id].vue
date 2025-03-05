@@ -1,6 +1,9 @@
 <script setup lang="ts">
 const baseId = useRoute('/quiz/[id]').params.id
+const qDialogId = ref<string | undefined>(undefined)
 const qDialogVisible = ref(false)
+const qDialogTitle = ref('')
+const qDialogQuestions = ref(['', '', '', ''])
 const contents = ref<Record<string, any>[]>([])
 
 const headers = [
@@ -15,6 +18,12 @@ const headers = [
   },
   {
     prop: 'action',
+    label: 'Change',
+    width: '90',
+    action: changeQuiz,
+  },
+  {
+    prop: 'action',
     label: 'Send',
     width: '80',
     action: sendQuiz,
@@ -25,17 +34,11 @@ const headers = [
     width: '90',
     action: closeQuiz,
   },
-  {
-    prop: 'action',
-    label: 'Delete',
-    width: '90',
-    action: deleteQuiz,
-  },
 ]
 
 const router = useRouter()
 const { insert: questionnaireDetailInsert } = useSupabaseQuestionnaireDetail()
-const { select, remove } = useSupabaseQuiz()
+const { select, updateClose } = useSupabaseQuiz()
 const { loading, withLoadingFn } = useLoading()
 
 withLoadingFn(async () => {
@@ -49,6 +52,17 @@ function home() {
 async function selectData() {
   const data = await select(baseId)
   contents.value = data
+}
+
+function openQuizDialog(title: string, questions: string[], id?: string) {
+  qDialogId.value = id
+  qDialogTitle.value = title
+  qDialogQuestions.value = questions
+  qDialogVisible.value = true
+}
+
+function changeQuiz(row: any) {
+  openQuizDialog(row.title, row.questions, row.id)
 }
 
 async function sendQuiz(row: any) {
@@ -68,19 +82,13 @@ async function sendQuiz(row: any) {
   alert('add quiz!')
 }
 
-function closeQuiz() {
-}
-
-function deleteQuiz(row: any) {
-  // eslint-disable-next-line no-alert
-  if (!window.confirm('Are you sure you want to delete?')) {
-    return
-  }
-
-  withLoadingFn(async () => {
-    await remove(row.id)
-    await selectData()
+function closeQuiz(row: any) {
+  updateClose({
+    id: row.id,
+    close: true,
   })
+  // eslint-disable-next-line no-alert
+  alert('response are closed!')
 }
 
 function onCreate() {
@@ -106,10 +114,10 @@ function onCreate() {
           </p>
         </div>
         <div>
-          <el-button color="#626aef" @click="qDialogVisible = true">
+          <el-button color="#626aef" @click="openQuizDialog('', ['', '', '', ''])">
             Create
           </el-button>
-          <QuizDialog v-model="qDialogVisible" :base-id="baseId" @create="onCreate" />
+          <QuizDialog :id="qDialogId" v-model="qDialogVisible" :base-id="baseId" :title="qDialogTitle" :questions="qDialogQuestions" @create="onCreate" />
         </div>
       </div>
 

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { Close, Plus } from '@element-plus/icons-vue'
 
-const props = defineProps<{ baseId: string }>()
+const props = defineProps<{ baseId: string, id: string | undefined, title: string, questions: string[] }>()
 const emits = defineEmits(['create'])
 
 const qDialogVisible = defineModel<boolean>({ default: false })
 
-const { insert } = useSupabaseQuiz()
+const { insert, updateQuestion } = useSupabaseQuiz()
 const { loading, withLoadingFn } = useLoading()
 
 const qDialogForm = reactive({
@@ -27,16 +27,24 @@ function removeQuestion(idx: number) {
 }
 
 function onOpen() {
-  qDialogForm.title = ''
-  qDialogForm.questions = ['', '', '', '']
+  qDialogForm.title = props.title
+  qDialogForm.questions = props.questions
 }
 
 function ok() {
   withLoadingFn(async () => {
-    await insert({
-      base_id: props.baseId,
-      ...qDialogForm,
-    })
+    if (props.id) {
+      await updateQuestion({
+        id: props.id,
+        ...qDialogForm,
+      })
+    }
+    else {
+      await insert({
+        base_id: props.baseId,
+        ...qDialogForm,
+      })
+    }
     emits('create')
     qDialogVisible.value = false
   })

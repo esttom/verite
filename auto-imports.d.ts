@@ -254,6 +254,7 @@ declare global {
   const useSupabaseQuestionnaire: typeof import('./src/composables/supabase/questionaire')['useSupabaseQuestionnaire']
   const useSupabaseQuestionnaireDetail: typeof import('./src/composables/supabase/questionnaire-detail')['useSupabaseQuestionnaireDetail']
   const useSupabaseQuiz: typeof import('./src/composables/supabase/quiz')['useSupabaseQuiz']
+  const useSupabaseQuizDetail: typeof import('./src/composables/supabase/quiz-detail')['useSupabaseQuizDetail']
   const useSupported: typeof import('@vueuse/core')['useSupported']
   const useSwipe: typeof import('@vueuse/core')['useSwipe']
   const useTemplateRef: typeof import('vue')['useTemplateRef']
@@ -558,6 +559,7 @@ declare module 'vue' {
     readonly useSupabaseQuestionnaire: UnwrapRef<typeof import('./src/composables/supabase/questionaire')['useSupabaseQuestionnaire']>
     readonly useSupabaseQuestionnaireDetail: UnwrapRef<typeof import('./src/composables/supabase/questionnaire-detail')['useSupabaseQuestionnaireDetail']>
     readonly useSupabaseQuiz: UnwrapRef<typeof import('./src/composables/supabase/quiz')['useSupabaseQuiz']>
+    readonly useSupabaseQuizDetail: UnwrapRef<typeof import('./src/composables/supabase/quiz-detail')['useSupabaseQuizDetail']>
     readonly useSupported: UnwrapRef<typeof import('@vueuse/core')['useSupported']>
     readonly useSwipe: UnwrapRef<typeof import('@vueuse/core')['useSwipe']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>

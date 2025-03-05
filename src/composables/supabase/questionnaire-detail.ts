@@ -33,7 +33,7 @@ export function useSupabaseQuestionnaireDetail() {
     return data
   }
 
-  const listen = (baseId: string, insertHandler: (record: any) => void, updateHandler: (record: any) => void, callback: () => void) => {
+  const listen = (baseId: string, insertHandler: (record: any) => void, updateHandler: (record: any) => void) => {
     client.channel('questionnaire_detail')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'questionnaire_detail', filter: `base_id=eq.${baseId}` }, (payload) => {
         if (payload.errors) {
@@ -50,16 +50,7 @@ export function useSupabaseQuestionnaireDetail() {
           updateHandler(payload.new)
         }
       })
-      .subscribe((_, error) => {
-        callback()
-        if (error) {
-          ElMessage({
-            type: 'error',
-            message: 'listen failed',
-          })
-          throw new Error(error.message)
-        }
-      })
+      .subscribe()
   }
 
   const insert = async (param: QuestionnaireDetailInsertParam) => {

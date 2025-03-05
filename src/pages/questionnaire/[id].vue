@@ -21,10 +21,7 @@ const router = useRouter()
 const { isAuth } = useUserContext()
 const { select, listen, updateFavorite, updateFixed } = useSupabaseQuestionnaireDetail()
 const { loading, withLoadingFn } = useLoading()
-const { loading: listenLoading } = useLoading()
 const { loading: favoriteLoading, withLoadingFn: favoriteWithLoadingFn } = useLoading()
-
-listenLoading.value = true
 
 const authenticated = isAuth()
 const fixMessagesHandler: Record<string, NotificationHandle['close']> = {}
@@ -115,8 +112,6 @@ listen(baseId, (record) => {
     item.replyText = ''
     list.value.splice(index, 1, item)
   }
-}, () => {
-  listenLoading.value = false
 })
 
 async function onFavoriteUpdate(id: string, favorite: number, clicked: boolean) {
@@ -282,7 +277,7 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <QuestionText v-model="questionText" v-loading="listenLoading" placeholder="Write a message..." />
+    <QuestionText v-model="questionText" placeholder="Write a message..." />
   </div>
 </template>
 
