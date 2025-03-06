@@ -60,10 +60,14 @@ function setPercentage() {
 </script>
 
 <template>
-  <div v-loading="loading" class="mb-3 max-w-420px border-1 border-[#8a8bf9] rounded-xl bg-white pa-3" h-fit>
-    <div class="mb-3 flex items-center border-b-1 text-#8a8bf9 font-bold">
-      <QuestionFilled class="mr-1 w-[18px]" />
-      <span class="text-sm">{{ title }}</span>
+  <div v-loading="loading" class="mb-3 max-w-420px border-1 border-gray-2 rounded-xl bg-slate-50 pa-3 shadow-md" h-fit>
+    <div class="mb-3 flex">
+      <div class="mr-1 w-[20px]">
+        <QuestionFilled class="w-[20px] text-#8a8bf9" />
+      </div>
+      <div class="text-sm font-bold">
+        {{ title }}
+      </div>
     </div>
 
     <template v-if="close">
@@ -82,7 +86,7 @@ function setPercentage() {
           <button
             v-for="(question, idx) in questions"
             :key="idx"
-            class="w-full transform border-1 border-[#8a8bf9] rounded-2xl py-[1px] text-sm text-[#8a8bf9] shadow-sm hover:bg-[#7a7be0] hover:text-white"
+            class="w-full transform border-1 border-[#8a8bf9] rounded-2xl px-3 py-[1px] text-sm text-[#8a8bf9] shadow-sm hover:bg-[#7a7be0] hover:text-white"
             @click="sendAnswer(idx)"
           >
             {{ question.text }}
