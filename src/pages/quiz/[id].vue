@@ -57,7 +57,7 @@ async function selectData() {
 function openQuizDialog(title: string, questions: string[], id?: string) {
   qDialogId.value = id
   qDialogTitle.value = title
-  qDialogQuestions.value = questions
+  qDialogQuestions.value = JSON.parse(JSON.stringify(questions))
   qDialogVisible.value = true
 }
 

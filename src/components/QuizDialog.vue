@@ -21,7 +21,7 @@ function addQuestion() {
 }
 
 function removeQuestion(idx: number) {
-  if (qDialogForm.questions.length > 1) {
+  if (qDialogForm.questions.length > 2) {
     qDialogForm.questions.splice(idx, 1)
   }
 }
