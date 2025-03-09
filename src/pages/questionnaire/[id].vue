@@ -76,8 +76,8 @@ listen(baseId, (record) => {
     list.value.push(record)
     if (enableScroll.value && !record.stamp) {
       setTimeout(() => {
-        scrollbarRef.value.scrollTo({
-          top: scrollbarRef.value.wrapRef.scrollHeight,
+        scrollbarRef.value?.scrollTo({
+          top: scrollbarRef.value?.wrapRef.scrollHeight,
           behavior: 'smooth',
         })
       }, 200)
@@ -88,8 +88,8 @@ listen(baseId, (record) => {
     newStampSrc.value = record.content
     stampPopupVisible.value = true
     setTimeout(() => {
-      stampScrollbarRef.value.scrollTo({
-        left: stampScrollbarRef.value.wrapRef.scrollWidth,
+      stampScrollbarRef.value?.scrollTo({
+        left: stampScrollbarRef.value?.wrapRef.scrollWidth,
         behavior: 'smooth',
       })
     }, 200)
@@ -190,7 +190,7 @@ onUnmounted(() => {
               </Teleport>
             </template>
             <div v-else-if="item.quiz_id">
-              <QuizCard :quiz-id="item.quiz_id" />
+              <QuizCard :base-id="baseId" :quiz-id="item.quiz_id" />
             </div>
             <div v-else mb-3 w-full flex flex-col>
               <div w-full flex items-center>

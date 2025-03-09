@@ -14,6 +14,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          quiz_id: string
           title: string
           user_id: string
         }
@@ -21,6 +22,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          quiz_id?: string
           title?: string
           user_id?: string
         }
@@ -28,6 +30,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          quiz_id?: string
           title?: string
           user_id?: string
         }
@@ -74,27 +77,30 @@ export type Database = {
       }
       quiz: {
         Row: {
-          base_id: string
           close: boolean
           created_at: string
           id: string
           questions: string[] | null
+          quiz_id: string
+          sent: boolean
           title: string
         }
         Insert: {
-          base_id: string
           close?: boolean
           created_at?: string
           id?: string
           questions?: string[] | null
+          quiz_id: string
+          sent?: boolean
           title: string
         }
         Update: {
-          base_id?: string
           close?: boolean
           created_at?: string
           id?: string
           questions?: string[] | null
+          quiz_id?: string
+          sent?: boolean
           title?: string
         }
         Relationships: []
@@ -105,18 +111,21 @@ export type Database = {
           base_id: string
           created_at: string
           id: string
+          quiz_id: string
         }
         Insert: {
           answer: number
           base_id: string
           created_at?: string
           id?: string
+          quiz_id: string
         }
         Update: {
           answer?: number
           base_id?: string
           created_at?: string
           id?: string
+          quiz_id?: string
         }
         Relationships: []
       }

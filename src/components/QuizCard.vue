@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { QuestionFilled } from '@element-plus/icons-vue'
 
-const props = defineProps<{ quizId: string }>()
+const props = defineProps<{ baseId: string, quizId: string }>()
 
 const close = ref(false)
 const title = ref('')
@@ -26,7 +26,8 @@ withLoadingFn(async () => {
 function sendAnswer(answer: number) {
   withLoadingFn(async () => {
     await insert({
-      base_id: props.quizId,
+      base_id: props.baseId,
+      quiz_id: props.quizId,
       answer,
     })
     close.value = true

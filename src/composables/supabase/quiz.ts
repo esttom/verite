@@ -1,7 +1,7 @@
 import { ElMessage } from 'element-plus'
 
 interface QuizInsertParam {
-  base_id: string
+  quiz_id: string
   title: string
   questions: string[]
 }
@@ -12,16 +12,17 @@ interface QuizUpdateQuestionParam {
   questions: string[]
 }
 
-interface QuizUpdateCloseParam {
+interface QuizUpdateStateParam {
   id: string
-  close: boolean
+  close?: boolean
+  sent?: boolean
 }
 
 export function useSupabaseQuiz() {
   const client = useSupabase()
 
-  const select = async (baseId: string) => {
-    const { data, error } = await client.from('quiz').select().eq('base_id', baseId)
+  const select = async (quizId: string) => {
+    const { data, error } = await client.from('quiz').select().eq('quiz_id', quizId).order('created_at', { ascending: true })
     if (error) {
       ElMessage({
         type: 'error',
@@ -69,7 +70,7 @@ export function useSupabaseQuiz() {
     return data
   }
 
-  const updateClose = async (param: QuizUpdateCloseParam) => {
+  const updateClose = async (param: QuizUpdateStateParam) => {
     const { id, close } = param
     const { data, error } = await client.from('quiz').update({ close }).eq('id', id)
     if (error) {
@@ -82,8 +83,8 @@ export function useSupabaseQuiz() {
     return data
   }
 
-  const remove = async (id: string) => {
-    const { data, error } = await client.from('quiz').delete().eq('id', id)
+  const remove = async (quizId: string) => {
+    const { data, error } = await client.from('quiz').delete().eq('quiz_id', quizId)
     if (error) {
       ElMessage({
         type: 'error',

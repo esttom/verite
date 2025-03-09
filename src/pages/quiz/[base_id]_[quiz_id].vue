@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const baseId = useRoute('/quiz/[id]').params.id
+const baseId = useRoute('/quiz/[base_id]_[quiz_id]').params.base_id
+const quizId = useRoute('/quiz/[base_id]_[quiz_id]').params.quiz_id
 const qDialogId = ref<string | undefined>(undefined)
 const qDialogVisible = ref(false)
 const qDialogTitle = ref('')
@@ -50,7 +51,7 @@ function home() {
 }
 
 async function selectData() {
-  const data = await select(baseId)
+  const data = await select(quizId)
   contents.value = data
 }
 
@@ -117,7 +118,7 @@ function onCreate() {
           <el-button color="#626aef" @click="openQuizDialog('', ['', '', '', ''])">
             Create
           </el-button>
-          <QuizDialog :id="qDialogId" v-model="qDialogVisible" :base-id="baseId" :title="qDialogTitle" :questions="qDialogQuestions" @create="onCreate" />
+          <QuizDialog :id="qDialogId" v-model="qDialogVisible" :quiz-id="quizId" :title="qDialogTitle" :questions="qDialogQuestions" @create="onCreate" />
         </div>
       </div>
 

@@ -2,14 +2,15 @@ import { ElMessage } from 'element-plus'
 
 interface QuizDetailInsertParam {
   base_id: string
+  quiz_id: string
   answer: number
 }
 
 export function useSupabaseQuizDetail() {
   const client = useSupabase()
 
-  const select = async (baseId: string) => {
-    const { data, error } = await client.from('quiz_detail').select().eq('base_id', baseId)
+  const select = async (quizId: string) => {
+    const { data, error } = await client.from('quiz_detail').select().eq('quiz_id', quizId).order('created_at', { ascending: true })
     if (error) {
       ElMessage({
         type: 'error',
@@ -32,9 +33,9 @@ export function useSupabaseQuizDetail() {
     return data
   }
 
-  const listen = (baseId: string, insertHandler: (record: any) => void) => {
+  const listen = (quizId: string, insertHandler: (record: any) => void) => {
     client.channel('quiz_detail')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'quiz_detail', filter: `base_id=eq.${baseId}` }, (payload) => {
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'quiz_detail', filter: `quiz_id=eq.${quizId}` }, (payload) => {
         if (payload.errors) {
           ElMessage({
             type: 'error',
@@ -47,22 +48,22 @@ export function useSupabaseQuizDetail() {
       .subscribe()
   }
 
-  // const remove = async (id: string) => {
-  //   const { data, error } = await client.from('quiz').delete().eq('id', id)
-  //   if (error) {
-  //     ElMessage({
-  //       type: 'error',
-  //       message: 'delete quiz failed',
-  //     })
-  //     throw new Error(error.message)
-  //   }
-  //   return data
-  // }
+  const remove = async (baseId: string) => {
+    const { data, error } = await client.from('quiz_detail').delete().eq('base_id', baseId)
+    if (error) {
+      ElMessage({
+        type: 'error',
+        message: 'delete quiz detail failed',
+      })
+      throw new Error(error.message)
+    }
+    return data
+  }
 
   return {
     select,
     insert,
     listen,
-    // remove,
+    remove,
   }
 }

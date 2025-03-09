@@ -9,6 +9,8 @@ const router = useRouter()
 const { loading, withLoadingFn } = useLoading()
 const { select, remove } = useSupabaseQuestionnaire()
 const { remove: removeDetail } = useSupabaseQuestionnaireDetail()
+const { remove: removeQuiz } = useSupabaseQuiz()
+const { remove: removeQuizDetail } = useSupabaseQuizDetail()
 
 const headers = [
   {
@@ -59,7 +61,7 @@ async function moveToRoom(row: any) {
 }
 
 async function moveToQuiz(row: any) {
-  router.push(`/quiz/${row.id}`)
+  router.push(`/quiz/${row.id}_${row.quiz_id}`)
 }
 
 async function deleteData(row: any) {
@@ -69,8 +71,12 @@ async function deleteData(row: any) {
   }
 
   withLoadingFn(async () => {
-    await removeDetail(row.id)
-    await remove(row.id)
+    await Promise.all([
+      removeDetail(row.id),
+      remove(row.id),
+      removeQuiz(row.quiz_id),
+      removeQuizDetail(row.id),
+    ])
     await selectData()
   })
 }

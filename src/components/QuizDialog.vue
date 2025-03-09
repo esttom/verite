@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Close, Plus } from '@element-plus/icons-vue'
 
-const props = defineProps<{ baseId: string, id: string | undefined, title: string, questions: string[] }>()
+const props = defineProps<{ quizId: string, id: string | undefined, title: string, questions: string[] }>()
 const emits = defineEmits(['create'])
 
 const qDialogVisible = defineModel<boolean>({ default: false })
@@ -41,7 +41,7 @@ function ok() {
     }
     else {
       await insert({
-        base_id: props.baseId,
+        quiz_id: props.quizId,
         ...qDialogForm,
       })
     }
