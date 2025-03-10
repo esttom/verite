@@ -9,21 +9,26 @@ const qDialogVisible = defineModel<boolean>({ default: false })
 const { insert, updateQuestion } = useSupabaseQuiz()
 const { loading, withLoadingFn } = useLoading()
 
+const hasError = ref(false)
 const qDialogForm = reactive({
   title: '',
   questions: ['', '', '', ''],
 })
 
 function addQuestion() {
-  if (qDialogForm.questions.length < 8) {
-    qDialogForm.questions.push('')
+  if (qDialogForm.questions.length >= 8) {
+    setError()
+    return
   }
+  qDialogForm.questions.push('')
 }
 
 function removeQuestion(idx: number) {
-  if (qDialogForm.questions.length > 2) {
-    qDialogForm.questions.splice(idx, 1)
+  if (qDialogForm.questions.length <= 2) {
+    setError()
+    return
   }
+  qDialogForm.questions.splice(idx, 1)
 }
 
 function onOpen() {
@@ -32,27 +37,39 @@ function onOpen() {
 }
 
 function ok() {
+  const questions = qDialogForm.questions.filter(q => !!q)
+  if (questions.length < 2) {
+    setError()
+    return
+  }
   withLoadingFn(async () => {
     if (props.id) {
       await updateQuestion({
         id: props.id,
-        ...qDialogForm,
+        title: qDialogForm.title,
+        questions,
       })
     }
     else {
       await insert({
         quiz_id: props.quizId,
-        ...qDialogForm,
+        title: qDialogForm.title,
+        questions,
       })
     }
     emits('create')
     qDialogVisible.value = false
   })
 }
+
+function setError() {
+  hasError.value = true
+  setTimeout(() => (hasError.value = false), 300)
+}
 </script>
 
 <template>
-  <el-dialog v-model="qDialogVisible" title="Quiz" width="90%" max-w="600px" min-w="400px" @open="onOpen">
+  <el-dialog v-model="qDialogVisible" title="Quiz" width="90%" max-w="600px" min-w="400px" :class="{ shake: hasError }" @open="onOpen">
     <el-form v-loading="loading" :model="qDialogForm" label-width="auto">
       <el-form-item label="Title">
         <el-input v-model="qDialogForm.title" autocomplete="off" />
