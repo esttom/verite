@@ -70,9 +70,9 @@ export function useSupabaseQuiz() {
     return data
   }
 
-  const updateClose = async (param: QuizUpdateStateParam) => {
-    const { id, close } = param
-    const { data, error } = await client.from('quiz').update({ close }).eq('id', id)
+  const updateState = async (param: QuizUpdateStateParam) => {
+    const { id, close, sent } = param
+    const { data, error } = await client.from('quiz').update({ close, sent }).eq('id', id)
     if (error) {
       ElMessage({
         type: 'error',
@@ -100,7 +100,7 @@ export function useSupabaseQuiz() {
     selectById,
     insert,
     updateQuestion,
-    updateClose,
+    updateState,
     remove,
   }
 }

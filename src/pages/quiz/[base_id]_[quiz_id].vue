@@ -39,20 +39,20 @@ const headers = [
 
 const router = useRouter()
 const { insert: questionnaireDetailInsert } = useSupabaseQuestionnaireDetail()
-const { select, updateClose } = useSupabaseQuiz()
+const { select, updateState } = useSupabaseQuiz()
 const { loading, withLoadingFn } = useLoading()
 
-withLoadingFn(async () => {
-  await selectData()
-})
+selectData()
 
 function home() {
   router.push('/admin/dashboard')
 }
 
 async function selectData() {
-  const data = await select(quizId)
-  contents.value = data
+  await withLoadingFn(async () => {
+    const data = await select(quizId)
+    contents.value = data
+  })
 }
 
 function openQuizDialog(title: string, questions: string[], id?: string) {
@@ -63,10 +63,17 @@ function openQuizDialog(title: string, questions: string[], id?: string) {
 }
 
 function changeQuiz(row: any) {
+  if (!sentCheck(row.sent)) {
+    return
+  }
   openQuizDialog(row.title, row.questions, row.id)
 }
 
 async function sendQuiz(row: any) {
+  if (!sentCheck(row.sent)) {
+    return
+  }
+
   // eslint-disable-next-line no-alert
   if (!window.confirm('Are you sure you want to send quiz?')) {
     return
@@ -79,23 +86,42 @@ async function sendQuiz(row: any) {
     stamp: false,
     quiz_id: row.id,
   })
+  await updateState({
+    id: row.id,
+    sent: true,
+  })
+  await selectData()
   // eslint-disable-next-line no-alert
   alert('add quiz!')
 }
 
-function closeQuiz(row: any) {
-  updateClose({
+async function closeQuiz(row: any) {
+  if (row.close) {
+    // eslint-disable-next-line no-alert
+    alert('already close')
+    return
+  }
+
+  await updateState({
     id: row.id,
     close: true,
   })
+  await selectData()
   // eslint-disable-next-line no-alert
   alert('response are closed!')
 }
 
 function onCreate() {
-  withLoadingFn(async () => {
-    await selectData()
-  })
+  selectData()
+}
+
+function sentCheck(sent: boolean) {
+  if (sent) {
+    // eslint-disable-next-line no-alert
+    alert('already sent')
+    return false
+  }
+  return true
 }
 </script>
 
