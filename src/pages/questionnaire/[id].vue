@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ChatDotRound, QuestionFilled } from '@element-plus/icons-vue'
+import { QuestionFilled } from '@element-plus/icons-vue'
 import { ElNotification, type NotificationHandle } from 'element-plus'
 
 interface QuestionnaireDetailRecord {
@@ -193,11 +193,35 @@ onUnmounted(() => {
               <QuizCard :base-id="baseId" :quiz-id="item.quiz_id" />
             </div>
             <div v-else mb-3 w-full flex flex-col>
-              <div w-full flex items-center>
-                <div p="1" mr="4" h-fit border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
-                  <div i-carbon-chat-bot text-2xl color="white" />
+              <div items-top w-full flex>
+                <div class="relative mt-1 h-8 w-8 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-600">
+                  <svg class="absolute h-10 w-10 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
                 </div>
-                <div w-full flex flex-col>
+                <div class="ml-2 w-full">
+                  <div class="w-full flex items-center border-gray-200 rounded-e-xl rounded-es-xl bg-gray-100 px-3 py-2.5 dark:bg-gray-700">
+                    <div class="flex-grow whitespace-pre-wrap dark:text-white">
+                      {{ item.content }}
+                    </div>
+
+                    <div v-if="authenticated" @click="onClickFixMessage(item.id, item.fixed)">
+                      clip
+                    </div>
+
+                    <svg class="mr-2 h-[22px] w-[22px] cursor-pointer dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" @click="toggleShowReply(item.id)">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7.556 8.5h8m-8 3.5H12m7.111-7H4.89a.896.896 0 0 0-.629.256.868.868 0 0 0-.26.619v9.25c0 .232.094.455.26.619A.896.896 0 0 0 4.89 16H9l3 4 3-4h4.111a.896.896 0 0 0 .629-.256.868.868 0 0 0 .26-.619v-9.25a.868.868 0 0 0-.26-.619.896.896 0 0 0-.63-.256Z" />
+                    </svg>
+
+                    <div v-loading="item.loading" class="flex" items="center" @click="onFavoriteUpdate(item.id, item.favorite, item.clicked)">
+                      <svg :class="{ 'text-pink': item.clicked }" class="h-[22px] w-[22px] cursor-pointer dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z" />
+                      </svg>
+                      <div class="dark:text-white" align="left" w-16px text-sm>
+                        {{ item.favorite }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div w-full flex flex-col>
                   <div items="center" class="card" w-full flex bg-slate-50 py-3 pr-3 border="rounded">
                     <div w="full" whitespace-pre-wrap>
                       {{ item.content }}
@@ -217,10 +241,10 @@ onUnmounted(() => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
               <div flex>
-                <div w-52px />
+                <div w-40px />
                 <div w-full pl-1>
                   <div v-if="item.replies.length > 0" items="center" cursor="pointer" flex pl-1 pt-1 @click="toggleShowReply(item.id)">
                     <div text="sm color-#8a8bf9">
@@ -231,7 +255,18 @@ onUnmounted(() => {
                   <div v-if="item.showReply" mt-1 border-l-3 border-slate-300 p-l-6>
                     <TransitionGroup name="list" tag="div">
                       <div v-for="(reply, idx) in item.replies" :key="idx" mb-2>
-                        <div flex items-center>
+                        <div w-full flex items-center>
+                          <div class="relative h-8 w-8 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-600">
+                            <svg class="absolute h-10 w-10 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
+                          </div>
+                          <div class="ml-2 w-full">
+                            <div class="w-full flex items-center border-gray-200 rounded-e-xl rounded-es-xl bg-gray-100 px-3 py-2.5 dark:bg-gray-700">
+                              <div class="flex-grow dark:text-white" whitespace-pre-wrap>
+                                {{ reply }}
+                              </div>
+                            </div>
+                          </div>
+                        <!-- <div flex items-center>
                           <div p="1" mr="4" h-fit border="rounded" style="background: linear-gradient(45deg, #9392FD, #F395F5);">
                             <div i-carbon-chat-bot text-sm color="white" />
                           </div>
@@ -240,6 +275,7 @@ onUnmounted(() => {
                               {{ reply }}
                             </div>
                           </div>
+                        </div> -->
                         </div>
                       </div>
                     </TransitionGroup>
