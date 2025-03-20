@@ -59,9 +59,9 @@ function setPercentage() {
 </script>
 
 <template>
-  <div v-loading="loading" class="mb-3 max-w-420px border border-gray-200 rounded-lg bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800" h-fit>
-    <h5 class="mb-3 inline-flex items-center text-base font-semibold dark:text-white">
-      <svg class="mr-1 h-[22px] w-[22px] text-blue-700 dark:text-blue-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <div v-loading="loading" class="mb-3 max-w-420px border border-blue-500 rounded-lg bg-white p-4 shadow-sm dark:border-blue-600 dark:bg-gray-800" h-fit>
+    <h5 class="mb-3 flex items-center text-base font-semibold dark:text-white">
+      <svg class="mr-1 h-[22px] w-[22px] text-blue-500 dark:text-blue-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
         <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm9.008-3.018a1.502 1.502 0 0 1 2.522 1.159v.024a1.44 1.44 0 0 1-1.493 1.418 1 1 0 0 0-1.037.999V14a1 1 0 1 0 2 0v-.539a3.44 3.44 0 0 0 2.529-3.256 3.502 3.502 0 0 0-7-.255 1 1 0 0 0 2 .076c.014-.398.187-.774.48-1.044Zm.982 7.026a1 1 0 1 0 0 2H12a1 1 0 1 0 0-2h-.01Z" clip-rule="evenodd" />
       </svg>
       <div>
@@ -70,9 +70,9 @@ function setPercentage() {
     </h5>
 
     <template v-if="close">
-      <div class="space-y-2">
+      <div class="space-y-3">
         <div v-for="(question, idx) in questions" :key="idx" class="relative w-full overflow-hidden rounded-2xl bg-gray-400">
-          <div class="absolute left-0 top-0 h-full bg-[#8a8bf9]" :style="`width: ${question.percentage}%`" />
+          <div class="absolute left-0 top-0 h-full bg-blue-500" :style="`width: ${question.percentage}%`" />
           <div class="relative z-10 px-3 py-[1px] text-sm text-white">
             {{ question.text }} - {{ question.percentage }}%
           </div>
@@ -85,7 +85,7 @@ function setPercentage() {
           <button
             v-for="(question, idx) in questions"
             :key="idx"
-            class="w-full transform border-1 border-blue-600 rounded-2xl px-3 py-[1px] text-sm text-blue-600 shadow-sm hover:bg-blue-600 dark:text-white hover:text-white"
+            class="w-full transform border-1 border-blue-500 rounded-2xl px-3 py-[1px] text-sm text-blue-500 shadow-sm dark:border-blue-600 hover:bg-blue-600 dark:text-white hover:text-white"
             @click="sendAnswer(idx)"
           >
             {{ question.text }}

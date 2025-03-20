@@ -174,15 +174,15 @@ onUnmounted(() => {
 
 <template>
   <div v-loading.fullscreen.lock="loading" h-full w-full items="center" flex flex-col>
-    <div class="max-w-8xl mx-auto w-full flex items-center justify-between px-3 py-3 lg:px-4">
+    <div class="max-w-8xl mx-auto mb-3 w-full flex items-center justify-between border-b-1 px-3 pb-2 dark:border-gray-700 lg:px-4">
       <div />
       <div @click="home">
         <img src="/logo.png" alt="logo" cursor="pointer" width="42px" text="center">
       </div>
-      <svg v-if="isDark" class="h-[20px] w-[20px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" @click="toggle()">
+      <svg v-if="isDark" class="h-[20px] w-[20px] cursor-pointer text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" @click="toggle()">
         <path fill-rule="evenodd" d="M13 3a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0V3ZM6.343 4.929A1 1 0 0 0 4.93 6.343l1.414 1.414a1 1 0 0 0 1.414-1.414L6.343 4.929Zm12.728 1.414a1 1 0 0 0-1.414-1.414l-1.414 1.414a1 1 0 0 0 1.414 1.414l1.414-1.414ZM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm-9 4a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2H3Zm16 0a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2h-2ZM7.757 17.657a1 1 0 1 0-1.414-1.414l-1.414 1.414a1 1 0 1 0 1.414 1.414l1.414-1.414Zm9.9-1.414a1 1 0 0 0-1.414 1.414l1.414 1.414a1 1 0 0 0 1.414-1.414l-1.414-1.414ZM13 19a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0v-2Z" clip-rule="evenodd" />
       </svg>
-      <svg v-else class="h-[20px] w-[20px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" @click="toggle()">
+      <svg v-else class="h-[20px] w-[20px] cursor-pointer text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" @click="toggle()">
         <path fill-rule="evenodd" d="M11.675 2.015a.998.998 0 0 0-.403.011C6.09 2.4 2 6.722 2 12c0 5.523 4.477 10 10 10 4.356 0 8.058-2.784 9.43-6.667a1 1 0 0 0-1.02-1.33c-.08.006-.105.005-.127.005h-.001l-.028-.002A5.227 5.227 0 0 0 20 14a8 8 0 0 1-8-8c0-.952.121-1.752.404-2.558a.996.996 0 0 0 .096-.428V3a1 1 0 0 0-.825-.985Z" clip-rule="evenodd" />
       </svg>
     </div>
@@ -208,19 +208,19 @@ onUnmounted(() => {
                       {{ item.content }}
                     </div>
 
-                    <svg v-if="authenticated" class="mr-2 h-[22px] w-[22px] cursor-pointer text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" @click="onClickFixMessage(item.id, item.fixed)">
+                    <svg v-if="authenticated" :class="{ 'text-orange': item.fixed, 'dark:text-gray-300': !item.fixed }" class="mr-2 h-[22px] w-[22px] cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" @click="onClickFixMessage(item.id, item.fixed)">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 8v8a5 5 0 1 0 10 0V6.5a3.5 3.5 0 1 0-7 0V15a2 2 0 0 0 4 0V8" />
                     </svg>
 
-                    <svg class="mr-2 h-[22px] w-[22px] cursor-pointer dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" @click="toggleShowReply(item.id)">
+                    <svg class="mr-2 h-[22px] w-[22px] cursor-pointer dark:text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" @click="toggleShowReply(item.id)">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7.556 8.5h8m-8 3.5H12m7.111-7H4.89a.896.896 0 0 0-.629.256.868.868 0 0 0-.26.619v9.25c0 .232.094.455.26.619A.896.896 0 0 0 4.89 16H9l3 4 3-4h4.111a.896.896 0 0 0 .629-.256.868.868 0 0 0 .26-.619v-9.25a.868.868 0 0 0-.26-.619.896.896 0 0 0-.63-.256Z" />
                     </svg>
 
                     <div v-loading="item.loading" class="flex" items="center" @click="onFavoriteUpdate(item.id, item.favorite, item.clicked)">
-                      <svg :class="{ 'text-pink': item.clicked, 'dark:text-white': !item.clicked }" class="h-[22px] w-[22px] cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <svg :class="{ 'text-pink': item.clicked, 'dark:text-gray-300': !item.clicked }" class="h-[22px] w-[22px] cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z" />
                       </svg>
-                      <div class="ml-0.5 dark:text-white" align="left" w-16px text-sm>
+                      <div class="ml-0.5 dark:text-gray-300" align="left" w-16px text-sm>
                         {{ item.favorite }}
                       </div>
                     </div>
@@ -228,15 +228,15 @@ onUnmounted(() => {
                 </div>
               </div>
               <div flex>
-                <div w-40px />
+                <div w-34px />
                 <div w-full pl-1>
                   <div v-if="item.replies.length > 0" items="center" cursor="pointer" flex pl-1 pt-1 @click="toggleShowReply(item.id)">
-                    <div text="sm color-#8a8bf9">
+                    <div class="text-sm text-blue-500 dark:text-blue-600">
                       {{ `${item.replies.length} reply ` }}
                     </div>
-                    <div class="i-carbon-chevron-down" ml-0.5 mt-1 text-xs text="color-#8a8bf9" />
+                    <div class="i-carbon-chevron-down text-blue-500 dark:text-blue-600" ml-0.5 mt-1 text-xs />
                   </div>
-                  <div v-if="item.showReply" mt-1 border-l-3 border-slate-300 p-l-6>
+                  <div v-if="item.showReply" mt-3 border-l-3 border-slate-300 p-l-6>
                     <TransitionGroup name="list" tag="div">
                       <div v-for="(reply, idx) in item.replies" :key="idx" mb-2>
                         <div w-full flex items-center>
@@ -265,15 +265,15 @@ onUnmounted(() => {
       </Transition>
     </el-scrollbar>
 
-    <div v-if="list.length > 0" max-w="768px" justify="end" items="center" my-2 w-full flex>
-      <label class="inline-flex cursor-pointer items-center">
-        <input v-model="enableScroll" type="checkbox" class="peer sr-only">
-        <div class="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:border after:border-gray-300 dark:border-gray-600 after:rounded-full after:bg-white dark:bg-gray-700 peer-checked:bg-blue-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white dark:peer-checked:bg-blue-600 dark:peer-focus:ring-blue-800 rtl:peer-checked:after:-translate-x-full" />
-        <span class="ms-3 text-sm dark:text-gray-300">scroll</span>
-      </label>
-    </div>
-
-    <QuestionText v-model="questionText" placeholder="Write a message..." />
+    <QuestionText v-model="questionText" placeholder="Write a message...">
+      <template #bottom-left>
+        <label class="inline-flex cursor-pointer items-center">
+          <input v-model="enableScroll" type="checkbox" class="peer sr-only">
+          <div class="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:border after:border-gray-300 dark:border-gray-600 after:rounded-full after:bg-white dark:bg-gray-400 peer-checked:bg-blue-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white dark:peer-checked:bg-blue-600 dark:peer-focus:ring-blue-800 rtl:peer-checked:after:-translate-x-full" />
+          <span class="ml-2 text-sm dark:text-gray-300">scroll</span>
+        </label>
+      </template>
+    </QuestionText>
   </div>
 </template>
 
