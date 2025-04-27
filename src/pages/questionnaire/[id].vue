@@ -30,9 +30,7 @@ const fixMessagesHandler: Record<string, NotificationHandle['close']> = {}
 const scrollbarRef = ref()
 const enableScroll = ref(true)
 const questionText = ref('')
-const stampScrollbarRef = ref()
-const stampPopupVisible = ref(false)
-const newStampSrc = ref<string | undefined>(undefined)
+const chatStampRef = ref()
 const list = ref<QuestionnaireDetailRecord[]>([])
 
 withLoadingFn(async () => {
@@ -86,15 +84,8 @@ listen(baseId, (record) => {
   }
 
   if (record.stamp) {
-    newStampSrc.value = record.content
-    stampPopupVisible.value = true
-    setTimeout(() => {
-      stampScrollbarRef.value?.scrollTo({
-        left: stampScrollbarRef.value?.wrapRef.scrollWidth,
-        behavior: 'smooth',
-      })
-    }, 200)
-    setTimeout(() => stampPopupVisible.value = false, 3000)
+    chatStampRef.value?.scroll()
+    chatStampRef.value?.popup(record.content)
   }
 }, (record) => {
   const index = list.value.findIndex(item => item.id === record.id)
@@ -197,13 +188,18 @@ onUnmounted(() => {
             <div v-if="item.quiz_id">
               <QuizCard :base-id="baseId" :quiz-id="item.quiz_id" />
             </div>
+            <template v-else-if="item.stamp">
+              <Teleport to="#stamp-container" defer>
+                <img :src="item.content" class="w-16">
+              </Teleport>
+            </template>
             <div v-else mb-3 w-full flex flex-col>
               <div items-top w-full flex>
                 <div class="relative mt-1 h-8 w-8 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-600">
                   <svg class="absolute h-10 w-10 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
                 </div>
                 <div class="ml-2 w-full">
-                  <div class="w-full flex items-center border-gray-200 rounded-e-xl rounded-es-xl bg-gray-100 px-3 py-2.5 dark:bg-gray-700">
+                  <div class="w-full flex items-center border-gray-200 rounded-e-xl rounded-es-xl bg-gray-100 px-3 py-2.5 dark:bg-gray-600">
                     <div class="flex-grow whitespace-pre-wrap break-all">
                       {{ item.content }}
                     </div>
@@ -268,6 +264,8 @@ onUnmounted(() => {
         </div>
       </Transition>
     </el-scrollbar>
+
+    <ChatStamp ref="chatStampRef" />
 
     <QuestionText v-model="questionText" placeholder="Write a message...">
       <template #bottom-left>
