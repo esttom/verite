@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ChatStamp: typeof import('./src/components/chat/ChatStamp.vue')['default']
     CustomRouter: typeof import('./src/components/CustomRouter.vue')['default']
     CustomTable: typeof import('./src/components/CustomTable.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -30,6 +31,7 @@ declare module 'vue' {
     QuizDialog: typeof import('./src/components/QuizDialog.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StampList: typeof import('./src/components/chat/StampList.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
