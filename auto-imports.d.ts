@@ -17,6 +17,7 @@ declare global {
   const computedWithControl: typeof import('@vueuse/core')['computedWithControl']
   const controlledComputed: typeof import('@vueuse/core')['controlledComputed']
   const controlledRef: typeof import('@vueuse/core')['controlledRef']
+  const copyToClipboard: typeof import('./src/composables/utils/copy')['copyToClipboard']
   const createApp: typeof import('vue')['createApp']
   const createEventHook: typeof import('@vueuse/core')['createEventHook']
   const createGlobalState: typeof import('@vueuse/core')['createGlobalState']
@@ -202,6 +203,7 @@ declare global {
   const useMediaQuery: typeof import('@vueuse/core')['useMediaQuery']
   const useMemoize: typeof import('@vueuse/core')['useMemoize']
   const useMemory: typeof import('@vueuse/core')['useMemory']
+  const useMessage: typeof import('./src/composables/utils/message')['useMessage']
   const useModel: typeof import('vue')['useModel']
   const useMounted: typeof import('@vueuse/core')['useMounted']
   const useMouse: typeof import('@vueuse/core')['useMouse']
@@ -251,10 +253,13 @@ declare global {
   const useStyleTag: typeof import('@vueuse/core')['useStyleTag']
   const useSupabase: typeof import('./src/composables/supabase/setting')['useSupabase']
   const useSupabaseAuth: typeof import('./src/composables/supabase/auth')['useSupabaseAuth']
+  const useSupabaseChat: typeof import('./src/composables/supabase/chat')['useSupabaseChat']
+  const useSupabaseChatDetail: typeof import('./src/composables/supabase/chat-detail')['useSupabaseChatDetail']
   const useSupabaseQuestionnaire: typeof import('./src/composables/supabase/questionaire')['useSupabaseQuestionnaire']
   const useSupabaseQuestionnaireDetail: typeof import('./src/composables/supabase/questionnaire-detail')['useSupabaseQuestionnaireDetail']
   const useSupabaseQuiz: typeof import('./src/composables/supabase/quiz')['useSupabaseQuiz']
   const useSupabaseQuizDetail: typeof import('./src/composables/supabase/quiz-detail')['useSupabaseQuizDetail']
+  const useSupabaseStamp: typeof import('./src/composables/supabase/stamp')['useSupabaseStamp']
   const useSupported: typeof import('@vueuse/core')['useSupported']
   const useSwipe: typeof import('@vueuse/core')['useSwipe']
   const useTemplateRef: typeof import('vue')['useTemplateRef']
@@ -329,6 +334,7 @@ declare module 'vue' {
     readonly computedWithControl: UnwrapRef<typeof import('@vueuse/core')['computedWithControl']>
     readonly controlledComputed: UnwrapRef<typeof import('@vueuse/core')['controlledComputed']>
     readonly controlledRef: UnwrapRef<typeof import('@vueuse/core')['controlledRef']>
+    readonly copyToClipboard: UnwrapRef<typeof import('./src/composables/utils/copy')['copyToClipboard']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
     readonly createEventHook: UnwrapRef<typeof import('@vueuse/core')['createEventHook']>
     readonly createGlobalState: UnwrapRef<typeof import('@vueuse/core')['createGlobalState']>
@@ -508,6 +514,7 @@ declare module 'vue' {
     readonly useMediaQuery: UnwrapRef<typeof import('@vueuse/core')['useMediaQuery']>
     readonly useMemoize: UnwrapRef<typeof import('@vueuse/core')['useMemoize']>
     readonly useMemory: UnwrapRef<typeof import('@vueuse/core')['useMemory']>
+    readonly useMessage: UnwrapRef<typeof import('./src/composables/utils/message')['useMessage']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
     readonly useMounted: UnwrapRef<typeof import('@vueuse/core')['useMounted']>
     readonly useMouse: UnwrapRef<typeof import('@vueuse/core')['useMouse']>
@@ -556,10 +563,13 @@ declare module 'vue' {
     readonly useStyleTag: UnwrapRef<typeof import('@vueuse/core')['useStyleTag']>
     readonly useSupabase: UnwrapRef<typeof import('./src/composables/supabase/setting')['useSupabase']>
     readonly useSupabaseAuth: UnwrapRef<typeof import('./src/composables/supabase/auth')['useSupabaseAuth']>
+    readonly useSupabaseChat: UnwrapRef<typeof import('./src/composables/supabase/chat')['useSupabaseChat']>
+    readonly useSupabaseChatDetail: UnwrapRef<typeof import('./src/composables/supabase/chat-detail')['useSupabaseChatDetail']>
     readonly useSupabaseQuestionnaire: UnwrapRef<typeof import('./src/composables/supabase/questionaire')['useSupabaseQuestionnaire']>
     readonly useSupabaseQuestionnaireDetail: UnwrapRef<typeof import('./src/composables/supabase/questionnaire-detail')['useSupabaseQuestionnaireDetail']>
     readonly useSupabaseQuiz: UnwrapRef<typeof import('./src/composables/supabase/quiz')['useSupabaseQuiz']>
     readonly useSupabaseQuizDetail: UnwrapRef<typeof import('./src/composables/supabase/quiz-detail')['useSupabaseQuizDetail']>
+    readonly useSupabaseStamp: UnwrapRef<typeof import('./src/composables/supabase/stamp')['useSupabaseStamp']>
     readonly useSupported: UnwrapRef<typeof import('@vueuse/core')['useSupported']>
     readonly useSwipe: UnwrapRef<typeof import('@vueuse/core')['useSwipe']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>

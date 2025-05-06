@@ -7,10 +7,9 @@ definePage({
 
 const router = useRouter()
 const { loading, withLoadingFn } = useLoading()
-const { select, remove } = useSupabaseQuestionnaire()
-const { remove: removeDetail } = useSupabaseQuestionnaireDetail()
-const { remove: removeQuiz } = useSupabaseQuiz()
-const { remove: removeQuizDetail } = useSupabaseQuizDetail()
+const { select, remove: removeChat } = useSupabaseChat()
+const { remove: removeChatDetail } = useSupabaseChatDetail()
+const { remove: removeStamp } = useSupabaseStamp()
 
 const headers = [
   {
@@ -26,19 +25,13 @@ const headers = [
     prop: 'action',
     label: 'Go',
     width: '70',
-    action: moveToRoom,
-  },
-  {
-    prop: 'action',
-    label: 'Quiz',
-    width: '80',
-    action: moveToQuiz,
+    action: moveToChat,
   },
   {
     prop: 'action',
     label: 'Copy',
     width: '80',
-    action: copyToClipboard,
+    action: copyUrl,
   },
   {
     prop: 'action',
@@ -56,12 +49,8 @@ withLoadingFn(async () => {
   await selectData()
 })
 
-async function moveToRoom(row: any) {
-  router.push(`/questionnaire/${row.id}`)
-}
-
-async function moveToQuiz(row: any) {
-  router.push(`/quiz/${row.id}_${row.quiz_id}`)
+async function moveToChat(row: any) {
+  router.push(`/chat/${row.id}`)
 }
 
 async function deleteData(row: any) {
@@ -72,10 +61,9 @@ async function deleteData(row: any) {
 
   withLoadingFn(async () => {
     await Promise.all([
-      removeDetail(row.id),
-      remove(row.id),
-      removeQuiz(row.quiz_id),
-      removeQuizDetail(row.id),
+      removeChatDetail(row.id),
+      removeChat(row.id),
+      removeStamp(row.id),
     ])
     await selectData()
   })
@@ -89,52 +77,12 @@ function onCreate() {
 
 async function selectData() {
   const data = await select()
-  contents.value = data
+  contents.value = data ?? []
 }
 
-// from vitepress
-function copyToClipboard(row: any) {
-  const url = `${window.location.origin}/questionnaire/${row.id}`
-  try {
-    return navigator.clipboard.writeText(url)
-  }
-  catch {
-    const element = document.createElement('textarea')
-    const previouslyFocusedElement = document.activeElement
-
-    element.value = url
-
-    // Prevent keyboard from showing on mobile
-    element.setAttribute('readonly', '')
-
-    element.style.contain = 'strict'
-    element.style.position = 'absolute'
-    element.style.left = '-9999px'
-    element.style.fontSize = '12pt' // Prevent zooming on iOS
-
-    const selection = document.getSelection()
-    const originalRange = selection ? selection.rangeCount > 0 && selection.getRangeAt(0) : null
-
-    document.body.appendChild(element)
-    element.select()
-
-    // Explicit selection workaround for iOS
-    element.selectionStart = 0
-    element.selectionEnd = url.length
-
-    document.execCommand('copy')
-    document.body.removeChild(element)
-
-    if (originalRange) {
-      selection!.removeAllRanges() // originalRange can't be truthy when selection is falsy
-      selection!.addRange(originalRange)
-    }
-
-    // Get the focus back on the previously focused element, if any
-    if (previouslyFocusedElement) {
-      (previouslyFocusedElement as HTMLElement).focus()
-    }
-  }
+function copyUrl(row: any) {
+  const url = `${window.location.origin}/chat/${row.id}`
+  copyToClipboard(url)
 }
 </script>
 
@@ -143,17 +91,17 @@ function copyToClipboard(row: any) {
     <div w="full" flex justify="between" items="end">
       <div flex="column">
         <div class="text-xl">
-          Questionnaire
+          Chat
         </div>
         <p class="text-center text-sm text-gray-500" op-80>
-          anonymous questionnaire
+          チャット画面を作成します。
         </p>
       </div>
       <div>
         <el-button color="#626aef" @click="qDialogVisible = true">
           Create
         </el-button>
-        <QuestionDialog v-model="qDialogVisible" @create="onCreate" />
+        <ChatCreateDialog v-model="qDialogVisible" @create="onCreate" />
       </div>
     </div>
 

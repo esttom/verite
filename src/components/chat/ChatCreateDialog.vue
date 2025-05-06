@@ -4,7 +4,7 @@ const emits = defineEmits(['create'])
 const qDialogVisible = defineModel<boolean>({ default: false })
 
 const { context } = useUserContext()
-const { insert } = useSupabaseQuestionnaire()
+const { insert } = useSupabaseChat()
 const { loading, withLoadingFn } = useLoading()
 
 const qDialogForm = reactive({
