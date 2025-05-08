@@ -9,9 +9,14 @@ interface ChatInsertParam {
 export function useSupabaseChat() {
   const client = useSupabase()
 
-  const select = async () => {
-    const { data, error } = await client.from('chat').select()
+  const selectByUserId = async (userId: string) => {
+    const { data, error } = await client.from('chat').select().eq('user_id', userId)
     return supabaseResponse(data, error)
+  }
+
+  const selectById = async (id: string) => {
+    const { data, error } = await client.from('chat').select().eq('id', id).single()
+    return supabaseResponse(data!, error)
   }
 
   const insert = async (param: ChatInsertParam) => {
@@ -25,7 +30,8 @@ export function useSupabaseChat() {
   }
 
   return {
-    select,
+    selectById,
+    selectByUserId,
     insert,
     remove,
   }

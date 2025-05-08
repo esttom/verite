@@ -5,9 +5,10 @@ definePage({
   },
 })
 
+const { context } = useUserContext()
 const router = useRouter()
 const { loading, withLoadingFn } = useLoading()
-const { select, remove: removeChat } = useSupabaseChat()
+const { selectByUserId, remove: removeChat } = useSupabaseChat()
 const { remove: removeChatDetail } = useSupabaseChatDetail()
 const { remove: removeStamp } = useSupabaseStamp()
 
@@ -76,7 +77,7 @@ function onCreate() {
 }
 
 async function selectData() {
-  const data = await select()
+  const data = await selectByUserId(context.userId)
   contents.value = data ?? []
 }
 

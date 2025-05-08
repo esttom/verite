@@ -87,6 +87,35 @@ export type Database = {
           },
         ]
       }
+      questionnaire: {
+        Row: {
+          answer: Json
+          chat_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          answer: Json
+          chat_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          answer?: Json
+          chat_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questionnaire_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "chat"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quiz: {
         Row: {
           created_at: string
@@ -94,6 +123,7 @@ export type Database = {
           questions: string[]
           status: string
           title: string
+          user_id: string
         }
         Insert: {
           created_at?: string
@@ -101,6 +131,7 @@ export type Database = {
           questions: string[]
           status?: string
           title: string
+          user_id: string
         }
         Update: {
           created_at?: string
@@ -108,6 +139,7 @@ export type Database = {
           questions?: string[]
           status?: string
           title?: string
+          user_id?: string
         }
         Relationships: []
       }
