@@ -73,7 +73,7 @@ function confirmCallback(ok: boolean) {
   visible.value = false
   ElNotification({
     icon: CircleCheckFilled,
-    message: 'ご回答ありがとうございました。',
+    message: 'ご回答ありがとうございました！',
     duration: 5000,
     customClass: 'text-green-600',
   })
@@ -111,9 +111,9 @@ function formClear() {
 
 <template>
   <div v-if="visible" tabindex="-1" aria-hidden="true" class="f-full fixed left-0 right-0 top-0 z-50 w-full flex items-center justify-center overflow-x-hidden overflow-y-auto bg-gray-500 bg-opacity-60 md:inset-0">
-    <div class="relative max-w-2xl w-full p-4" :class="{ shake: hasError }">
+    <div class="relative h-90vh max-w-2xl w-full overflow-y-auto" :class="{ shake: hasError }">
       <div class="relative rounded-lg bg-white p-4 shadow dark:bg-gray-800 sm:p-5">
-        <div class="mb-4 flex items-center justify-between border-b rounded-t pb-4 sm:mb-5 dark:border-gray-600">
+        <div class="mb-2 flex items-center justify-between border-b rounded-t pb-4 sm:mb-5 dark:border-gray-600">
           <h3 class="text-lg text-gray-900 font-semibold dark:text-white">
             アンケート
           </h3>
@@ -123,7 +123,7 @@ function formClear() {
           </button>
         </div>
         <form action="#" @submit.prevent="preSubmit">
-          <div class="grid mb-3 h-70vh gap-3 overflow-y-auto pr-3 sm:grid-cols-2">
+          <div class="grid mb-3 gap-3 pr-3 sm:grid-cols-2">
             <template v-for="form in forms" :key="form.id">
               <div class="sm:col-span-2">
                 <div v-if="form.type === 'radio'">

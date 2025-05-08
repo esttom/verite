@@ -94,7 +94,7 @@ async function stampInsertFn(stamp: string) {
     <CommonHeader />
 
     <template v-if="chatClosed">
-      <label class="mb-6 mt-12 text-center">チャットは終了しました。ありがとうございます。<br>宜しければアンケートにご協力ください。</label>
+      <label class="mb-6 mt-12 text-center">ご参加いただきありがとうございました。<br>宜しければアンケートにご協力ください。</label>
       <button type="button" class="mb-2 me-2 rounded-lg bg-blue-700 px-5 py-2.5 text-sm text-white font-medium dark:bg-blue-600 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="questionnaireDialog = !questionnaireDialog">
         アンケート回答
       </button>

@@ -9,6 +9,7 @@ declare global {
   const ACTIVE: typeof import('./src/composables/utils/const')['ACTIVE']
   const COMPLETED: typeof import('./src/composables/utils/const')['COMPLETED']
   const EffectScope: typeof import('vue')['EffectScope']
+  const RealtimeState: typeof import('./src/composables/utils/const')['RealtimeState']
   const WAITING: typeof import('./src/composables/utils/const')['WAITING']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
@@ -327,10 +328,8 @@ import { UnwrapRef } from 'vue'
 declare module 'vue' {
   interface GlobalComponents {}
   interface ComponentCustomProperties {
-    readonly ACTIVE: UnwrapRef<typeof import('./src/composables/utils/const')['ACTIVE']>
-    readonly COMPLETED: UnwrapRef<typeof import('./src/composables/utils/const')['COMPLETED']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
-    readonly WAITING: UnwrapRef<typeof import('./src/composables/utils/const')['WAITING']>
+    readonly RealtimeState: UnwrapRef<typeof import('./src/composables/utils/const')['RealtimeState']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
