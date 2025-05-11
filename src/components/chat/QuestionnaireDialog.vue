@@ -2,6 +2,8 @@
 import { CircleCheckFilled } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 
+const props = defineProps<{ submit: (form: Record<string, any>) => Promise<void> }>()
+
 const forms = reactive([
   {
     id: 'satisfy',
@@ -66,10 +68,11 @@ function preSubmit() {
   confirmRef.value?.show()
 }
 
-function confirmCallback(ok: boolean) {
+async function confirmCallback(ok: boolean) {
   if (!ok) {
     return
   }
+  await props.submit(forms.map(f => ({ [f.title]: f.value })))
   visible.value = false
   ElNotification({
     icon: CircleCheckFilled,

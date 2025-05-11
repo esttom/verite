@@ -1,7 +1,9 @@
-import { ElMessage } from 'element-plus'
+import type { QuizStateType } from '../utils'
+import { supabaseResponse } from './common'
 
 interface QuizInsertParam {
-  quiz_id: string
+  chat_id: string
+  user_id: string
   title: string
   questions: string[]
 }
@@ -14,85 +16,36 @@ interface QuizUpdateQuestionParam {
 
 interface QuizUpdateStateParam {
   id: string
-  close?: boolean
-  sent?: boolean
+  status: QuizStateType
 }
 
 export function useSupabaseQuiz() {
   const client = useSupabase()
 
-  const select = async (quizId: string) => {
-    const { data, error } = await client.from('quiz').select().eq('quiz_id', quizId).order('created_at', { ascending: true })
-    if (error) {
-      ElMessage({
-        type: 'error',
-        message: 'get quiz failed',
-      })
-      throw new Error(error.message)
-    }
-    return data
+  const select = async (chatId: string) => {
+    const { data, error } = await client.from('quiz').select().eq('chat_id', chatId).order('created_at', { ascending: true })
+    return supabaseResponse(data!, error)
   }
 
   const selectById = async (id: string) => {
     const { data, error } = await client.from('quiz').select().eq('id', id).single()
-    if (error) {
-      ElMessage({
-        type: 'error',
-        message: 'get quiz failed',
-      })
-      throw new Error(error.message)
-    }
-    return data
+    return supabaseResponse(data!, error)
   }
 
   const insert = async (param: QuizInsertParam) => {
     const { data, error } = await client.from('quiz').insert(param).select()
-    if (error) {
-      ElMessage({
-        type: 'error',
-        message: 'insert quiz failed',
-      })
-      throw new Error(error.message)
-    }
-    return data
+    return supabaseResponse(data, error)
   }
 
   const updateQuestion = async (param: QuizUpdateQuestionParam) => {
     const { id, title, questions } = param
     const { data, error } = await client.from('quiz').update({ title, questions }).eq('id', id)
-    if (error) {
-      ElMessage({
-        type: 'error',
-        message: 'update quiz failed',
-      })
-      throw new Error(error.message)
-    }
-    return data
+    return supabaseResponse(data, error)
   }
 
   const updateState = async (param: QuizUpdateStateParam) => {
-    const { id, close, sent } = param
-    const { data, error } = await client.from('quiz').update({ close, sent }).eq('id', id)
-    if (error) {
-      ElMessage({
-        type: 'error',
-        message: 'update quiz failed',
-      })
-      throw new Error(error.message)
-    }
-    return data
-  }
-
-  const remove = async (quizId: string) => {
-    const { data, error } = await client.from('quiz').delete().eq('quiz_id', quizId)
-    if (error) {
-      ElMessage({
-        type: 'error',
-        message: 'delete quiz failed',
-      })
-      throw new Error(error.message)
-    }
-    return data
+    const { data, error } = await client.from('quiz').update({ status: param.status }).eq('id', param.id)
+    return supabaseResponse(data, error)
   }
 
   return {
@@ -101,6 +54,5 @@ export function useSupabaseQuiz() {
     insert,
     updateQuestion,
     updateState,
-    remove,
   }
 }

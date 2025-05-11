@@ -37,11 +37,6 @@ export function useSupabaseStamp() {
     return supabaseResponse(data, error)
   }
 
-  const remove = async (chatId: string) => {
-    const { data, error } = await client.from('stamp').delete().eq('chat_id', chatId)
-    return supabaseResponse(data, error)
-  }
-
   onUnmounted(() => {
     unsubscribe()
   })
@@ -49,7 +44,7 @@ export function useSupabaseStamp() {
   return {
     select,
     subscribe,
+    unsubscribe,
     insert,
-    remove,
   }
 }

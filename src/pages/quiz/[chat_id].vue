@@ -1,6 +1,7 @@
 <script setup lang="ts">
-const baseId = useRoute('/quiz/[base_id]_[quiz_id]').params.base_id
-const quizId = useRoute('/quiz/[base_id]_[quiz_id]').params.quiz_id
+import { QuizState, type QuizStateType } from '~/composables'
+
+const chatId = useRoute('/quiz/[chat_id]').params.chat_id
 const qDialogId = ref<string | undefined>(undefined)
 const qDialogVisible = ref(false)
 const qDialogTitle = ref('')
@@ -20,7 +21,7 @@ const headers = [
   {
     prop: 'action',
     label: 'Change',
-    width: '90',
+    width: '100',
     action: changeQuiz,
   },
   {
@@ -38,7 +39,7 @@ const headers = [
 ]
 
 const router = useRouter()
-const { insert: questionnaireDetailInsert } = useSupabaseQuestionnaireDetail()
+const { insert: chatDetailInsert } = useSupabaseChatDetail()
 const { select, updateState } = useSupabaseQuiz()
 const { loading, withLoadingFn } = useLoading()
 
@@ -50,7 +51,7 @@ function home() {
 
 async function selectData() {
   await withLoadingFn(async () => {
-    const data = await select(quizId)
+    const data = await select(chatId)
     contents.value = data
   })
 }
@@ -63,32 +64,31 @@ function openQuizDialog(title: string, questions: string[], id?: string) {
 }
 
 function changeQuiz(row: any) {
-  if (!sentCheck(row.sent)) {
+  if (!statusCheck(row.status)) {
     return
   }
   openQuizDialog(row.title, row.questions, row.id)
 }
 
 async function sendQuiz(row: any) {
-  if (!sentCheck(row.sent)) {
+  if (!statusCheck(row.status)) {
     return
   }
 
   // eslint-disable-next-line no-alert
-  if (!window.confirm('Are you sure you want to send quiz?')) {
+  if (!window.confirm('クイズを送信して良いですか?')) {
     return
   }
 
-  await questionnaireDetailInsert({
-    base_id: baseId,
+  await chatDetailInsert({
+    chat_id: chatId,
     content: '',
     reply: null,
-    stamp: false,
     quiz_id: row.id,
   })
   await updateState({
     id: row.id,
-    sent: true,
+    status: ChatState.ACTIVE,
   })
   await selectData()
   // eslint-disable-next-line no-alert
@@ -96,29 +96,34 @@ async function sendQuiz(row: any) {
 }
 
 async function closeQuiz(row: any) {
-  if (row.close) {
+  if (row.status !== QuizState.ACTIVE) {
     // eslint-disable-next-line no-alert
-    alert('already close')
-    return
+    alert('このクイズは終了できません。')
+    return false
   }
 
   await updateState({
     id: row.id,
-    close: true,
+    status: ChatState.COMPLETED,
   })
   await selectData()
   // eslint-disable-next-line no-alert
-  alert('response are closed!')
+  alert('このクイズは終了しました。')
 }
 
 function onCreate() {
   selectData()
 }
 
-function sentCheck(sent: boolean) {
-  if (sent) {
+function statusCheck(status: QuizStateType) {
+  if (status === QuizState.ACTIVE) {
     // eslint-disable-next-line no-alert
-    alert('already sent')
+    alert('すでに送信されています。')
+    return false
+  }
+  else if (status === QuizState.COMPLETED) {
+    // eslint-disable-next-line no-alert
+    alert('すでに終了しています。')
     return false
   }
   return true
@@ -137,14 +142,14 @@ function sentCheck(sent: boolean) {
             Quiz
           </div>
           <p class="text-center text-sm text-gray-500" op-80>
-            create quiz
+            クイズを作成します。
           </p>
         </div>
         <div>
           <el-button color="#626aef" @click="openQuizDialog('', ['', '', '', ''])">
             Create
           </el-button>
-          <QuizDialog :id="qDialogId" v-model="qDialogVisible" :quiz-id="quizId" :title="qDialogTitle" :questions="qDialogQuestions" @create="onCreate" />
+          <QuizDialog :id="qDialogId" v-model="qDialogVisible" :chat-id="chatId" :title="qDialogTitle" :questions="qDialogQuestions" @create="onCreate" />
         </div>
       </div>
 

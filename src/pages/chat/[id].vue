@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import { type ChatItem, RealtimeState } from '~/composables'
+import { type ChatItem, ChatState, type ChatStateType } from '~/composables'
 
 const chatId = useRoute('/chat/[id]').params.id
 
 const { isAuth } = useUserContext()
-const { selectById } = useSupabaseChat()
-const { select, subscribe, update } = useSupabaseChatDetail()
+const { selectById, subscribe, unsubscribe, update } = useSupabaseChat()
+const { select: chatDetailSelect, subscribe: chatDetailSubscribe, update: chatDetailUpdate, unsubscribe: chatDetailUnsubscribe } = useSupabaseChatDetail()
 const { loading, withLoadingFn } = useLoading()
-const { insert: stampInsert, subscribe: stampSubscribe } = useSupabaseStamp()
+const { insert: stampInsert, subscribe: stampSubscribe, unsubscribe: stampUnsubscribe } = useSupabaseStamp()
+const { insert } = useSupabaseQuestionnaire()
 const { show, close } = useMessage()
 
 const authenticated = isAuth()
 
-const chatClosed = ref(false)
+const chatState = ref<ChatStateType>(ChatState.WAITING)
 const questionnaireDialog = ref(false)
 const enableScroll = ref(true)
 const questionText = ref('')
@@ -22,16 +23,23 @@ const chatList = ref<ChatItem[]>([])
 
 withLoadingFn(async () => {
   const chatInfo = await selectById(chatId)
-
-  if (chatInfo.status === RealtimeState.COMPLETED) {
-    chatClosed.value = true
-    return
+  chatState.value = chatInfo.status as ChatStateType
+  if (chatState.value !== ChatState.COMPLETED) {
+    chatSubscribeStart()
   }
+  if (chatState.value === ChatState.ACTIVE) {
+    await chatInitialize()
+  }
+})
 
-  chatSubscribeStart()
+async function chatInitialize() {
+  chatDetailSubscribeStart()
   stampSubscribeStart()
+  await chatListSelect()
+}
 
-  const data = await select(chatId) ?? []
+async function chatListSelect() {
+  const data = await chatDetailSelect(chatId) ?? []
   chatList.value = data.map((d) => {
     return {
       ...d,
@@ -41,10 +49,26 @@ withLoadingFn(async () => {
     }
   })
   chatList.value.filter(item => item.fixed).forEach(item => show(item.id, item.content))
-})
+}
 
 function chatSubscribeStart() {
   subscribe(chatId, (record) => {
+    chatState.value = record.status as ChatStateType
+    if (chatState.value === ChatState.ACTIVE) {
+      withLoadingFn(async () => {
+        await chatInitialize()
+      })
+    }
+    else if (chatState.value === ChatState.COMPLETED) {
+      unsubscribe()
+      chatDetailUnsubscribe()
+      stampUnsubscribe()
+    }
+  })
+}
+
+function chatDetailSubscribeStart() {
+  chatDetailSubscribe(chatId, (record) => {
     chatList.value.push({
       ...record,
       replyInput: '',
@@ -81,11 +105,19 @@ function stampSubscribeStart() {
 }
 
 async function onChatUpdate(item: ChatItem) {
-  await update({ id: item.id, fixed: item.fixed, favorite: item.favorite })
+  await chatDetailUpdate({ id: item.id, fixed: item.fixed, favorite: item.favorite })
 }
 
 async function stampInsertFn(stamp: string) {
   await stampInsert({ chat_id: chatId, content: stamp })
+}
+
+function onStateUpdate(status: ChatStateType) {
+  update({ id: chatId, status })
+}
+
+async function formSubmit(form: Record<string, any>) {
+  await insert({ chat_id: chatId, answer: form })
 }
 </script>
 
@@ -93,12 +125,15 @@ async function stampInsertFn(stamp: string) {
   <div v-loading.fullscreen.lock="loading" h-full w-full items="center" flex flex-col>
     <CommonHeader />
 
-    <template v-if="chatClosed">
+    <template v-if="chatState === ChatState.WAITING">
+      <label class="mb-6 mt-12 text-center">開催をお待ちください。</label>
+    </template>
+    <template v-else-if="chatState === ChatState.COMPLETED">
       <label class="mb-6 mt-12 text-center">ご参加いただきありがとうございました。<br>宜しければアンケートにご協力ください。</label>
       <button type="button" class="mb-2 me-2 rounded-lg bg-blue-700 px-5 py-2.5 text-sm text-white font-medium dark:bg-blue-600 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="questionnaireDialog = !questionnaireDialog">
         アンケート回答
       </button>
-      <QuestionnaireDialog v-model="questionnaireDialog" />
+      <QuestionnaireDialog v-model="questionnaireDialog" :submit="formSubmit" />
     </template>
     <template v-else>
       <ChatList ref="chatListRef" v-model="chatList" :chat-id="chatId" :authenticated="authenticated" @update="onChatUpdate" />
@@ -117,5 +152,7 @@ async function stampInsertFn(stamp: string) {
         </template>
       </ChatText>
     </template>
+
+    <ChatStateController v-if="authenticated" :chat-id="chatId" :state="chatState" @update="onStateUpdate" />
   </div>
 </template>

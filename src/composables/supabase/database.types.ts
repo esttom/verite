@@ -106,18 +106,11 @@ export type Database = {
           created_at?: string
           id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "questionnaire_chat_id_fkey"
-            columns: ["chat_id"]
-            isOneToOne: false
-            referencedRelation: "chat"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       quiz: {
         Row: {
+          chat_id: string
           created_at: string
           id: string
           questions: string[]
@@ -126,6 +119,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          chat_id: string
           created_at?: string
           id?: string
           questions: string[]
@@ -134,6 +128,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          chat_id?: string
           created_at?: string
           id?: string
           questions?: string[]
@@ -141,7 +136,15 @@ export type Database = {
           title?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "quiz_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "chat"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       quiz_detail: {
         Row: {

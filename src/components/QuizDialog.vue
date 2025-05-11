@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Close, Plus } from '@element-plus/icons-vue'
 
-const props = defineProps<{ quizId: string, id: string | undefined, title: string, questions: string[] }>()
+const props = defineProps<{ chatId: string, id: string | undefined, title: string, questions: string[] }>()
 const emits = defineEmits(['create'])
 
 const qDialogVisible = defineModel<boolean>({ default: false })
 
+const { context } = useUserContext()
 const { insert, updateQuestion } = useSupabaseQuiz()
 const { loading, withLoadingFn } = useLoading()
 
@@ -52,7 +53,8 @@ function ok() {
     }
     else {
       await insert({
-        quiz_id: props.quizId,
+        chat_id: props.chatId,
+        user_id: context.userId,
         title: qDialogForm.title,
         questions,
       })

@@ -8,6 +8,7 @@ export {}
 declare global {
   const ACTIVE: typeof import('./src/composables/utils/const')['ACTIVE']
   const COMPLETED: typeof import('./src/composables/utils/const')['COMPLETED']
+  const ChatState: typeof import('./src/composables/utils/const')['ChatState']
   const EffectScope: typeof import('vue')['EffectScope']
   const RealtimeState: typeof import('./src/composables/utils/const')['RealtimeState']
   const WAITING: typeof import('./src/composables/utils/const')['WAITING']
@@ -259,7 +260,7 @@ declare global {
   const useSupabaseAuth: typeof import('./src/composables/supabase/auth')['useSupabaseAuth']
   const useSupabaseChat: typeof import('./src/composables/supabase/chat')['useSupabaseChat']
   const useSupabaseChatDetail: typeof import('./src/composables/supabase/chat-detail')['useSupabaseChatDetail']
-  const useSupabaseQuestionnaire: typeof import('./src/composables/supabase/questionaire')['useSupabaseQuestionnaire']
+  const useSupabaseQuestionnaire: typeof import('./src/composables/supabase/questionnaire')['useSupabaseQuestionnaire']
   const useSupabaseQuestionnaireDetail: typeof import('./src/composables/supabase/questionnaire-detail')['useSupabaseQuestionnaireDetail']
   const useSupabaseQuiz: typeof import('./src/composables/supabase/quiz')['useSupabaseQuiz']
   const useSupabaseQuizDetail: typeof import('./src/composables/supabase/quiz-detail')['useSupabaseQuizDetail']
@@ -328,8 +329,8 @@ import { UnwrapRef } from 'vue'
 declare module 'vue' {
   interface GlobalComponents {}
   interface ComponentCustomProperties {
+    readonly ChatState: UnwrapRef<typeof import('./src/composables/utils/const')['ChatState']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
-    readonly RealtimeState: UnwrapRef<typeof import('./src/composables/utils/const')['RealtimeState']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
@@ -570,8 +571,7 @@ declare module 'vue' {
     readonly useSupabaseAuth: UnwrapRef<typeof import('./src/composables/supabase/auth')['useSupabaseAuth']>
     readonly useSupabaseChat: UnwrapRef<typeof import('./src/composables/supabase/chat')['useSupabaseChat']>
     readonly useSupabaseChatDetail: UnwrapRef<typeof import('./src/composables/supabase/chat-detail')['useSupabaseChatDetail']>
-    readonly useSupabaseQuestionnaire: UnwrapRef<typeof import('./src/composables/supabase/questionaire')['useSupabaseQuestionnaire']>
-    readonly useSupabaseQuestionnaireDetail: UnwrapRef<typeof import('./src/composables/supabase/questionnaire-detail')['useSupabaseQuestionnaireDetail']>
+    readonly useSupabaseQuestionnaire: UnwrapRef<typeof import('./src/composables/supabase/questionnaire')['useSupabaseQuestionnaire']>
     readonly useSupabaseQuiz: UnwrapRef<typeof import('./src/composables/supabase/quiz')['useSupabaseQuiz']>
     readonly useSupabaseQuizDetail: UnwrapRef<typeof import('./src/composables/supabase/quiz-detail')['useSupabaseQuizDetail']>
     readonly useSupabaseStamp: UnwrapRef<typeof import('./src/composables/supabase/stamp')['useSupabaseStamp']>

@@ -7,11 +7,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ChatAdminController: typeof import('./src/components/chat/ChatAdminController.vue')['default']
     ChatCreateDialog: typeof import('./src/components/chat/ChatCreateDialog.vue')['default']
     ChatList: typeof import('./src/components/chat/ChatList.vue')['default']
     ChatQuizCard: typeof import('./src/components/chat/ChatQuizCard.vue')['default']
     ChatStamp: typeof import('./src/components/chat/ChatStamp.vue')['default']
     ChatStampPopup: typeof import('./src/components/chat/ChatStampPopup.vue')['default']
+    ChatStateController: typeof import('./src/components/chat/ChatStateController.vue')['default']
     ChatText: typeof import('./src/components/chat/ChatText.vue')['default']
     CommonHeader: typeof import('./src/components/common/CommonHeader.vue')['default']
     ConfirmModal: typeof import('./src/components/common/ConfirmModal.vue')['default']

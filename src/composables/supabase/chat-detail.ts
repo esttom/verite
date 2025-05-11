@@ -55,11 +55,6 @@ export function useSupabaseChatDetail() {
     return supabaseResponse(data, error)
   }
 
-  const remove = async (chatId: string) => {
-    const { data, error } = await client.from('chat_detail').delete().eq('chat_id', chatId)
-    return supabaseResponse(data, error)
-  }
-
   onUnmounted(() => {
     unsubscribe()
   })
@@ -68,7 +63,6 @@ export function useSupabaseChatDetail() {
     select,
     update,
     insert,
-    remove,
     subscribe,
     unsubscribe,
   }

@@ -1,69 +1,49 @@
-import { ElMessage } from 'element-plus'
+import type { RealtimeChannel } from '@supabase/supabase-js'
+import { supabaseResponse } from './common'
 
 interface QuizDetailInsertParam {
-  base_id: string
   quiz_id: string
   answer: number
 }
 
 export function useSupabaseQuizDetail() {
+  type QuizDetailRecord = NonNullable<Awaited<ReturnType<typeof select>>>[number]
+
   const client = useSupabase()
+  let realtimeChannel: RealtimeChannel | null = null
 
   const select = async (quizId: string) => {
     const { data, error } = await client.from('quiz_detail').select().eq('quiz_id', quizId).order('created_at', { ascending: true })
-    if (error) {
-      ElMessage({
-        type: 'error',
-        message: 'get quiz detail failed',
-      })
-      throw new Error(error.message)
-    }
-    return data
+    return supabaseResponse(data!, error)
   }
 
   const insert = async (param: QuizDetailInsertParam) => {
     const { data, error } = await client.from('quiz_detail').insert(param).select()
-    if (error) {
-      ElMessage({
-        type: 'error',
-        message: 'insert quiz detail failed',
-      })
-      throw new Error(error.message)
-    }
-    return data
+    return supabaseResponse(data, error)
   }
 
-  const listen = (quizId: string, insertHandler: (record: any) => void) => {
-    client.channel('quiz_detail')
+  const subscribe = (quizId: string, handler: (record: QuizDetailRecord) => void) => {
+    realtimeChannel = client.channel(`quiz_detail_${quizId}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'quiz_detail', filter: `quiz_id=eq.${quizId}` }, (payload) => {
         if (payload.errors) {
-          ElMessage({
-            type: 'error',
-            message: 'get quiz detail message failed',
-          })
           throw new Error(payload.errors.join(','))
         }
-        insertHandler(payload.new)
+        handler(payload.new as QuizDetailRecord)
       })
       .subscribe()
   }
 
-  const remove = async (baseId: string) => {
-    const { data, error } = await client.from('quiz_detail').delete().eq('base_id', baseId)
-    if (error) {
-      ElMessage({
-        type: 'error',
-        message: 'delete quiz detail failed',
-      })
-      throw new Error(error.message)
-    }
-    return data
+  const unsubscribe = () => {
+    realtimeChannel?.unsubscribe()
   }
+
+  onUnmounted(() => {
+    unsubscribe()
+  })
 
   return {
     select,
     insert,
-    listen,
-    remove,
+    subscribe,
   }
 }

@@ -8,9 +8,7 @@ definePage({
 const { context } = useUserContext()
 const router = useRouter()
 const { loading, withLoadingFn } = useLoading()
-const { selectByUserId, remove: removeChat } = useSupabaseChat()
-const { remove: removeChatDetail } = useSupabaseChatDetail()
-const { remove: removeStamp } = useSupabaseStamp()
+const { selectByUserId, remove } = useSupabaseChat()
 
 const headers = [
   {
@@ -27,6 +25,12 @@ const headers = [
     label: 'Go',
     width: '70',
     action: moveToChat,
+  },
+  {
+    prop: 'action',
+    label: 'Quiz',
+    width: '80',
+    action: moveToQuiz,
   },
   {
     prop: 'action',
@@ -50,8 +54,12 @@ withLoadingFn(async () => {
   await selectData()
 })
 
-async function moveToChat(row: any) {
+function moveToChat(row: any) {
   router.push(`/chat/${row.id}`)
+}
+
+function moveToQuiz(row: any) {
+  router.push(`/quiz/${row.id}`)
 }
 
 async function deleteData(row: any) {
@@ -61,11 +69,7 @@ async function deleteData(row: any) {
   }
 
   withLoadingFn(async () => {
-    await Promise.all([
-      removeChatDetail(row.id),
-      removeChat(row.id),
-      removeStamp(row.id),
-    ])
+    await remove(row.id)
     await selectData()
   })
 }
