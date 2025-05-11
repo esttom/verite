@@ -16,7 +16,7 @@ const { loading, withLoadingFn } = useLoading()
 withLoadingFn(async () => {
   const data = await selectById(props.quizId)
   title.value = data.title
-  questions.value = data.questions?.map(q => ({ text: q, percentage: 0 })) ?? []
+  questions.value = data.questions.map(q => ({ text: q, percentage: 0 }))
   close.value = data.status === QuizState.COMPLETED
   if (!close.value) {
     listenAnswer()

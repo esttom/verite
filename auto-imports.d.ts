@@ -10,6 +10,7 @@ declare global {
   const COMPLETED: typeof import('./src/composables/utils/const')['COMPLETED']
   const ChatState: typeof import('./src/composables/utils/const')['ChatState']
   const EffectScope: typeof import('vue')['EffectScope']
+  const QuizState: typeof import('./src/composables/utils/const')['QuizState']
   const RealtimeState: typeof import('./src/composables/utils/const')['RealtimeState']
   const WAITING: typeof import('./src/composables/utils/const')['WAITING']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
@@ -331,6 +332,7 @@ declare module 'vue' {
   interface ComponentCustomProperties {
     readonly ChatState: UnwrapRef<typeof import('./src/composables/utils/const')['ChatState']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly QuizState: UnwrapRef<typeof import('./src/composables/utils/const')['QuizState']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>

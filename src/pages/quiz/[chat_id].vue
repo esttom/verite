@@ -92,7 +92,7 @@ async function sendQuiz(row: any) {
   })
   await selectData()
   // eslint-disable-next-line no-alert
-  alert('add quiz!')
+  alert('クイズを送信しました。')
 }
 
 async function closeQuiz(row: any) {
