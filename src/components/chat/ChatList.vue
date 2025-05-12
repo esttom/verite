@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import type { ChatItem } from '~/composables'
 
-const props = defineProps<{ chatId: string, authenticated: boolean, submit: (data: string | ChatItem) => Promise<void> }>()
-
-const emits = defineEmits<{
-  update: [value: ChatItem]
-}>()
+const props = defineProps<{ chatId: string, authenticated: boolean, submit: (data: string | ChatItem) => Promise<void>, update: (data: ChatItem) => Promise<void> }>()
 
 const list = defineModel<ChatItem[]>({ default: [] })
 
@@ -13,11 +9,15 @@ const scrollbarRef = ref()
 
 async function onClickFavorite(item: ChatItem) {
   const nextFavorite = item.favorite + (item.favorited ? -1 : 1)
-  emits('update', { ...item, favorite: nextFavorite })
+  await props.update({ ...item, favorite: nextFavorite })
+  const index = list.value.findIndex(i => i.id === item.id)
+  if (index >= 0) {
+    list.value[index].favorited = !list.value[index].favorited
+  }
 }
 
 async function onClickFixed(item: ChatItem) {
-  emits('update', { ...item, fixed: !item.fixed })
+  props.update({ ...item, fixed: !item.fixed })
 }
 
 async function onClickReply(item: ChatItem) {

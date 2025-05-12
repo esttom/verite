@@ -89,7 +89,6 @@ function chatSubscribeStart() {
         chatList.value[index] = {
           ...item,
           ...payload,
-          favorited: payload.favorite === item.favorite ? item.favorited : !item.favorited,
         }
 
         if (!item.fixed && payload.fixed) {
@@ -164,7 +163,7 @@ async function questionnaireSubmit(form: Record<string, any>) {
       <QuestionnaireDialog v-model="questionnaireDialog" :submit="questionnaireSubmit" />
     </template>
     <template v-else>
-      <ChatList ref="chatListRef" v-model="chatList" :chat-id="chatId" :authenticated="authenticated" :submit="chatSubmit" @update="chatUpdate" />
+      <ChatList ref="chatListRef" v-model="chatList" :chat-id="chatId" :authenticated="authenticated" :submit="chatSubmit" :update="chatUpdate" />
 
       <ChatStamp ref="chatStampRef" />
 
