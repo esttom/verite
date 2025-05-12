@@ -8,6 +8,13 @@ export function provideSupabase() {
   const client = createClient<Database>(
     import.meta.env.VITE_SUPABASE_URI,
     import.meta.env.VITE_SUPABASE_ANON_KEY,
+    {
+      realtime: {
+        params: {
+          eventsPerSecond: 20,
+        },
+      },
+    },
   )
   provide(SUPABASE_KEY, client)
 }

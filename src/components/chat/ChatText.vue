@@ -1,9 +1,12 @@
 <script setup lang="ts">
-const props = defineProps<{ chatId: string, placeholder: string, reply?: string }>()
+import type { ChatItem } from '~/composables'
+
+const props = defineProps<{ item?: ChatItem, submit: (data: string | ChatItem) => Promise<void> }>()
 
 const questionText = defineModel<string>({ default: '' })
 
-const { insert } = useSupabaseChatDetail()
+const rows = props.item ? '1' : '3'
+
 const { loading: messageLoading, withLoadingFn: messageLoadingFn } = useLoading()
 
 async function sendMessage() {
@@ -11,12 +14,13 @@ async function sendMessage() {
     return
   }
   messageLoadingFn(async () => {
-    await insert({
-      chat_id: props.chatId,
-      content: questionText.value,
-      quiz_id: null,
-      reply: null,
-    })
+    if (props.item) {
+      const reply = props.item.reply ?? []
+      await props.submit({ ...props.item, reply: [...reply, questionText.value] })
+    }
+    else {
+      await props.submit(questionText.value)
+    }
     questionText.value = ''
   })
 }
@@ -26,7 +30,7 @@ async function sendMessage() {
   <div w="full" max-w="768px">
     <div v-loading="messageLoading" class="w-full border border-gray-200 rounded-lg bg-gray-50 dark:border-gray-600 dark:bg-gray-700">
       <div class="rounded-t-lg bg-white px-4 py-3 dark:bg-gray-800">
-        <textarea v-model="questionText" :rows="props.reply ? '1' : '3'" class="w-full resize-none border-0 bg-white px-0 text-sm outline-none dark:bg-gray-800 dark:text-white focus:ring-0 dark:placeholder-gray-400" placeholder="Write a comment..." @keydown.ctrl.enter.prevent="sendMessage()" />
+        <textarea v-model="questionText" :rows="rows" class="w-full resize-none border-0 bg-white px-0 text-sm outline-none dark:bg-gray-800 dark:text-white focus:ring-0 dark:placeholder-gray-400" placeholder="Write a comment... (Ctrl + Enter)" @keydown.ctrl.enter.prevent="sendMessage()" />
       </div>
       <div class="relative flex items-center justify-between border-t border-gray-200 px-3 py-1 dark:border-gray-600">
         <div class="flex">

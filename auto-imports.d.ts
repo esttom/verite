@@ -11,6 +11,7 @@ declare global {
   const ChatState: typeof import('./src/composables/utils/const')['ChatState']
   const EffectScope: typeof import('vue')['EffectScope']
   const QuizState: typeof import('./src/composables/utils/const')['QuizState']
+  const REALTIME_SYMBOL: typeof import('./src/composables/supabase/realtime')['REALTIME_SYMBOL']
   const RealtimeState: typeof import('./src/composables/utils/const')['RealtimeState']
   const WAITING: typeof import('./src/composables/utils/const')['WAITING']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
@@ -83,6 +84,7 @@ declare global {
   const provide: typeof import('vue')['provide']
   const provideLoading: typeof import('./src/composables/loading')['provideLoading']
   const provideLocal: typeof import('@vueuse/core')['provideLocal']
+  const provideQuiz: typeof import('./src/composables/quiz/quiz')['provideQuiz']
   const provideSupabase: typeof import('./src/composables/supabase/setting')['provideSupabase']
   const provideUserContext: typeof import('./src/composables/context')['provideUserContext']
   const reactify: typeof import('@vueuse/core')['reactify']
@@ -237,6 +239,7 @@ declare global {
   const usePreferredLanguages: typeof import('@vueuse/core')['usePreferredLanguages']
   const usePreferredReducedMotion: typeof import('@vueuse/core')['usePreferredReducedMotion']
   const usePrevious: typeof import('@vueuse/core')['usePrevious']
+  const useQuiz: typeof import('./src/composables/quiz/quiz')['useQuiz']
   const useRafFn: typeof import('@vueuse/core')['useRafFn']
   const useRefHistory: typeof import('@vueuse/core')['useRefHistory']
   const useResizeObserver: typeof import('@vueuse/core')['useResizeObserver']
@@ -265,6 +268,8 @@ declare global {
   const useSupabaseQuestionnaireDetail: typeof import('./src/composables/supabase/questionnaire-detail')['useSupabaseQuestionnaireDetail']
   const useSupabaseQuiz: typeof import('./src/composables/supabase/quiz')['useSupabaseQuiz']
   const useSupabaseQuizDetail: typeof import('./src/composables/supabase/quiz-detail')['useSupabaseQuizDetail']
+  const useSupabaseRealtime: typeof import('./src/composables/supabase/realtime')['useSupabaseRealtime']
+  const useSupabaseRealtimeSender: typeof import('./src/composables/supabase/realtime')['useSupabaseRealtimeSender']
   const useSupabaseStamp: typeof import('./src/composables/supabase/stamp')['useSupabaseStamp']
   const useSupported: typeof import('@vueuse/core')['useSupported']
   const useSwipe: typeof import('@vueuse/core')['useSwipe']
@@ -333,6 +338,7 @@ declare module 'vue' {
     readonly ChatState: UnwrapRef<typeof import('./src/composables/utils/const')['ChatState']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly QuizState: UnwrapRef<typeof import('./src/composables/utils/const')['QuizState']>
+    readonly REALTIME_SYMBOL: UnwrapRef<typeof import('./src/composables/supabase/realtime')['REALTIME_SYMBOL']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
@@ -397,6 +403,7 @@ declare module 'vue' {
     readonly pausableWatch: UnwrapRef<typeof import('@vueuse/core')['pausableWatch']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly provideLocal: UnwrapRef<typeof import('@vueuse/core')['provideLocal']>
+    readonly provideQuiz: UnwrapRef<typeof import('./src/composables/quiz/quiz')['provideQuiz']>
     readonly provideSupabase: UnwrapRef<typeof import('./src/composables/supabase/setting')['provideSupabase']>
     readonly provideUserContext: UnwrapRef<typeof import('./src/composables/context')['provideUserContext']>
     readonly reactify: UnwrapRef<typeof import('@vueuse/core')['reactify']>
@@ -549,6 +556,7 @@ declare module 'vue' {
     readonly usePreferredLanguages: UnwrapRef<typeof import('@vueuse/core')['usePreferredLanguages']>
     readonly usePreferredReducedMotion: UnwrapRef<typeof import('@vueuse/core')['usePreferredReducedMotion']>
     readonly usePrevious: UnwrapRef<typeof import('@vueuse/core')['usePrevious']>
+    readonly useQuiz: UnwrapRef<typeof import('./src/composables/quiz/quiz')['useQuiz']>
     readonly useRafFn: UnwrapRef<typeof import('@vueuse/core')['useRafFn']>
     readonly useRefHistory: UnwrapRef<typeof import('@vueuse/core')['useRefHistory']>
     readonly useResizeObserver: UnwrapRef<typeof import('@vueuse/core')['useResizeObserver']>
@@ -576,7 +584,8 @@ declare module 'vue' {
     readonly useSupabaseQuestionnaire: UnwrapRef<typeof import('./src/composables/supabase/questionnaire')['useSupabaseQuestionnaire']>
     readonly useSupabaseQuiz: UnwrapRef<typeof import('./src/composables/supabase/quiz')['useSupabaseQuiz']>
     readonly useSupabaseQuizDetail: UnwrapRef<typeof import('./src/composables/supabase/quiz-detail')['useSupabaseQuizDetail']>
-    readonly useSupabaseStamp: UnwrapRef<typeof import('./src/composables/supabase/stamp')['useSupabaseStamp']>
+    readonly useSupabaseRealtime: UnwrapRef<typeof import('./src/composables/supabase/realtime')['useSupabaseRealtime']>
+    readonly useSupabaseRealtimeSender: UnwrapRef<typeof import('./src/composables/supabase/realtime')['useSupabaseRealtimeSender']>
     readonly useSupported: UnwrapRef<typeof import('@vueuse/core')['useSupported']>
     readonly useSwipe: UnwrapRef<typeof import('@vueuse/core')['useSwipe']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>

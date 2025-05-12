@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ChatItem } from '~/composables'
 
-const props = defineProps<{ chatId: string, authenticated: boolean }>()
+const props = defineProps<{ chatId: string, authenticated: boolean, submit: (data: string | ChatItem) => Promise<void> }>()
 
 const emits = defineEmits<{
   update: [value: ChatItem]
@@ -116,7 +116,7 @@ defineExpose({
                     </div>
                   </TransitionGroup>
                   <div mt-2>
-                    <ChatText v-model="item.replyInput" :chat-id="props.chatId" placeholder="reply..." :reply="item.id" />
+                    <ChatText v-model="item.replyInput" :item="item" :submit="props.submit" />
                   </div>
                 </div>
               </div>

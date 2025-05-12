@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    ChatAdminController: typeof import('./src/components/chat/ChatAdminController.vue')['default']
     ChatCreateDialog: typeof import('./src/components/chat/ChatCreateDialog.vue')['default']
     ChatList: typeof import('./src/components/chat/ChatList.vue')['default']
     ChatQuizCard: typeof import('./src/components/chat/ChatQuizCard.vue')['default']
@@ -28,20 +27,13 @@ declare module 'vue' {
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
-    ElPopover: typeof import('element-plus/es')['ElPopover']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
-    ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
-    QuestionDialog: typeof import('./src/components/QuestionDialog.vue')['default']
     QuestionnaireDialog: typeof import('./src/components/chat/QuestionnaireDialog.vue')['default']
-    QuestionStamp: typeof import('./src/components/QuestionStamp.vue')['default']
-    QuestionText: typeof import('./src/components/QuestionText.vue')['default']
-    QuizCard: typeof import('./src/components/QuizCard.vue')['default']
     QuizDialog: typeof import('./src/components/QuizDialog.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    StampList: typeof import('./src/components/chat/StampList.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

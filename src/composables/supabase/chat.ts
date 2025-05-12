@@ -1,4 +1,3 @@
-import type { RealtimeChannel } from '@supabase/supabase-js'
 import { supabaseResponse } from './common'
 
 interface ChatInsertParam {
@@ -13,10 +12,7 @@ interface ChatUpdateParam {
 }
 
 export function useSupabaseChat() {
-  type ChatRecord = NonNullable<Awaited<ReturnType<typeof selectById>>>
-
   const client = useSupabase()
-  let realtimeChannel: RealtimeChannel | null = null
 
   const selectByUserId = async (userId: string) => {
     const { data, error } = await client.from('chat').select().eq('user_id', userId)
@@ -43,32 +39,11 @@ export function useSupabaseChat() {
     return supabaseResponse(data, error)
   }
 
-  const subscribe = (chatId: string, handler: (record: ChatRecord) => void) => {
-    realtimeChannel = client.channel('chat')
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'chat', filter: `id=eq.${chatId}` }, (payload) => {
-        if (payload.errors) {
-          throw new Error(payload.errors.join(','))
-        }
-        handler(payload.new as ChatRecord)
-      })
-      .subscribe()
-  }
-
-  const unsubscribe = () => {
-    realtimeChannel?.unsubscribe()
-  }
-
-  onUnmounted(() => {
-    unsubscribe()
-  })
-
   return {
     selectById,
     selectByUserId,
     insert,
     update,
     remove,
-    subscribe,
-    unsubscribe,
   }
 }

@@ -8,9 +8,10 @@ const title = ref('')
 const total = ref(0)
 const questions = ref<{ text: string, percentage: number }[]>([])
 
-let answers: Record<string, number> = {}
+const { add, collectAnswer, registerListener } = useQuiz()
 const { selectById } = useSupabaseQuiz()
-const { insert, select, subscribe } = useSupabaseQuizDetail()
+const { insert, select } = useSupabaseQuizDetail()
+const sender = useSupabaseRealtimeSender()
 const { loading, withLoadingFn } = useLoading()
 
 withLoadingFn(async () => {
@@ -18,40 +19,37 @@ withLoadingFn(async () => {
   title.value = data.title
   questions.value = data.questions.map(q => ({ text: q, percentage: 0 }))
   close.value = data.status === QuizState.COMPLETED
-  if (!close.value) {
-    listenAnswer()
-  }
   await getAnswer()
+})
+
+registerListener(props.quizId, () => {
+  setDisplayData()
 })
 
 function sendAnswer(answer: number) {
   withLoadingFn(async () => {
-    await insert({
+    const { id, quiz_id } = await insert({
       quiz_id: props.quizId,
       answer,
     })
+    sender('quiz', { id, quiz_id, answer })
     close.value = true
   })
 }
 
 async function getAnswer() {
   const data = await select(props.quizId)
-  answers = data.reduce((prev, curr) => Object.assign(prev, { [curr.id]: curr.answer }), {} as Record<string, number>)
+  for (const d of data) {
+    add(d.quiz_id, d.id, d.answer)
+  }
   setDisplayData()
-}
-
-function listenAnswer() {
-  subscribe(props.quizId, (record) => {
-    answers[record.id] = record.answer
-    setDisplayData()
-  })
 }
 
 function setDisplayData() {
   const answerCalcData = Array.from({ length: questions.value.length }).fill(0) as number[]
-  const answerValues = Object.values(answers)
-  total.value = answerValues.length
-  answerValues.forEach(a => answerCalcData[a]++)
+  const answers = collectAnswer(props.quizId)
+  total.value = answers.length
+  answers.forEach(a => answerCalcData[a]++)
   answerCalcData.forEach((t, idx) => questions.value[idx].percentage = Math.floor(100 * t / total.value))
 }
 </script>

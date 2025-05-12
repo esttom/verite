@@ -3,7 +3,6 @@ import { supabaseResponse } from './common'
 
 interface QuizInsertParam {
   chat_id: string
-  user_id: string
   title: string
   questions: string[]
 }
@@ -21,9 +20,11 @@ interface QuizUpdateStateParam {
 
 export function useSupabaseQuiz() {
   const client = useSupabase()
+  const { context } = useUserContext()
+  const userId = context.userId === '' ? '00000000-0000-4000-8000-000000000000' : context.userId
 
   const select = async (chatId: string) => {
-    const { data, error } = await client.from('quiz').select().eq('chat_id', chatId).order('created_at', { ascending: true })
+    const { data, error } = await client.from('quiz').select().eq('chat_id', chatId).eq('user_id', userId).order('created_at', { ascending: true })
     return supabaseResponse(data!, error)
   }
 
@@ -33,7 +34,7 @@ export function useSupabaseQuiz() {
   }
 
   const insert = async (param: QuizInsertParam) => {
-    const { data, error } = await client.from('quiz').insert(param).select()
+    const { data, error } = await client.from('quiz').insert({ user_id: userId, ...param }).select()
     return supabaseResponse(data, error)
   }
 

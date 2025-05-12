@@ -41,7 +41,10 @@ const headers = [
 const router = useRouter()
 const { insert: chatDetailInsert } = useSupabaseChatDetail()
 const { select, updateState } = useSupabaseQuiz()
+const { subscribe, send } = useSupabaseRealtime()
 const { loading, withLoadingFn } = useLoading()
+
+subscribe(chatId, () => {})
 
 selectData()
 
@@ -80,7 +83,7 @@ async function sendQuiz(row: any) {
     return
   }
 
-  await chatDetailInsert({
+  const data = await chatDetailInsert({
     chat_id: chatId,
     content: '',
     reply: null,
@@ -90,6 +93,9 @@ async function sendQuiz(row: any) {
     id: row.id,
     status: ChatState.ACTIVE,
   })
+  if (data) {
+    send('chat-insert', { ...data })
+  }
   await selectData()
   // eslint-disable-next-line no-alert
   alert('クイズを送信しました。')
