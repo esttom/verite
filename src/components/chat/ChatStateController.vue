@@ -7,8 +7,8 @@ const emits = defineEmits<{
   update: [status: ChatStateType]
 }>()
 
-const outerIndicatorColor = computed(() => stateColor(props.state, 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300', 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300', 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'))
-const innerIndicatorColor = computed(() => stateColor(props.state, 'bg-green-500', 'bg-purple-500', 'bg-red-500'))
+const outerIndicatorColor = computed(() => stateColor(props.state, 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300', 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300', 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'))
+const innerIndicatorColor = computed(() => stateColor(props.state, 'bg-green-500', 'bg-purple-500', 'bg-blue-500'))
 
 function stateColor(_state: ChatStateType, activeClass: string, completedClass: string, waitingClass: string) {
   return _state === ChatState.ACTIVE ? activeClass : _state === ChatState.COMPLETED ? completedClass : waitingClass

@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { Close, Plus } from '@element-plus/icons-vue'
 
-const props = defineProps<{ chatId: string, id: string | undefined, title: string, questions: string[] }>()
-const emits = defineEmits(['create'])
+const props = defineProps<{
+  id: string | undefined
+  title: string
+  questions: string[]
+  submit: (data: { id: string | undefined, title: string, questions: string[] }) => Promise<void>
+}>()
 
 const qDialogVisible = defineModel<boolean>({ default: false })
 
-const { insert, updateQuestion } = useSupabaseQuiz()
 const { loading, withLoadingFn } = useLoading()
 
 const hasError = ref(false)
@@ -43,21 +46,11 @@ function ok() {
     return
   }
   withLoadingFn(async () => {
-    if (props.id) {
-      await updateQuestion({
-        id: props.id,
-        title: qDialogForm.title,
-        questions,
-      })
-    }
-    else {
-      await insert({
-        chat_id: props.chatId,
-        title: qDialogForm.title,
-        questions,
-      })
-    }
-    emits('create')
+    await props.submit({
+      id: props.id,
+      title: qDialogForm.title,
+      questions,
+    })
     qDialogVisible.value = false
   })
 }

@@ -32,6 +32,7 @@ declare module 'vue' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     QuestionnaireDialog: typeof import('./src/components/chat/QuestionnaireDialog.vue')['default']
     QuizDialog: typeof import('./src/components/QuizDialog.vue')['default']
+    QuizNavigation: typeof import('./src/components/chat/QuizNavigation.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

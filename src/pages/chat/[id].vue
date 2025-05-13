@@ -180,6 +180,10 @@ async function questionnaireSubmit(form: Record<string, any>) {
       </ChatText>
     </template>
 
-    <ChatStateController v-if="authenticated" :chat-id="chatId" :state="chatState" @update="onStateUpdate" />
+    <template v-if="authenticated">
+      <QuizNavigation :chat-id="chatId" />
+
+      <ChatStateController :chat-id="chatId" :state="chatState" @update="onStateUpdate" />
+    </template>
   </div>
 </template>

@@ -28,12 +28,6 @@ const headers = [
   },
   {
     prop: 'action',
-    label: 'Quiz',
-    width: '80',
-    action: moveToQuiz,
-  },
-  {
-    prop: 'action',
     label: 'Copy',
     width: '80',
     action: copyUrl,
@@ -56,10 +50,6 @@ withLoadingFn(async () => {
 
 function moveToChat(row: any) {
   router.push(`/chat/${row.id}`)
-}
-
-function moveToQuiz(row: any) {
-  router.push(`/quiz/${row.id}`)
 }
 
 async function deleteData(row: any) {

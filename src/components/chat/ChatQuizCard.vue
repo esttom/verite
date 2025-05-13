@@ -71,7 +71,7 @@ function setDisplayData() {
       <div class="space-y-3">
         <div v-for="(question, idx) in questions" :key="idx" class="relative w-full overflow-hidden rounded-2xl bg-gray-400">
           <div class="absolute left-0 top-0 h-full bg-blue-600" :style="`width: ${question.percentage}%`" />
-          <div class="relative z-10 px-3 py-[1px] text-sm text-gray-300">
+          <div class="relative px-3 py-[1px] text-sm text-gray-300">
             {{ question.text }} - {{ question.percentage }}%
           </div>
         </div>
