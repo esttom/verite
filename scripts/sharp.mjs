@@ -32,7 +32,7 @@ function imageCompress(path) {
       else if (srcPath.endsWith('.gif')) {
         sharp(srcPath, { animated: true })
           .resize(256, 256)
-          .gif()
+          .gif({ loop: 0 })
           .toFile(outPath)
       }
     }
