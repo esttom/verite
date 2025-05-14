@@ -36,6 +36,7 @@
     "jsdom": "^25.0.0",
     "lint-staged": "^15.2.10",
     "pnpm": "^9.9.0",
+    "sharp": "^0.34.1",
     "simple-git-hooks": "^2.11.1",
     "supabase": "^2.9.6",
     "taze": "^0.16.7",

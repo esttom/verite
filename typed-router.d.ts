@@ -23,6 +23,5 @@ declare module 'vue-router/auto-routes' {
     '/admin': RouteRecordInfo<'/admin', '/admin', Record<never, never>, Record<never, never>>,
     '/admin/dashboard': RouteRecordInfo<'/admin/dashboard', '/admin/dashboard', Record<never, never>, Record<never, never>>,
     '/chat/[id]': RouteRecordInfo<'/chat/[id]', '/chat/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    '/quiz/[chat_id]': RouteRecordInfo<'/quiz/[chat_id]', '/quiz/:chat_id', { chat_id: ParamValue<true> }, { chat_id: ParamValue<false> }>,
   }
 }
