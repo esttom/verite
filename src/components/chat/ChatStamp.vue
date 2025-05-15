@@ -37,24 +37,29 @@ defineExpose({
 
 .reaction {
   position: absolute;
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   border-radius: 20px;
-  background-color: rgba(255, 255, 255, 0.8);
-  animation: floatUp 3s forwards;
+  background: rgba(255, 255, 255, 0.4);
+  animation: scaleUp 3s ease-in-out forwards;
 }
 
-@keyframes floatUp {
+@keyframes scaleUp {
   0% {
-    transform: translateY(0);
     opacity: 1;
+    transform: scale(0.6);
   }
-  50% {
-    opacity: 0.8;
+  30% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1.1);
   }
   100% {
-    transform: translateY(-200px);
     opacity: 0;
+    transform: scale(0.7);
   }
 }
 </style>
