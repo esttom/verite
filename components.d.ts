@@ -10,6 +10,7 @@ declare module 'vue' {
     ChatCreateDialog: typeof import('./src/components/chat/ChatCreateDialog.vue')['default']
     ChatList: typeof import('./src/components/chat/ChatList.vue')['default']
     ChatQuizCard: typeof import('./src/components/chat/ChatQuizCard.vue')['default']
+    ChatScrollSwitch: typeof import('./src/components/chat/ChatScrollSwitch.vue')['default']
     ChatStamp: typeof import('./src/components/chat/ChatStamp.vue')['default']
     ChatStampPopup: typeof import('./src/components/chat/ChatStampPopup.vue')['default']
     ChatStateController: typeof import('./src/components/chat/ChatStateController.vue')['default']

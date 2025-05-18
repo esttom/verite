@@ -152,7 +152,7 @@ function next() {
 </script>
 
 <template>
-  <div class="fixed bottom-40 right-6">
+  <div class="fixed bottom-30 right-6">
     <div v-if="visible" v-loading="loading" class="mb-2 flex flex-col items-center justify-center">
       <div class="w-sm flex flex-col justify-center border border-gray-200 rounded-lg bg-white px-4 pb-3 pt-1 shadow-sm dark:border-gray-700 dark:bg-gray-800">
         <div class="mb-2 w-full flex items-center justify-between">
