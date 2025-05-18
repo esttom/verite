@@ -7,3 +7,7 @@ dist-ssr
 node_modules
 .idea/
 *.log
+
+# wrangler files
+.wrangler
+.dev.vars*

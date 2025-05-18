@@ -1,5 +1,6 @@
+import type { NotificationHandle } from 'element-plus'
 import { QuestionFilled } from '@element-plus/icons-vue'
-import { ElNotification, type NotificationHandle } from 'element-plus'
+import { ElNotification } from 'element-plus'
 
 export function useMessage() {
   const fixMessagesHandler: Record<string, NotificationHandle['close']> = {}

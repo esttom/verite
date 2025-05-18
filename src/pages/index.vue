@@ -29,8 +29,7 @@ const loginFormRules = reactive<FormRules<typeof loginForm>>({
         callback()
       }
     },
-  },
-  ],
+  }],
   password: [{
     trigger: 'change',
     validator: (rule: any, value: any, callback: any) => {

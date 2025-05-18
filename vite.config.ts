@@ -1,6 +1,7 @@
 /// <reference types="vitest" />
 
 import path from 'node:path'
+import { cloudflare } from '@cloudflare/vite-plugin'
 import Vue from '@vitejs/plugin-vue'
 import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -9,6 +10,7 @@ import Components from 'unplugin-vue-components/vite'
 import { VueRouterAutoImports } from 'unplugin-vue-router'
 import VueRouter from 'unplugin-vue-router/vite'
 import { defineConfig } from 'vite'
+
 import viteCompression from 'vite-plugin-compression'
 
 export default defineConfig({
@@ -52,7 +54,11 @@ export default defineConfig({
     // see uno.config.ts for config
     UnoCSS(),
 
-    viteCompression(),
+    viteCompression({
+      algorithm: 'brotliCompress',
+    }),
+
+    cloudflare(),
   ],
 
   // https://github.com/vitest-dev/vitest

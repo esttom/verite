@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { type ChatItem, ChatState, type ChatStateType } from '~/composables'
+import type { ChatItem, ChatStateType } from '~/composables'
+import { ChatState } from '~/composables'
 
 const chatId = useRoute('/chat/[id]').params.id
 

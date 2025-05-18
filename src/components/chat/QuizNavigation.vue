@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { QuizState, type QuizStateType } from '~/composables'
+import type { QuizStateType } from '~/composables'
+import { QuizState } from '~/composables'
 
 type QuizList = Awaited<ReturnType<typeof select>>
 
