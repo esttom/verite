@@ -9,7 +9,7 @@ function home() {
 
 <template>
   <div class="max-w-8xl mx-auto mb-3 w-full flex items-center justify-between border-b-1 px-3 pb-1 dark:border-gray-700 lg:px-4">
-    <div />
+    <div class="w-[20px]" />
     <div @click="home">
       <img src="/logo.png" alt="logo" cursor="pointer" width="42px" text="center">
     </div>

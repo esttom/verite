@@ -4,7 +4,7 @@ provideUserContext()
 </script>
 
 <template>
-  <main v-cloak justify="center" h-full w-full flex font-sans class="bg-white pb-4 pt-2 dark:bg-gray-900 dark:text-gray-300">
+  <main v-cloak justify="center" class="h-full w-full flex bg-white px-2 pb-4 pt-2 font-sans dark:bg-gray-900 dark:text-gray-300">
     <CustomRouter />
   </main>
 </template>

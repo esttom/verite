@@ -53,13 +53,13 @@ app.all('*', async (c) => {
   const currentTimestamp = Date.now() / 1000
   if (currentTimestamp < assertedFromTimestamp) {
     return c.text(
-      `URL is before expiration as of ${new Date((assertedFromTimestamp) * 1000).toLocaleString()}`,
+      `URL is before expiration as of ${new Date((assertedFromTimestamp) * 1000).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}`,
       403,
     )
   }
   if (currentTimestamp > assertedToTimestamp) {
     return c.text(
-      `URL expired at ${new Date((assertedToTimestamp) * 1000).toLocaleString()}`,
+      `URL expired at ${new Date((assertedToTimestamp) * 1000).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}`,
       403,
     )
   }

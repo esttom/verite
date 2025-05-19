@@ -62,13 +62,13 @@ function setError() {
 </script>
 
 <template>
-  <el-dialog v-model="qDialogVisible" title="Quiz" width="90%" max-w="600px" min-w="400px" :class="{ shake: hasError }" @open="onOpen">
+  <el-dialog v-model="qDialogVisible" title="Quiz" width="90%" max-w="600px" :class="{ shake: hasError }" @open="onOpen">
     <el-form v-loading="loading" :model="qDialogForm" label-width="auto">
       <el-form-item label="Title">
-        <el-input v-model="qDialogForm.title" autocomplete="off" />
+        <el-input v-model="qDialogForm.title" autocomplete="off" input-style="font-size: 16px" />
       </el-form-item>
       <el-form-item v-for="(_, idx) in qDialogForm.questions" :key="idx" :label="`option ${idx + 1}`">
-        <el-input v-model="qDialogForm.questions[idx]">
+        <el-input v-model="qDialogForm.questions[idx]" input-style="font-size: 16px">
           <template #append>
             <el-button :icon="Close" @click="removeQuestion(idx)" />
           </template>

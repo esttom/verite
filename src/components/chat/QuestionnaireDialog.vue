@@ -113,7 +113,7 @@ function formClear() {
 </script>
 
 <template>
-  <div v-if="visible" tabindex="-1" aria-hidden="true" class="f-full fixed left-0 right-0 top-0 z-50 w-full flex items-center justify-center overflow-x-hidden overflow-y-auto bg-gray-500 bg-opacity-60 md:inset-0">
+  <div v-if="visible" tabindex="-1" aria-hidden="true" class="f-full fixed left-0 right-0 top-0 z-50 w-full flex items-center justify-center overflow-x-hidden overflow-y-auto bg-gray-500 bg-opacity-60 p-4 md:inset-0">
     <div class="relative h-90vh max-w-2xl w-full overflow-y-auto" :class="{ shake: hasError }">
       <div class="relative rounded-lg bg-white p-4 shadow dark:bg-gray-800 sm:p-5">
         <div class="mb-2 flex items-center justify-between border-b rounded-t pb-4 sm:mb-5 dark:border-gray-600">
@@ -138,7 +138,7 @@ function formClear() {
                 </div>
                 <div v-else-if="form.type === 'textarea'">
                   <label :for="form.id" class="mb-2 block text-sm text-gray-900 font-medium dark:text-white" :class="{ required: form.required }">{{ form.title }}</label>
-                  <textarea :id="form.id" v-model="form.value" rows="2" class="block w-full border border-gray-300 rounded-lg bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 focus:border-primary-500 dark:bg-gray-700 dark:text-white focus:ring-primary-500 dark:focus:border-primary-500 dark:focus:ring-primary-500 dark:placeholder-gray-400" :class="{ '[box-shadow:inset_0_0_0_1px_red]': form.error }" placeholder="長文回答" />
+                  <textarea :id="form.id" v-model="form.value" rows="2" class="block w-full border border-gray-300 rounded-lg bg-gray-50 p-2.5 text-base text-gray-900 dark:border-gray-600 focus:border-primary-500 dark:bg-gray-700 md:text-sm dark:text-white focus:ring-primary-500 dark:focus:border-primary-500 dark:focus:ring-primary-500 dark:placeholder-gray-400" :class="{ '[box-shadow:inset_0_0_0_1px_red]': form.error }" placeholder="長文回答" />
                 </div>
                 <div class="h-13px text-xs text-red">
                   <label>{{ form.errorMessage }}</label>

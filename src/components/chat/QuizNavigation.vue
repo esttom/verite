@@ -152,10 +152,10 @@ function next() {
 </script>
 
 <template>
-  <div class="fixed bottom-30 right-6">
-    <div v-if="visible" v-loading="loading" class="mb-2 flex flex-col items-center justify-center">
-      <div class="w-sm flex flex-col justify-center border border-gray-200 rounded-lg bg-white px-4 pb-3 pt-1 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-        <div class="mb-2 w-full flex items-center justify-between">
+  <div class="absolute bottom-30 right-0 max-w-sm w-full px-2">
+    <div v-if="visible" v-loading="loading" class="relative left-0 top-0 mb-2 w-full flex flex-col items-center justify-center">
+      <div class="w-full flex flex-col justify-center border border-gray-200 rounded-lg bg-white px-4 pb-3 pt-1 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <div class="mb-2 flex items-center justify-between">
           <button type="button" class="h-8 w-6 inline-flex items-center justify-center rounded-s-lg bg-gray-100 px-1 dark:bg-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:hover:bg-gray-800 dark:focus:ring-gray-800" @click="prev">
             <svg class="h-2 w-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />

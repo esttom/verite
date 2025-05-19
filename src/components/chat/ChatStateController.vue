@@ -31,7 +31,7 @@ function changeState() {
 </script>
 
 <template>
-  <span class="absolute right-5 top-18 inline-flex cursor-pointer items-center rounded-full px-2.5 py-0.5 text-xs font-medium" :class="outerIndicatorColor" @click="changeState">
+  <span class="absolute right-2 top-16 inline-flex cursor-pointer items-center rounded-full px-2.5 py-0.5 text-xs font-medium" :class="outerIndicatorColor" @click="changeState">
     <span class="me-1 h-2 w-2 rounded-full" :class="innerIndicatorColor" />
     {{ props.state }}
   </span>
