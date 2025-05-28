@@ -8,13 +8,13 @@ interface QuestionnaireInsertParam {
 export function useSupabaseQuestionnaire() {
   const client = useSupabase()
 
-  const select = async () => {
-    const { data, error } = await client.from('questionnaire').select()
+  const select = async (chatId: string) => {
+    const { data, error } = await client.from('questionnaire').select().eq('chat_id', chatId)
     return supabaseResponse(data, error)
   }
 
   const insert = async (param: QuestionnaireInsertParam) => {
-    const { data, error } = await client.from('questionnaire').insert(param).select()
+    const { data, error } = await client.from('questionnaire').insert(param)
     return supabaseResponse(data, error)
   }
 

@@ -9,6 +9,7 @@ const { context } = useUserContext()
 const router = useRouter()
 const { loading, withLoadingFn } = useLoading()
 const { selectByUserId, remove } = useSupabaseChat()
+const { select: selectQuestionnaire } = useSupabaseQuestionnaire()
 
 const headers = [
   {
@@ -31,6 +32,12 @@ const headers = [
     label: 'Copy',
     width: '80',
     action: copyUrl,
+  },
+  {
+    prop: 'action',
+    label: 'csv',
+    width: '80',
+    action: createQuestionnaireCsv,
   },
   {
     prop: 'action',
@@ -78,6 +85,25 @@ async function selectData() {
 function copyUrl(row: any) {
   const url = `${window.location.origin}/chat/${row.id}`
   copyToClipboard(url)
+}
+
+async function createQuestionnaireCsv(row: any) {
+  const data = await selectQuestionnaire(row.id)
+  if (!data || data.length === 0) {
+    // eslint-disable-next-line no-alert
+    alert('データがありません')
+    return
+  }
+  const keys = Object.keys(data[0].answer as object).map(d => `"${d.replace(/"/g, '""')}"`)
+  const values = data.map(d => Object.values(d.answer as object).map(d => `"${d.replace(/"/g, '""')}"`).join(','))
+  const csv = `${keys.join(',')}\n${values.join('\n')}`
+  const blob = new Blob([csv], { type: 'text/plain' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${row.title ?? 'data'}.csv`
+  a.click()
+  URL.revokeObjectURL(url)
 }
 </script>
 

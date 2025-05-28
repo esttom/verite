@@ -72,7 +72,7 @@ async function confirmCallback(ok: boolean) {
   if (!ok) {
     return
   }
-  await props.submit(forms.map(f => ({ [f.title]: f.value })))
+  await props.submit(forms.reduce((prev, curr) => Object.assign(prev, { [curr.title]: curr.value }), {}))
   visible.value = false
   ElNotification({
     icon: CircleCheckFilled,
