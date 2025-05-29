@@ -9,7 +9,7 @@ export function useSupabaseQuestionnaire() {
   const client = useSupabase()
 
   const select = async (chatId: string) => {
-    const { data, error } = await client.from('questionnaire').select().eq('chat_id', chatId)
+    const { data, error } = await client.from('questionnaire').select().eq('chat_id', chatId).order('created_at', { ascending: true })
     return supabaseResponse(data, error)
   }
 
