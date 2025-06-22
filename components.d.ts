@@ -15,6 +15,7 @@ declare module 'vue' {
     ChatStampPopup: typeof import('./src/components/chat/ChatStampPopup.vue')['default']
     ChatStateController: typeof import('./src/components/chat/ChatStateController.vue')['default']
     ChatText: typeof import('./src/components/chat/ChatText.vue')['default']
+    ChatTextType: typeof import('./src/components/chat/ChatTextType.vue')['default']
     CommonHeader: typeof import('./src/components/common/CommonHeader.vue')['default']
     ConfirmModal: typeof import('./src/components/common/ConfirmModal.vue')['default']
     CustomRouter: typeof import('./src/components/CustomRouter.vue')['default']

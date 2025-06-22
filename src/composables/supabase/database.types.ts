@@ -47,6 +47,7 @@ export type Database = {
           favorite: number
           fixed: boolean
           id: string
+          question: boolean
           quiz_id: string | null
           reply: string[] | null
         }
@@ -57,6 +58,7 @@ export type Database = {
           favorite?: number
           fixed?: boolean
           id?: string
+          question?: boolean
           quiz_id?: string | null
           reply?: string[] | null
         }
@@ -67,6 +69,7 @@ export type Database = {
           favorite?: number
           fixed?: boolean
           id?: string
+          question?: boolean
           quiz_id?: string | null
           reply?: string[] | null
         }
@@ -171,35 +174,6 @@ export type Database = {
             columns: ["quiz_id"]
             isOneToOne: false
             referencedRelation: "quiz"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      stamp: {
-        Row: {
-          chat_id: string
-          content: string
-          created_at: string
-          id: string
-        }
-        Insert: {
-          chat_id: string
-          content: string
-          created_at?: string
-          id?: string
-        }
-        Update: {
-          chat_id?: string
-          content?: string
-          created_at?: string
-          id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "stamp_chat_id_fkey"
-            columns: ["chat_id"]
-            isOneToOne: false
-            referencedRelation: "chat"
             referencedColumns: ["id"]
           },
         ]

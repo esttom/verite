@@ -1,25 +1,27 @@
 <script setup lang="ts">
 import type { ChatItem } from '~/composables'
+import ChatTextType from './ChatTextType.vue'
 
-const props = defineProps<{ item?: ChatItem, submit: (data: string | ChatItem) => Promise<void> }>()
+const props = defineProps<{ item?: ChatItem, submit: (data: string | ChatItem, question?: boolean) => Promise<void> }>()
 
-const questionText = defineModel<string>({ default: '' })
+const text = defineModel<string>({ default: '' })
+const question = ref(false)
 
 const { loading: messageLoading, withLoadingFn: messageLoadingFn } = useLoading()
 
 async function sendMessage() {
-  if (questionText.value.trimEnd() === '' || questionText.value.replaceAll('\n', '').trimEnd() === '') {
+  if (text.value.trimEnd() === '' || text.value.replaceAll('\n', '').trimEnd() === '') {
     return
   }
   messageLoadingFn(async () => {
     if (props.item) {
       const reply = props.item.reply ?? []
-      await props.submit({ ...props.item, reply: [...reply, questionText.value] })
+      await props.submit({ ...props.item, reply: [...reply, text.value] })
     }
     else {
-      await props.submit(questionText.value)
+      await props.submit(text.value, question.value)
     }
-    questionText.value = ''
+    text.value = ''
   })
 }
 </script>
@@ -31,7 +33,8 @@ async function sendMessage() {
         <div class="flex">
           <slot name="bottom-left" />
         </div>
-        <textarea v-model="questionText" rows="1" class="mx-3 block w-full resize-none border border-gray-300 rounded-lg bg-white p-2.5 text-base dark:border-gray-600 focus:border-blue-500 dark:bg-gray-800 md:text-sm dark:text-white focus:ring-blue-500 dark:focus:border-blue-500 dark:focus:ring-blue-500 dark:placeholder-gray-400" placeholder="Write a comment... (Ctrl+Enter)" @keydown.ctrl.enter.prevent="sendMessage()" />
+        <ChatTextType v-model="question" />
+        <textarea v-model="text" rows="1" class="mr-3 block w-full resize-none border border-gray-300 rounded-e-lg bg-white p-2.5 text-base dark:border-gray-600 focus:border-blue-500 dark:bg-gray-800 md:text-sm dark:text-white focus:ring-blue-500 dark:focus:border-blue-500 dark:focus:ring-blue-500 dark:placeholder-gray-400" placeholder="Write a comment... (Ctrl+Enter)" @keydown.ctrl.enter.prevent="sendMessage()" />
         <div class="flex ps-0 space-x-1 sm:ps-2 rtl:space-x-reverse">
           <button type="submit" class="mb-1.5 inline-flex cursor-pointer items-center justify-center rounded-sm bg-blue-500 p-2 text-white dark:bg-blue-600 hover:bg-blue-800" @click="sendMessage()">
             <svg class="h-4 w-4 rotate-90 rtl:-rotate-90" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">

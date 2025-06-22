@@ -8,4 +8,5 @@ export interface ChatItem {
   replyInput: string
   showReply: boolean
   favorited: boolean
+  question: boolean
 }

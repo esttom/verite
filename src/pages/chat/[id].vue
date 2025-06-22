@@ -78,6 +78,7 @@ function chatSubscribeStart() {
         replyInput: '',
         showReply: false,
         favorited: false,
+        question: payload.question,
       })
       if (enableScroll.value) {
         chatListRef.value?.scroll()
@@ -107,21 +108,22 @@ function chatSubscribeStart() {
   })
 }
 
-async function chatSubmit(data: string | ChatItem) {
+async function chatSubmit(data: string | ChatItem, question?: boolean) {
   if (typeof data === 'string') {
-    chatInsert(data)
+    chatInsert(data, !!question)
   }
   else {
     chatUpdate(data)
   }
 }
 
-async function chatInsert(content: string) {
+async function chatInsert(content: string, question: boolean) {
   const data = await chatDetailInsert({
     chat_id: chatId,
     content,
     reply: null,
     quiz_id: null,
+    question,
   })
   if (data) {
     send('chat-insert', { ...data })

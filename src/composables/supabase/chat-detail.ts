@@ -5,6 +5,7 @@ interface ChatDetailInsertParam {
   content: string
   reply: string[] | null
   quiz_id: string | null
+  question: boolean
 }
 
 interface ChatDetailUpdateParam {

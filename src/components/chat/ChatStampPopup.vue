@@ -32,7 +32,7 @@ async function onClickStamp(stamp: string) {
 </script>
 
 <template>
-  <div ref="target">
+  <div ref="target" class="mr-2">
     <div class="mb-2.5 cursor-pointer" @click.stop="popup = !popup">
       <svg class="h-[24px] w-[24px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
         <path fill-rule="evenodd" d="M13 10a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H14a1 1 0 0 1-1-1Z" clip-rule="evenodd" />
