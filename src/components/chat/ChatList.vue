@@ -66,7 +66,7 @@ defineExpose({
                     {{ item.content }}
                   </div>
 
-                  <span v-if="item.question" class="me-2 ml-1 rounded-sm bg-blue-100 px-2.5 py-0.5 text-xs text-blue-800 font-medium dark:bg-blue-900 dark:text-blue-300">Q</span>
+                  <span v-if="item.question" class="me-2 ml-1 rounded-sm bg-purple-100 px-2.5 py-0.5 text-xs text-purple-800 font-medium dark:bg-purple-900 dark:text-purple-300">Q</span>
 
                   <div class="ml-1">
                     <svg v-if="authenticated" :class="{ 'text-orange': item.fixed, 'dark:text-gray-300': !item.fixed }" class="mr-2 h-[22px] w-[22px] cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" @click="onClickFixed(item)">
