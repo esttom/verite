@@ -22,6 +22,7 @@ async function sendMessage() {
       await props.submit(text.value, question.value)
     }
     text.value = ''
+    question.value = false
   })
 }
 </script>

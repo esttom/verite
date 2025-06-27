@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { ChatItem } from '~/composables'
 
-const props = defineProps<{ chatId: string, authenticated: boolean, submit: (data: string | ChatItem) => Promise<void>, update: (data: ChatItem) => Promise<void> }>()
+const props = defineProps<{ chatId: string, authenticated: boolean, questionFilter: boolean, submit: (data: string | ChatItem) => Promise<void>, update: (data: ChatItem) => Promise<void> }>()
 
-const list = defineModel<ChatItem[]>({ default: [] })
+const list = defineModel<ChatItem[]>({ required: true })
+
+const filteredList = computed(() => props.questionFilter ? list.value.filter(c => c.question) : list.value)
 
 const scrollbarRef = ref()
 
@@ -46,12 +48,12 @@ defineExpose({
 
 <template>
   <el-scrollbar ref="scrollbarRef" class="w-full" wrap-class="w-full" view-class="w-full flex flex-grow justify-center">
-    <div v-if="list === null || list.length === 0">
+    <div v-if="list.length === 0">
       <el-empty />
     </div>
     <Transition>
-      <div v-if="list !== null && list.length > 0" class="max-w-768px w-full">
-        <template v-for="item in list" :key="item.id">
+      <div v-if="filteredList.length > 0" class="max-w-768px w-full">
+        <template v-for="item in filteredList" :key="item.id">
           <div v-if="item.quiz_id">
             <ChatQuizCard :chat-id="props.chatId" :quiz-id="item.quiz_id" />
           </div>

@@ -21,6 +21,7 @@ const enableScroll = ref(true)
 const questionText = ref('')
 const chatStampRef = ref()
 const chatListRef = ref()
+const questionFilter = ref(false)
 const chatList = ref<ChatItem[]>([])
 
 withLoadingFn(async () => {
@@ -166,11 +167,12 @@ async function questionnaireSubmit(form: Record<string, any>) {
       <QuestionnaireDialog v-model="questionnaireDialog" :submit="questionnaireSubmit" />
     </template>
     <template v-else>
-      <ChatList ref="chatListRef" v-model="chatList" :chat-id="chatId" :authenticated="authenticated" :submit="chatSubmit" :update="chatUpdate" />
+      <ChatList ref="chatListRef" v-model="chatList" :chat-id="chatId" :authenticated="authenticated" :question-filter="questionFilter" :submit="chatSubmit" :update="chatUpdate" />
 
       <ChatStamp ref="chatStampRef" />
 
-      <div class="my-1.5 max-w-768px w-full flex justify-end">
+      <div class="my-1.5 max-w-768px w-full flex items-center justify-end">
+        <ChatQuestionFilterButton v-model="questionFilter" />
         <ChatScrollSwitch v-model="enableScroll" />
       </div>
 
