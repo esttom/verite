@@ -1,5 +1,6 @@
 import type { RealtimeChannel } from '@supabase/supabase-js'
 import type { InjectionKey } from 'vue'
+import { useDocumentVisibility } from '@vueuse/core'
 
 type ChatRealtimeEvent = 'status' | 'stamp' | 'chat-insert' | 'chat-update' | 'quiz'
 
@@ -7,6 +8,9 @@ export const REALTIME_SYMBOL = Symbol('realtime_provide_key') as InjectionKey<(e
 
 export function useSupabaseRealtime() {
   const client = useSupabase()
+  const subscribed = ref(false)
+  const documentVisibility = useDocumentVisibility()
+
   let chatChannel: RealtimeChannel | null
 
   const subscribe = (chatId: string, handler: (event: ChatRealtimeEvent, record: Record<string, any>) => void) => {
@@ -19,12 +23,18 @@ export function useSupabaseRealtime() {
       .on('broadcast', { event: 'chat-insert' }, payload => handler('chat-insert', payload))
       .on('broadcast', { event: 'chat-update' }, payload => handler('chat-update', payload))
       .on('broadcast', { event: 'quiz' }, payload => handler('quiz', payload))
-      .subscribe()
+      .subscribe(status => subscribed.value = status === 'SUBSCRIBED')
   }
 
   const unsubscribe = () => {
     chatChannel?.unsubscribe()
   }
+
+  watch(documentVisibility, (v) => {
+    if (v === 'visible' && !subscribed.value) {
+      window.location.reload()
+    }
+  })
 
   onUnmounted(() => {
     unsubscribe()
