@@ -128,6 +128,7 @@ declare global {
   const until: typeof import('@vueuse/core')['until']
   const useActiveElement: typeof import('@vueuse/core')['useActiveElement']
   const useAnimate: typeof import('@vueuse/core')['useAnimate']
+  const useAnonId: typeof import('./src/composables/chat/chat')['useAnonId']
   const useArrayDifference: typeof import('@vueuse/core')['useArrayDifference']
   const useArrayEvery: typeof import('@vueuse/core')['useArrayEvery']
   const useArrayFilter: typeof import('@vueuse/core')['useArrayFilter']
@@ -446,6 +447,7 @@ declare module 'vue' {
     readonly until: UnwrapRef<typeof import('@vueuse/core')['until']>
     readonly useActiveElement: UnwrapRef<typeof import('@vueuse/core')['useActiveElement']>
     readonly useAnimate: UnwrapRef<typeof import('@vueuse/core')['useAnimate']>
+    readonly useAnonId: UnwrapRef<typeof import('./src/composables/chat/chat')['useAnonId']>
     readonly useArrayDifference: UnwrapRef<typeof import('@vueuse/core')['useArrayDifference']>
     readonly useArrayEvery: UnwrapRef<typeof import('@vueuse/core')['useArrayEvery']>
     readonly useArrayFilter: UnwrapRef<typeof import('@vueuse/core')['useArrayFilter']>

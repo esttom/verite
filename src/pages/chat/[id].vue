@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ChatItem, ChatStateType } from '~/composables'
-import { ChatState } from '~/composables'
+import { ChatState, useAnonId } from '~/composables'
 
 const chatId = useRoute('/chat/[id]').params.id
 
@@ -10,7 +10,7 @@ const { select: chatDetailSelect, insert: chatDetailInsert, update: chatDetailUp
 const { subscribe, unsubscribe, send } = useSupabaseRealtime()
 const { loading, withLoadingFn } = useLoading()
 const { insert: questionnaireInsert } = useSupabaseQuestionnaire()
-const { show, close } = useMessage()
+const { show, close, once } = useMessage()
 const { add, eventDispatcher } = provideQuiz()
 
 const authenticated = isAuth()
@@ -22,6 +22,7 @@ const questionText = ref('')
 const chatStampRef = ref()
 const chatListRef = ref()
 const questionFilter = ref(false)
+const anonId = useAnonId()
 const chatList = ref<ChatItem[]>([])
 
 withLoadingFn(async () => {
@@ -66,6 +67,7 @@ function chatSubscribeStart() {
       }
       else if (chatState.value === ChatState.COMPLETED) {
         unsubscribe()
+        questionnaireDialog.value = true
       }
     }
     else if (event === 'chat-insert') {
@@ -80,6 +82,7 @@ function chatSubscribeStart() {
         showReply: false,
         favorited: false,
         question: payload.question,
+        anon_id: payload.anon_id,
       })
       if (enableScroll.value) {
         chatListRef.value?.scroll()
@@ -99,6 +102,9 @@ function chatSubscribeStart() {
         }
         if (item.fixed && !payload.fixed) {
           close(item.id)
+        }
+        if (anonId.value === item.anon_id && (item.reply ?? []).length !== (payload.reply ?? []).length) {
+          once('投稿したメッセージに返信があります。', 10000)
         }
       }
     }
@@ -125,6 +131,7 @@ async function chatInsert(content: string, question: boolean) {
     reply: null,
     quiz_id: null,
     question,
+    anon_id: anonId.value,
   })
   if (data) {
     send('chat-insert', { ...data })

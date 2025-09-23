@@ -1,5 +1,5 @@
 import type { NotificationHandle } from 'element-plus'
-import { QuestionFilled } from '@element-plus/icons-vue'
+import { InfoFilled, QuestionFilled } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 
 export function useMessage() {
@@ -21,6 +21,17 @@ export function useMessage() {
     fixMessagesHandler[id]?.()
   }
 
+  function once(message: string, duration: number) {
+    setTimeout(() => {
+      ElNotification({
+        icon: InfoFilled,
+        message,
+        duration,
+        customClass: 'whitespace-pre-wrap text-blue-600',
+      })
+    }, 0)
+  }
+
   onUnmounted(() => {
     for (const key in fixMessagesHandler) {
       fixMessagesHandler[key]()
@@ -30,5 +41,6 @@ export function useMessage() {
   return {
     show,
     close,
+    once,
   }
 }
