@@ -18,6 +18,10 @@ async function onClickFavorite(item: ChatItem) {
   }
 }
 
+async function onClickQuestion(item: ChatItem) {
+  await props.update({ ...item, question: !item.question })
+}
+
 async function onClickFixed(item: ChatItem) {
   props.update({ ...item, fixed: !item.fixed })
 }
@@ -68,7 +72,15 @@ defineExpose({
                     {{ item.content }}
                   </div>
 
-                  <span v-if="item.question" class="me-2 ml-1 rounded-sm bg-purple-100 px-2.5 py-0.5 text-xs text-purple-800 font-medium dark:bg-purple-900 dark:text-purple-300">Q</span>
+                  <span v-if="item.question" class="me-2 ml-1 inline-flex items-center rounded-sm bg-purple-100 px-2 py-0.5 text-sm text-purple-800 font-medium dark:bg-purple-900 dark:text-purple-300">
+                    <div class="inline-flex items-center">Q</div>
+                    <button v-if="props.anonId === item.anon_id" type="button" class="rounded-xs ms-2 inline-flex items-center bg-transparent p-1 text-sm text-purple-400 hover:bg-purple-200 hover:text-purple-900 dark:hover:bg-purple-800 dark:hover:text-purple-300" data-dismiss-target="#badge-dismiss-purple" aria-label="Remove" @click="onClickQuestion(item)">
+                      <svg class="h-2 w-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                      </svg>
+                      <span class="sr-only">Remove badge</span>
+                    </button>
+                  </span>
 
                   <div class="ml-1">
                     <svg v-if="authenticated" :class="{ 'text-orange': item.fixed, 'dark:text-gray-300': !item.fixed }" class="mr-2 h-[22px] w-[22px] cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" @click="onClickFixed(item)">

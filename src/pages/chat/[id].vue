@@ -141,7 +141,7 @@ async function chatInsert(content: string, question: boolean) {
 }
 
 async function chatUpdate(item: ChatItem) {
-  const data = await chatDetailUpdate({ id: item.id, fixed: item.fixed, favorite: item.favorite, reply: item.reply })
+  const data = await chatDetailUpdate({ id: item.id, fixed: item.fixed, favorite: item.favorite, reply: item.reply, question: item.question })
   if (data) {
     send('chat-update', { ...data })
   }

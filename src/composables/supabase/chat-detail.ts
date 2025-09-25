@@ -14,6 +14,7 @@ interface ChatDetailUpdateParam {
   favorite: number
   fixed: boolean
   reply: Record<string, any>[] | null
+  question: boolean
 }
 
 export function useSupabaseChatDetail() {
@@ -30,7 +31,7 @@ export function useSupabaseChatDetail() {
   }
 
   const update = async (param: ChatDetailUpdateParam) => {
-    const { data, error } = await client.from('chat_detail').update({ favorite: param.favorite, fixed: param.fixed, reply: param.reply }).eq('id', param.id).select().single()
+    const { data, error } = await client.from('chat_detail').update({ favorite: param.favorite, fixed: param.fixed, reply: param.reply, question: param.question }).eq('id', param.id).select().single()
     return supabaseResponse(data, error)
   }
 
