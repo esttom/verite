@@ -55,7 +55,7 @@ export type Database = {
           id: string
           question: boolean
           quiz_id: string | null
-          reply: string[] | null
+          reply: Json[] | null
         }
         Insert: {
           anon_id?: string | null
@@ -67,7 +67,7 @@ export type Database = {
           id?: string
           question?: boolean
           quiz_id?: string | null
-          reply?: string[] | null
+          reply?: Json[] | null
         }
         Update: {
           anon_id?: string | null
@@ -79,7 +79,7 @@ export type Database = {
           id?: string
           question?: boolean
           quiz_id?: string | null
-          reply?: string[] | null
+          reply?: Json[] | null
         }
         Relationships: [
           {

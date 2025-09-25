@@ -103,8 +103,10 @@ function chatSubscribeStart() {
         if (item.fixed && !payload.fixed) {
           close(item.id)
         }
-        if (anonId.value === item.anon_id && (item.reply ?? []).length !== (payload.reply ?? []).length) {
-          once('投稿したメッセージに返信があります。', 10000)
+        if ((item.reply ?? []).length !== (payload.reply ?? []).length) {
+          if (anonId.value === item.anon_id && anonId.value !== payload.reply[payload.reply.length - 1].anon_id) {
+            once('投稿したメッセージに返信があります。', 10000)
+          }
         }
       }
     }
@@ -174,7 +176,7 @@ async function questionnaireSubmit(form: Record<string, any>) {
       <QuestionnaireDialog v-model="questionnaireDialog" :submit="questionnaireSubmit" />
     </template>
     <template v-else>
-      <ChatList ref="chatListRef" v-model="chatList" :chat-id="chatId" :authenticated="authenticated" :question-filter="questionFilter" :submit="chatSubmit" :update="chatUpdate" />
+      <ChatList ref="chatListRef" v-model="chatList" :chat-id="chatId" :anon-id="anonId" :authenticated="authenticated" :question-filter="questionFilter" :submit="chatSubmit" :update="chatUpdate" />
 
       <ChatStamp ref="chatStampRef" />
 
@@ -183,7 +185,7 @@ async function questionnaireSubmit(form: Record<string, any>) {
         <ChatScrollSwitch v-model="enableScroll" />
       </div>
 
-      <ChatText v-model="questionText" :submit="chatSubmit">
+      <ChatText v-model="questionText" :anon-id="anonId" :submit="chatSubmit">
         <template #bottom-left>
           <ChatStampPopup :stamp-insert="stampInsertFn" />
         </template>

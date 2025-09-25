@@ -2,7 +2,7 @@
 import type { ChatItem } from '~/composables'
 import ChatTextType from './ChatTextType.vue'
 
-const props = defineProps<{ item?: ChatItem, submit: (data: string | ChatItem, question?: boolean) => Promise<void> }>()
+const props = defineProps<{ anonId: string, item?: ChatItem, submit: (data: string | ChatItem, question?: boolean) => Promise<void> }>()
 
 const text = defineModel<string>({ default: '' })
 const question = ref(false)
@@ -16,7 +16,7 @@ async function sendMessage() {
   messageLoadingFn(async () => {
     if (props.item) {
       const reply = props.item.reply ?? []
-      await props.submit({ ...props.item, reply: [...reply, text.value] })
+      await props.submit({ ...props.item, reply: [...reply, { content: text.value, anon_id: props.anonId }] })
     }
     else {
       await props.submit(text.value, question.value)

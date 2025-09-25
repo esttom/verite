@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ChatItem } from '~/composables'
 
-const props = defineProps<{ chatId: string, authenticated: boolean, questionFilter: boolean, submit: (data: string | ChatItem) => Promise<void>, update: (data: ChatItem) => Promise<void> }>()
+const props = defineProps<{ chatId: string, anonId: string, authenticated: boolean, questionFilter: boolean, submit: (data: string | ChatItem) => Promise<void>, update: (data: ChatItem) => Promise<void> }>()
 
 const list = defineModel<ChatItem[]>({ required: true })
 
@@ -112,7 +112,7 @@ defineExpose({
                         <div class="ml-2 w-full">
                           <div class="w-full flex items-center border-gray-200 rounded-e-xl rounded-es-xl bg-gray-100 px-3 py-2.5 dark:bg-gray-700">
                             <div class="flex-grow whitespace-pre-wrap break-all">
-                              {{ reply }}
+                              {{ reply.content }}
                             </div>
                           </div>
                         </div>
@@ -120,7 +120,7 @@ defineExpose({
                     </div>
                   </TransitionGroup>
                   <div mt-2>
-                    <ChatText v-model="item.replyInput" :item="item" :submit="props.submit" />
+                    <ChatText v-model="item.replyInput" :anon-id="props.anonId" :item="item" :submit="props.submit" />
                   </div>
                 </div>
               </div>

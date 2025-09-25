@@ -62,6 +62,8 @@ async function sendQuiz(row: QuizList[number]) {
     content: '',
     reply: null,
     quiz_id: row.id,
+    question: false,
+    anon_id: '',
   })
   if (data) {
     sender('chat-insert', { ...data })

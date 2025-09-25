@@ -3,7 +3,7 @@ import { supabaseResponse } from './common'
 interface ChatDetailInsertParam {
   chat_id: string
   content: string
-  reply: string[] | null
+  reply: Record<string, any>[] | null
   quiz_id: string | null
   question: boolean
   anon_id: string
@@ -13,7 +13,7 @@ interface ChatDetailUpdateParam {
   id: string
   favorite: number
   fixed: boolean
-  reply: string[] | null
+  reply: Record<string, any>[] | null
 }
 
 export function useSupabaseChatDetail() {

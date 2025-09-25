@@ -4,7 +4,7 @@ export interface ChatItem {
   content: string
   fixed: boolean
   favorite: number
-  reply: string[] | null
+  reply: any[] | null
   replyInput: string
   showReply: boolean
   favorited: boolean
