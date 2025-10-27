@@ -47,20 +47,6 @@ const forms = reactive([
     errorMessage: '',
   },
   {
-    id: 'time',
-    type: 'radio',
-    title: '下期の技術研鑽会の日程について最も当てはまる項目を選択してください。（一つ選択）。',
-    value: '',
-    options: [
-      { label: '15:00-16:00', value: '1' },
-      { label: '17:00-18:00', value: '2' },
-      { label: '何時でも良い', value: '3' },
-      { label: '上記以外', value: '4' },
-    ],
-    error: false,
-    errorMessage: '',
-  },
-  {
     id: 'opinion',
     type: 'textarea',
     title: 'その他、ご意見などがあればお聞かせください。',
