@@ -7,7 +7,7 @@ const chatId = useRoute('/chat/[id]').params.id
 const { isAuth } = useUserContext()
 const { selectById, update } = useSupabaseChat()
 const { select: chatDetailSelect, insert: chatDetailInsert, update: chatDetailUpdate } = useSupabaseChatDetail()
-const { subscribe, unsubscribe, send } = useSupabaseRealtime()
+const { subscribe, unsubscribe, send, chatState } = useSupabaseRealtime()
 const { loading, withLoadingFn } = useLoading()
 const { insert: questionnaireInsert } = useSupabaseQuestionnaire()
 const { show, close, once } = useMessage()
@@ -15,7 +15,6 @@ const { add, eventDispatcher } = provideQuiz()
 
 const authenticated = isAuth()
 
-const chatState = ref<ChatStateType>(ChatState.WAITING)
 const questionnaireDialog = ref(false)
 const enableScroll = ref(true)
 const questionText = ref('')

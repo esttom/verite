@@ -1,6 +1,8 @@
 import type { RealtimeChannel } from '@supabase/supabase-js'
 import type { InjectionKey } from 'vue'
+import type { ChatStateType } from '~/composables'
 import { useDocumentVisibility } from '@vueuse/core'
+import { ChatState } from '~/composables'
 
 type ChatRealtimeEvent = 'status' | 'stamp' | 'chat-insert' | 'chat-update' | 'quiz'
 
@@ -9,6 +11,7 @@ export const REALTIME_SYMBOL = Symbol('realtime_provide_key') as InjectionKey<(e
 export function useSupabaseRealtime() {
   const client = useSupabase()
   const subscribed = ref(false)
+  const chatState = ref<ChatStateType>(ChatState.WAITING)
   const documentVisibility = useDocumentVisibility()
 
   let chatChannel: RealtimeChannel | null
@@ -31,7 +34,7 @@ export function useSupabaseRealtime() {
   }
 
   watch(documentVisibility, (v) => {
-    if (v === 'visible' && !subscribed.value) {
+    if (v === 'visible' && !subscribed.value && chatState.value === 'ACTIVE') {
       window.location.reload()
     }
   })
@@ -54,6 +57,7 @@ export function useSupabaseRealtime() {
     subscribe,
     unsubscribe,
     send,
+    chatState,
   }
 }
 
