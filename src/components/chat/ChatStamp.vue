@@ -30,7 +30,7 @@ defineExpose({
 .stamp-container {
   position: fixed;
   bottom: 240px;
-  width: 200px;
+  width: 240px;
   pointer-events: none;
 }
 

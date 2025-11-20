@@ -8,9 +8,14 @@ const stamps = [
   '/stamp/yokuaru.png',
   '/stamp/nice-hiyoko.png',
   '/stamp/chimeisho.png',
+  '/stamp/fusiginingen.png',
+  '/stamp/gogatsu-byo.png',
   '/stamp/kiokuni.png',
   '/stamp/onegaishimasu-hiyoko.png',
   '/stamp/otukare-hiyoko.png',
+  '/stamp/hanamaruhiyoko.png',
+  '/stamp/sassitahiyoko.png',
+  '/stamp/smilefukidasi.png',
   '/stamp/arigatou.gif',
   '/stamp/repost-iine-hiyokoo.gif',
   '/stamp/shimaenaga-cheer.png',
@@ -44,7 +49,7 @@ async function onClickStamp(stamp: string) {
       <div v-if="popup" role="tooltip" class="shadow-xs absolute left--3 top--70 z-10 inline-block border border-gray-200 rounded-lg bg-white text-sm text-gray-500 transition-opacity duration-300 dark:border-gray-600 dark:bg-gray-500 dark:text-gray-400">
         <div class="h-56 w-60 overflow-y-auto p-3 space-y-2">
           <div class="grid grid-cols-3">
-            <img v-for="stamp in stamps" :key="stamp" :src="stamp" class="w-15 cursor-pointer" @click.stop="onClickStamp(stamp)">
+            <img v-for="stamp in stamps" :key="stamp" :src="stamp" class="w-17 cursor-pointer" @click.stop="onClickStamp(stamp)">
           </div>
         </div>
       </div>
