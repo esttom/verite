@@ -47,6 +47,14 @@ const forms = reactive([
     errorMessage: '',
   },
   {
+    id: 'recommend',
+    type: 'textarea',
+    title: 'LTで話してほしい部署・人物・内容があればお聞かせください。',
+    value: '',
+    error: false,
+    errorMessage: '',
+  },
+  {
     id: 'opinion',
     type: 'textarea',
     title: 'その他、ご意見などがあればお聞かせください。',
