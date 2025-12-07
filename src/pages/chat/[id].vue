@@ -196,5 +196,7 @@ async function questionnaireSubmit(form: Record<string, any>) {
 
       <ChatStateController :chat-id="chatId" :state="chatState" @update="onStateUpdate" />
     </template>
+
+    <WinterFlavor />
   </div>
 </template>

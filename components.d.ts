@@ -37,6 +37,8 @@ declare module 'vue' {
     QuizNavigation: typeof import('./src/components/chat/QuizNavigation.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    WinterFlavor: typeof import('./src/components/flavor/WinterFlavor.vue')['default']
+    WriteQuestionnaireDialog: typeof import('./src/components/chat/WriteQuestionnaireDialog.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
