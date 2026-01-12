@@ -9,7 +9,7 @@ const { selectById, update } = useSupabaseChat()
 const { select: chatDetailSelect, insert: chatDetailInsert, update: chatDetailUpdate } = useSupabaseChatDetail()
 const { subscribe, unsubscribe, send, chatState } = useSupabaseRealtime()
 const { loading, withLoadingFn } = useLoading()
-const { insert: questionnaireInsert } = useSupabaseQuestionnaire()
+const { insert: questionnaireInsert } = useSupabaseQuestionnaireDetail()
 const { show, close, once } = useMessage()
 const { add, eventDispatcher } = provideQuiz()
 
@@ -22,10 +22,12 @@ const chatStampRef = ref()
 const chatListRef = ref()
 const questionFilter = ref(false)
 const anonId = useAnonId()
+const questionnaireId = ref('')
 const chatList = ref<ChatItem[]>([])
 
 withLoadingFn(async () => {
   const chatInfo = await selectById(chatId)
+  questionnaireId.value = chatInfo.questionnaire_id
   chatState.value = chatInfo.status as ChatStateType
   if (chatState.value !== ChatState.COMPLETED) {
     chatSubscribeStart()
@@ -172,7 +174,7 @@ async function questionnaireSubmit(form: Record<string, any>) {
       <button type="button" class="mb-2 me-2 rounded-lg bg-blue-700 px-5 py-2.5 text-sm text-white font-medium dark:bg-blue-600 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="questionnaireDialog = !questionnaireDialog">
         アンケート回答
       </button>
-      <QuestionnaireDialog v-model="questionnaireDialog" :submit="questionnaireSubmit" />
+      <QuestionnaireDialog v-model="questionnaireDialog" :questionnaire-id="questionnaireId" :submit="questionnaireSubmit" />
     </template>
     <template v-else>
       <ChatList ref="chatListRef" v-model="chatList" :chat-id="chatId" :anon-id="anonId" :authenticated="authenticated" :question-filter="questionFilter" :submit="chatSubmit" :update="chatUpdate" />

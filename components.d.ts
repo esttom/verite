@@ -32,13 +32,15 @@ declare module 'vue' {
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
+    FormBuilderDialog: typeof import('./src/components/form/FormBuilderDialog.vue')['default']
+    FormCreateDialog: typeof import('./src/components/common/FormCreateDialog.vue')['default']
+    FormInput: typeof import('./src/components/form/FormInput.vue')['default']
     QuestionnaireDialog: typeof import('./src/components/chat/QuestionnaireDialog.vue')['default']
     QuizDialog: typeof import('./src/components/QuizDialog.vue')['default']
     QuizNavigation: typeof import('./src/components/chat/QuizNavigation.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     WinterFlavor: typeof import('./src/components/flavor/WinterFlavor.vue')['default']
-    WriteQuestionnaireDialog: typeof import('./src/components/chat/WriteQuestionnaireDialog.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

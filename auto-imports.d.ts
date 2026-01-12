@@ -6,17 +6,12 @@
 // biome-ignore lint: disable
 export {}
 declare global {
-  const ACTIVE: typeof import('./src/composables/utils/const')['ACTIVE']
-  const COMPLETED: typeof import('./src/composables/utils/const')['COMPLETED']
   const ChatState: typeof import('./src/composables/utils/const')['ChatState']
   const EffectScope: typeof import('vue')['EffectScope']
   const QuizState: typeof import('./src/composables/utils/const')['QuizState']
   const REALTIME_SYMBOL: typeof import('./src/composables/supabase/realtime')['REALTIME_SYMBOL']
-  const RealtimeState: typeof import('./src/composables/utils/const')['RealtimeState']
-  const WAITING: typeof import('./src/composables/utils/const')['WAITING']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
-  const calcTextareaHeight: typeof import('./src/composables/textarea')['calcTextareaHeight']
   const computed: typeof import('vue')['computed']
   const computedAsync: typeof import('@vueuse/core')['computedAsync']
   const computedEager: typeof import('@vueuse/core')['computedEager']
@@ -39,8 +34,6 @@ declare global {
   const debouncedWatch: typeof import('@vueuse/core')['debouncedWatch']
   const defineAsyncComponent: typeof import('vue')['defineAsyncComponent']
   const defineComponent: typeof import('vue')['defineComponent']
-  const defineLoader: typeof import('vue-router/auto')['defineLoader']
-  const definePage: typeof import('unplugin-vue-router/runtime')['definePage']
   const eagerComputed: typeof import('@vueuse/core')['eagerComputed']
   const effectScope: typeof import('vue')['effectScope']
   const extendRef: typeof import('@vueuse/core')['extendRef']
@@ -50,13 +43,11 @@ declare global {
   const ignorableWatch: typeof import('@vueuse/core')['ignorableWatch']
   const inject: typeof import('vue')['inject']
   const injectLocal: typeof import('@vueuse/core')['injectLocal']
-  const isDark: typeof import('./src/composables/dark')['isDark']
   const isDefined: typeof import('@vueuse/core')['isDefined']
   const isProxy: typeof import('vue')['isProxy']
   const isReactive: typeof import('vue')['isReactive']
   const isReadonly: typeof import('vue')['isReadonly']
   const isRef: typeof import('vue')['isRef']
-  const loading: typeof import('./src/composables/loading')['loading']
   const makeDestructurable: typeof import('@vueuse/core')['makeDestructurable']
   const markRaw: typeof import('vue')['markRaw']
   const nextTick: typeof import('vue')['nextTick']
@@ -82,7 +73,6 @@ declare global {
   const onWatcherCleanup: typeof import('vue')['onWatcherCleanup']
   const pausableWatch: typeof import('@vueuse/core')['pausableWatch']
   const provide: typeof import('vue')['provide']
-  const provideLoading: typeof import('./src/composables/loading')['provideLoading']
   const provideLocal: typeof import('@vueuse/core')['provideLocal']
   const provideQuiz: typeof import('./src/composables/quiz/quiz')['provideQuiz']
   const provideSupabase: typeof import('./src/composables/supabase/setting')['provideSupabase']
@@ -116,7 +106,6 @@ declare global {
   const toRef: typeof import('vue')['toRef']
   const toRefs: typeof import('vue')['toRefs']
   const toValue: typeof import('vue')['toValue']
-  const toggleDark: typeof import('./src/composables/dark')['toggleDark']
   const triggerRef: typeof import('vue')['triggerRef']
   const tryOnBeforeMount: typeof import('@vueuse/core')['tryOnBeforeMount']
   const tryOnBeforeUnmount: typeof import('@vueuse/core')['tryOnBeforeUnmount']
@@ -219,7 +208,6 @@ declare global {
   const useMouseInElement: typeof import('@vueuse/core')['useMouseInElement']
   const useMousePressed: typeof import('@vueuse/core')['useMousePressed']
   const useMutationObserver: typeof import('@vueuse/core')['useMutationObserver']
-  const useMyFetch: typeof import('./src/composables/fetch')['useMyFetch']
   const useNavigatorLanguage: typeof import('@vueuse/core')['useNavigatorLanguage']
   const useNetwork: typeof import('@vueuse/core')['useNetwork']
   const useNow: typeof import('@vueuse/core')['useNow']
@@ -271,7 +259,6 @@ declare global {
   const useSupabaseQuizDetail: typeof import('./src/composables/supabase/quiz-detail')['useSupabaseQuizDetail']
   const useSupabaseRealtime: typeof import('./src/composables/supabase/realtime')['useSupabaseRealtime']
   const useSupabaseRealtimeSender: typeof import('./src/composables/supabase/realtime')['useSupabaseRealtimeSender']
-  const useSupabaseStamp: typeof import('./src/composables/supabase/stamp')['useSupabaseStamp']
   const useSupported: typeof import('@vueuse/core')['useSupported']
   const useSwipe: typeof import('@vueuse/core')['useSwipe']
   const useTemplateRef: typeof import('vue')['useTemplateRef']
@@ -584,6 +571,7 @@ declare module 'vue' {
     readonly useSupabaseChat: UnwrapRef<typeof import('./src/composables/supabase/chat')['useSupabaseChat']>
     readonly useSupabaseChatDetail: UnwrapRef<typeof import('./src/composables/supabase/chat-detail')['useSupabaseChatDetail']>
     readonly useSupabaseQuestionnaire: UnwrapRef<typeof import('./src/composables/supabase/questionnaire')['useSupabaseQuestionnaire']>
+    readonly useSupabaseQuestionnaireDetail: UnwrapRef<typeof import('./src/composables/supabase/questionnaire-detail')['useSupabaseQuestionnaireDetail']>
     readonly useSupabaseQuiz: UnwrapRef<typeof import('./src/composables/supabase/quiz')['useSupabaseQuiz']>
     readonly useSupabaseQuizDetail: UnwrapRef<typeof import('./src/composables/supabase/quiz-detail')['useSupabaseQuizDetail']>
     readonly useSupabaseRealtime: UnwrapRef<typeof import('./src/composables/supabase/realtime')['useSupabaseRealtime']>

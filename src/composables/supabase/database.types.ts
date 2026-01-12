@@ -100,6 +100,27 @@ export type Database = {
       }
       questionnaire: {
         Row: {
+          created_at: string
+          data: Json[]
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data: Json[]
+          id?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json[]
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      questionnaire_detail: {
+        Row: {
           answer: Json
           chat_id: string
           created_at: string

@@ -9,7 +9,7 @@ const { context } = useUserContext()
 const router = useRouter()
 const { loading, withLoadingFn } = useLoading()
 const { selectByUserId, remove } = useSupabaseChat()
-const { select: selectQuestionnaire } = useSupabaseQuestionnaire()
+const { select: selectQuestionnaire } = useSupabaseQuestionnaireDetail()
 
 const headers = [
   {

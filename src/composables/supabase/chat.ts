@@ -4,6 +4,7 @@ interface ChatInsertParam {
   user_id: string
   title: string
   description: string
+  questionnaire_id: string | null
 }
 
 interface ChatUpdateParam {

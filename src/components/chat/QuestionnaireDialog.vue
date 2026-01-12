@@ -2,72 +2,16 @@
 import { CircleCheckFilled } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 
-const props = defineProps<{ submit: (form: Record<string, any>) => Promise<void> }>()
+const props = defineProps<{ questionnaireId: string, submit: (form: Record<string, any>) => Promise<void> }>()
 
-const forms = reactive([
-  {
-    id: 'satisfy',
-    type: 'radio',
-    title: '今回の研鑽会について、総合的にどのくらい満足していますか。（一つ選択）。',
-    required: true,
-    value: '',
-    options: [
-      { label: '満足', value: '5' },
-      { label: 'やや満足', value: '4' },
-      { label: 'どちらともいえない', value: '3' },
-      { label: 'やや不満', value: '2' },
-      { label: '不満', value: '1' },
-    ],
-    error: false,
-    errorMessage: '',
-  },
-  {
-    id: 'reason',
-    type: 'textarea',
-    title: '上記の理由をお聞かせ下さい。',
-    required: true,
-    value: '',
-    error: false,
-    errorMessage: '',
-  },
-  {
-    id: 'notice',
-    type: 'textarea',
-    title: '今回の研鑽会や発表者に対する気づきがあれば教えてください。',
-    value: '',
-    error: false,
-    errorMessage: '',
-  },
-  {
-    id: 'idea',
-    type: 'textarea',
-    title: '技術研鑽会で取り扱ってほしい内容があれば教えてください。',
-    value: '',
-    error: false,
-    errorMessage: '',
-  },
-  {
-    id: 'recommend',
-    type: 'textarea',
-    title: 'LTで話してほしい部署・人物・内容があればお聞かせください。',
-    value: '',
-    error: false,
-    errorMessage: '',
-  },
-  {
-    id: 'opinion',
-    type: 'textarea',
-    title: 'その他、ご意見などがあればお聞かせください。',
-    value: '',
-    error: false,
-    errorMessage: '',
-  },
-])
+const forms = ref<any[]>([])
 
 const visible = defineModel<boolean>({ required: true })
 
 const hasError = ref(false)
 const confirmRef = ref()
+
+const { selectById } = useSupabaseQuestionnaire()
 
 function preSubmit() {
   if (formInvalidCheck()) {
@@ -80,7 +24,7 @@ async function confirmCallback(ok: boolean) {
   if (!ok) {
     return
   }
-  await props.submit(forms.reduce((prev, curr) => Object.assign(prev, { [curr.title]: curr.value }), {}))
+  await props.submit(forms.value.reduce((prev, curr) => Object.assign(prev, { [curr.title]: curr.value }), {}))
   visible.value = false
   ElNotification({
     icon: CircleCheckFilled,
@@ -93,15 +37,15 @@ async function confirmCallback(ok: boolean) {
 
 function formInvalidCheck() {
   let error = false
-  for (let i = 0, max = forms.length; i < max; i++) {
-    if (forms[i].required && !forms[i].value) {
-      forms[i].error = true
-      forms[i].errorMessage = 'この項目は必須入力です。'
+  for (let i = 0, max = forms.value.length; i < max; i++) {
+    if (forms.value[i].required && !forms.value[i].value) {
+      forms.value[i].error = true
+      forms.value[i].errorMessage = 'この項目は必須入力です。'
       error = true
     }
     else {
-      forms[i].error = false
-      forms[i].errorMessage = ''
+      forms.value[i].error = false
+      forms.value[i].errorMessage = ''
     }
   }
   hasError.value = error
@@ -112,12 +56,27 @@ function formInvalidCheck() {
 }
 
 function formClear() {
-  forms.forEach((form) => {
+  forms.value.forEach((form) => {
     form.value = ''
     form.error = false
     form.errorMessage = ''
   })
 }
+
+watch(() => visible.value, async (v) => {
+  if (v && props.questionnaireId) {
+    const result = await selectById(props.questionnaireId)
+    const data = result?.data ?? [] as any[]
+    forms.value = data.map(d => ({
+      value: '',
+      error: false,
+      errorMessage: '',
+      ...d,
+    }))
+  }
+}, {
+  immediate: true,
+})
 </script>
 
 <template>
@@ -135,13 +94,13 @@ function formClear() {
         </div>
         <form action="#" @submit.prevent="preSubmit">
           <div class="grid mb-3 gap-3 pr-3 sm:grid-cols-2">
-            <template v-for="form in forms" :key="form.id">
+            <template v-for="(form, idx) in forms" :key="idx">
               <div class="sm:col-span-2">
                 <div v-if="form.type === 'radio'">
                   <label class="mb-2 block text-sm text-gray-900 font-medium dark:text-white" :class="{ required: form.required }">{{ form.title }}</label>
-                  <div v-for="(option, idx) in form.options" :key="idx" class="mb-3 flex items-center">
-                    <input :id="`${form.id}-${idx}`" v-model="form.value" type="radio" :value="option.value" :name="form.id" class="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 dark:ring-offset-gray-800 dark:focus:ring-blue-600">
-                    <label :for="`${form.id}-${idx}`" class="ms-2 text-sm text-gray-900 font-medium dark:text-gray-300">{{ option.label }}</label>
+                  <div v-for="(option, idx2) in form.options" :key="`${idx}-${idx2}`" class="mb-3 flex items-center">
+                    <input :id="`${form.id}-${idx2}`" v-model="form.value" type="radio" :value="option" :name="form.id" class="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 dark:ring-offset-gray-800 dark:focus:ring-blue-600">
+                    <label :for="`${form.id}-${idx2}`" class="ms-2 text-sm text-gray-900 font-medium dark:text-gray-300">{{ option }}</label>
                   </div>
                 </div>
                 <div v-else-if="form.type === 'textarea'">

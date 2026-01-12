@@ -1,25 +1,37 @@
 import { supabaseResponse } from './common'
 
-interface QuestionnaireInsertParam {
-  chat_id: string
-  answer: Record<string, any>
+interface QuestionnaireParam {
+  title: string
+  data: Record<string, any>[]
 }
 
 export function useSupabaseQuestionnaire() {
   const client = useSupabase()
 
-  const select = async (chatId: string) => {
-    const { data, error } = await client.from('questionnaire').select().eq('chat_id', chatId).order('created_at', { ascending: true })
+  const selectById = async (id: string) => {
+    const { data, error } = await client.from('questionnaire').select().eq('id', id).single()
     return supabaseResponse(data, error)
   }
 
-  const insert = async (param: QuestionnaireInsertParam) => {
+  const selectByUserId = async (userId: string) => {
+    const { data, error } = await client.from('questionnaire').select().eq('user_id', userId).order('created_at', { ascending: true })
+    return supabaseResponse(data, error)
+  }
+
+  const insert = async (param: QuestionnaireParam) => {
     const { data, error } = await client.from('questionnaire').insert(param)
     return supabaseResponse(data, error)
   }
 
+  const update = async (id: string, param: QuestionnaireParam) => {
+    const { data, error } = await client.from('questionnaire').update(param).eq('id', id)
+    return supabaseResponse(data, error)
+  }
+
   return {
-    select,
+    selectById,
+    selectByUserId,
     insert,
+    update,
   }
 }
