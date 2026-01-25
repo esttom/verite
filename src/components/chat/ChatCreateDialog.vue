@@ -67,7 +67,7 @@ watch(qDialogVisible, async () => {
         <el-input v-model="qDialogForm.description" autocomplete="off" />
       </el-form-item>
       <el-form-item label="Questionnaire">
-        <put :list="formList" @save="onQuestionnaireSave" @selected="onSelected" />
+        <FormInput :list="formList" @save="onQuestionnaireSave" @selected="onSelected" />
       </el-form-item>
     </el-form>
     <template #footer>
