@@ -24,6 +24,10 @@ const questionFilter = ref(false)
 const anonId = useAnonId()
 const questionnaireId = ref('')
 const chatList = ref<ChatItem[]>([])
+const chatStampList = ref<string[]>([])
+const reverseOrderedStampList = computed(() =>
+  [...chatStampList.value].reverse(),
+)
 
 withLoadingFn(async () => {
   const chatInfo = await selectById(chatId)
@@ -58,6 +62,7 @@ function chatSubscribeStart() {
   subscribe(chatId, (event, payload) => {
     if (event === 'stamp') {
       chatStampRef.value?.show(payload.stamp)
+      chatStampList.value.push(payload.stamp)
     }
     else if (event === 'status') {
       chatState.value = payload.status as ChatStateType
@@ -181,9 +186,23 @@ async function questionnaireSubmit(form: Record<string, any>) {
 
       <ChatStamp ref="chatStampRef" />
 
-      <div class="my-1.5 max-w-768px w-full flex items-center justify-end">
-        <ChatQuestionFilterButton v-model="questionFilter" />
-        <ChatScrollSwitch v-model="enableScroll" />
+      <div class="my-1.5 max-w-[768px] w-full flex items-center">
+        <div class="scrollbar-none flex-1 overflow-x-auto rounded-md bg-gray-1 px-2 dark:bg-gray-6">
+          <div class="flex gap-1.5">
+            <img
+              v-for="(stamp, index) in reverseOrderedStampList"
+              :key="index"
+              :src="stamp"
+              class="h-8 w-8 shrink-0"
+              alt=""
+            >
+          </div>
+        </div>
+
+        <div class="mx-2 flex flex-shrink-0 items-center">
+          <ChatQuestionFilterButton v-model="questionFilter" />
+          <ChatScrollSwitch v-model="enableScroll" />
+        </div>
       </div>
 
       <ChatText v-model="questionText" :anon-id="anonId" :submit="chatSubmit">
@@ -198,7 +217,5 @@ async function questionnaireSubmit(form: Record<string, any>) {
 
       <ChatStateController :chat-id="chatId" :state="chatState" @update="onStateUpdate" />
     </template>
-
-    <WinterFlavor />
   </div>
 </template>
