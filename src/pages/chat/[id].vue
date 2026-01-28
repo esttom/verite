@@ -219,3 +219,13 @@ async function questionnaireSubmit(form: Record<string, any>) {
     </template>
   </div>
 </template>
+
+<style scoped>
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+</style>
