@@ -8,6 +8,8 @@ function show(src: string) {
 
   reaction.style.top = `${Math.random() * 100 - 100}px`
   reaction.style.left = `${Math.random() * 100}px`
+  reaction.style.animationDuration = `${3 + Math.random() * 2}s`
+  reaction.style.transform = `rotate(${Math.random() * 20 - 10}deg)`
 
   reaction.onload = () => {
     containerRef.value?.appendChild(reaction)
@@ -40,25 +42,21 @@ defineExpose({
   height: 90px;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.4);
-  animation: scaleUp 4s ease-in-out forwards;
+  animation: floatUp 4s linear forwards;
 }
 
-@keyframes scaleUp {
+@keyframes floatUp {
   0% {
-    opacity: 1;
-    transform: scale(0.6);
+    transform: translateY(0) scale(0.6) rotate(0deg);
+    opacity: 0;
   }
-  15% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  80% {
+  10% {
     opacity: 1;
     transform: scale(1);
   }
   100% {
+    transform: translateY(-400px) rotate(15deg);
     opacity: 0;
-    transform: scale(0.7);
   }
 }
 </style>
