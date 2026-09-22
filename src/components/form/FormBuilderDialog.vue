@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface Form {
   title: string
-  type: 'radio' | 'textarea'
+  type: 'radio' | 'checkbox' | 'textarea'
   options: string[]
   required: boolean
 }
@@ -43,7 +43,7 @@ function dump() {
   return builderForms.value.map(f => ({
     title: f.title,
     type: f.type,
-    options: f.type === 'radio' ? f.options : [],
+    options: ['radio', 'checkbox'].includes(f.type) ? f.options : [],
     required: f.required,
   }))
 }
@@ -98,11 +98,26 @@ watch(() => visible.value, (v) => {
                     <option value="radio">
                       ラジオボタン
                     </option>
+                    <option value="checkbox">
+                      チェックボックス
+                    </option>
                   </select>
                 </div>
               </div>
 
               <div v-if="f.type === 'radio'" class="space-y-2">
+                <div v-for="(_, i) in f.options" :key="i" class="flex gap-2">
+                  <input v-model="f.options[i]" class="flex-1 border px-2 py-1 dark:border-gray-600" :placeholder="`オプション ${i + 1}`">
+                  <button @click.prevent="f.options.splice(i, 1)">
+                    ✕
+                  </button>
+                </div>
+                <button @click.prevent="addOption(f)">
+                  ＋選択肢を追加
+                </button>
+              </div>
+
+              <div v-else-if="f.type === 'checkbox'" class="space-y-2">
                 <div v-for="(_, i) in f.options" :key="i" class="flex gap-2">
                   <input v-model="f.options[i]" class="flex-1 border px-2 py-1 dark:border-gray-600" :placeholder="`オプション ${i + 1}`">
                   <button @click.prevent="f.options.splice(i, 1)">

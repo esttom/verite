@@ -24,7 +24,7 @@ async function confirmCallback(ok: boolean) {
   if (!ok) {
     return
   }
-  await props.submit(forms.value.reduce((prev, curr) => Object.assign(prev, { [curr.title]: curr.value }), {}))
+  await props.submit(forms.value.reduce((prev, curr) => Object.assign(prev, { [curr.title]: Array.isArray(curr.value) ? curr.value.join(',') : curr.value }), {}))
   visible.value = false
   ElNotification({
     icon: CircleCheckFilled,
@@ -38,10 +38,15 @@ async function confirmCallback(ok: boolean) {
 function formInvalidCheck() {
   let error = false
   for (let i = 0, max = forms.value.length; i < max; i++) {
-    if (forms.value[i].required && !forms.value[i].value) {
-      forms.value[i].error = true
-      forms.value[i].errorMessage = 'この項目は必須入力です。'
-      error = true
+    if (forms.value[i].required) {
+      if (
+        (Array.isArray(forms.value[i].value) && forms.value[i].value.length === 0)
+        || !forms.value[i].value
+      ) {
+        forms.value[i].error = true
+        forms.value[i].errorMessage = 'この項目は必須入力です。'
+        error = true
+      }
     }
     else {
       forms.value[i].error = false
@@ -57,7 +62,7 @@ function formInvalidCheck() {
 
 function formClear() {
   forms.value.forEach((form) => {
-    form.value = ''
+    form.value = form.type === 'checkbox' ? [] : ''
     form.error = false
     form.errorMessage = ''
   })
@@ -68,7 +73,7 @@ watch(() => visible.value, async (v) => {
     const result = await selectById(props.questionnaireId)
     const data = result?.data ?? [] as any[]
     forms.value = data.map(d => ({
-      value: '',
+      value: d.type === 'checkbox' ? [] : '',
       error: false,
       errorMessage: '',
       ...d,
@@ -99,13 +104,41 @@ watch(() => visible.value, async (v) => {
                 <div v-if="form.type === 'radio'">
                   <label class="mb-2 block text-sm text-gray-900 font-medium dark:text-white" :class="{ required: form.required }">{{ form.title }}</label>
                   <div v-for="(option, idx2) in form.options" :key="`${idx}-${idx2}`" class="mb-3 flex items-center">
-                    <input :id="`${form.id}-${idx2}`" v-model="form.value" type="radio" :value="option" :name="form.id" class="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 dark:ring-offset-gray-800 dark:focus:ring-blue-600">
-                    <label :for="`${form.id}-${idx2}`" class="ms-2 text-sm text-gray-900 font-medium dark:text-gray-300">{{ option }}</label>
+                    <input :id="`${idx}-${idx2}`" v-model="form.value" type="radio" :value="option" :name="`${idx}-${idx2}`" class="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 dark:ring-offset-gray-800 dark:focus:ring-blue-600">
+                    <label :for="`${idx}-${idx2}`" class="ms-2 text-sm text-gray-900 font-medium dark:text-gray-300">{{ option }}</label>
+                  </div>
+                </div>
+                <div v-else-if="form.type === 'checkbox'">
+                  <label
+                    class="mb-2 block text-sm text-gray-900 font-medium dark:text-white"
+                    :class="{ required: form.required }"
+                  >
+                    {{ form.title }}
+                  </label>
+
+                  <div
+                    v-for="(option, idx2) in form.options"
+                    :key="`${idx}-${idx2}`"
+                    class="mb-3 flex items-center"
+                  >
+                    <input
+                      :id="`${idx}-${idx2}`"
+                      v-model="form.value"
+                      type="checkbox"
+                      :value="option"
+                      class="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600"
+                    >
+                    <label
+                      :for="`${idx}-${idx2}`"
+                      class="ms-2 text-sm text-gray-900 font-medium dark:text-gray-300"
+                    >
+                      {{ option }}
+                    </label>
                   </div>
                 </div>
                 <div v-else-if="form.type === 'textarea'">
-                  <label :for="form.id" class="mb-2 block text-sm text-gray-900 font-medium dark:text-white" :class="{ required: form.required }">{{ form.title }}</label>
-                  <textarea :id="form.id" v-model="form.value" rows="2" class="block w-full border border-gray-300 rounded-lg bg-gray-50 p-2.5 text-base text-gray-900 dark:border-gray-600 focus:border-primary-500 dark:bg-gray-700 md:text-sm dark:text-white focus:ring-primary-500 dark:focus:border-primary-500 dark:focus:ring-primary-500 dark:placeholder-gray-400" :class="{ '[box-shadow:inset_0_0_0_1px_red]': form.error }" placeholder="長文回答" />
+                  <label :for="`${idx}`" class="mb-2 block text-sm text-gray-900 font-medium dark:text-white" :class="{ required: form.required }">{{ form.title }}</label>
+                  <textarea :id="`${idx}`" v-model="form.value" rows="2" class="block w-full border border-gray-300 rounded-lg bg-gray-50 p-2.5 text-base text-gray-900 dark:border-gray-600 focus:border-primary-500 dark:bg-gray-700 md:text-sm dark:text-white focus:ring-primary-500 dark:focus:border-primary-500 dark:focus:ring-primary-500 dark:placeholder-gray-400" :class="{ '[box-shadow:inset_0_0_0_1px_red]': form.error }" placeholder="長文回答" />
                 </div>
                 <div class="h-13px text-xs text-red">
                   <label>{{ form.errorMessage }}</label>
