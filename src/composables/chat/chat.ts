@@ -1,6 +1,7 @@
 export interface ChatItem {
   id: string
   quiz_id: string | null
+  exam_id: string | null
   content: string
   fixed: boolean
   favorite: number

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ChatStateType } from '~/composables'
 
-const props = defineProps<{ chatId: string, state: ChatStateType }>()
+const props = withDefaults(defineProps<{ chatId: string, state: ChatStateType, embedded?: boolean }>(), { embedded: false })
 
 const emits = defineEmits<{
   update: [status: ChatStateType]
@@ -31,7 +31,7 @@ function changeState() {
 </script>
 
 <template>
-  <span class="absolute right-2 top-16 inline-flex cursor-pointer items-center rounded-full px-2.5 py-0.5 text-xs font-medium" :class="outerIndicatorColor" @click="changeState">
+  <span :class="[outerIndicatorColor, embedded ? '' : 'absolute right-2 top-16']" class="inline-flex cursor-pointer items-center rounded-full px-2.5 py-0.5 text-xs font-medium" @click="changeState">
     <span class="me-1 h-2 w-2 rounded-full" :class="innerIndicatorColor" />
     {{ props.state }}
   </span>

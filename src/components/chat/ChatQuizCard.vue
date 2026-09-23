@@ -4,8 +4,10 @@ import { QuizState } from '~/composables'
 const props = defineProps<{ chatId: string, quizId: string }>()
 
 const close = ref(false)
+const detailVisible = ref(false)
 const title = ref('')
 const total = ref(0)
+const selectedAnswer = ref<number | null>(null)
 const questions = ref<{ text: string, percentage: number }[]>([])
 
 const { add, collectAnswer, registerListener } = useQuiz()
@@ -26,15 +28,23 @@ registerListener(props.quizId, () => {
   setDisplayData()
 })
 
-function sendAnswer(answer: number) {
+function sendAnswer() {
+  if (selectedAnswer.value === null) {
+    return
+  }
   withLoadingFn(async () => {
     const { id, quiz_id } = await insert({
       quiz_id: props.quizId,
-      answer,
+      answer: selectedAnswer.value!,
     })
-    sender('quiz', { id, quiz_id, answer })
+    sender('quiz', { id, quiz_id, answer: selectedAnswer.value })
     close.value = true
   })
+}
+
+function retry() {
+  close.value = false
+  selectedAnswer.value = null
 }
 
 async function getAnswer() {
@@ -50,47 +60,54 @@ function setDisplayData() {
   const answers = collectAnswer(props.quizId)
   total.value = answers.length
   answers.forEach(a => answerCalcData[a]++)
-  answerCalcData.forEach((t, idx) => questions.value[idx].percentage = Math.floor(100 * t / total.value))
+  answerCalcData.forEach((t, idx) => questions.value[idx].percentage = total.value === 0 ? 0 : Math.floor(100 * t / total.value))
 }
 </script>
 
 <template>
-  <div v-loading="loading" class="mb-3 max-w-420px border border-blue-500 rounded-lg bg-white p-4 shadow-sm dark:border-blue-600 dark:bg-gray-800" h-fit>
-    <h5 class="items-top mb-3 flex text-base font-semibold">
-      <div class="flex">
-        <svg class="mr-1 h-[24px] w-[24px] text-blue-500 dark:text-blue-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-          <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm9.008-3.018a1.502 1.502 0 0 1 2.522 1.159v.024a1.44 1.44 0 0 1-1.493 1.418 1 1 0 0 0-1.037.999V14a1 1 0 1 0 2 0v-.539a3.44 3.44 0 0 0 2.529-3.256 3.502 3.502 0 0 0-7-.255 1 1 0 0 0 2 .076c.014-.398.187-.774.48-1.044Zm.982 7.026a1 1 0 1 0 0 2H12a1 1 0 1 0 0-2h-.01Z" clip-rule="evenodd" />
-        </svg>
-        <div class="whitespace-pre-wrap break-all">
-          {{ title }} - {{ total }} 票
-        </div>
-      </div>
-    </h5>
+  <div v-loading="loading">
+    <ProblemSummaryCard
+      :title="title"
+      :description="`${total} 票`"
+      :status="close ? '回答済み' : '未回答'"
+      :action-label="close ? '結果を見る' : '回答する'"
+      @open="detailVisible = true"
+    />
 
-    <template v-if="close">
-      <div class="space-y-3">
-        <div v-for="(question, idx) in questions" :key="idx" class="relative w-full overflow-hidden rounded-2xl bg-gray-400">
-          <div class="absolute left-0 top-0 h-full bg-blue-600" :style="`width: ${question.percentage}%`" />
-          <div class="relative px-3 py-[1px] text-sm text-gray-300">
-            {{ question.text }} - {{ question.percentage }}%
+    <ProblemDetailDialog v-model="detailVisible" :title="title">
+      <template v-if="close">
+        <div class="mb-4 space-y-3">
+          <div v-for="(question, idx) in questions" :key="idx" class="relative w-full overflow-hidden rounded-2xl bg-gray-400">
+            <div class="absolute left-0 top-0 h-full bg-blue-600" :style="`width: ${question.percentage}%`" />
+            <div class="relative px-3 py-[1px] text-sm text-gray-300">
+              {{ question.text }} - {{ question.percentage }}%
+            </div>
           </div>
         </div>
-      </div>
-    </template>
-    <template v-else>
-      <div class="flex flex-col">
+        <div class="flex justify-end">
+          <el-button @click="retry">
+            もう一度回答
+          </el-button>
+        </div>
+      </template>
+      <template v-else>
         <div class="space-y-2">
-          <button
+          <label
             v-for="(question, idx) in questions"
             :key="idx"
-            class="w-full transform border-1 border-blue-500 rounded-2xl px-3 py-[1px] text-sm shadow-sm dark:border-blue-600 hover:bg-blue-600 hover:text-white"
-            @click="sendAnswer(idx)"
+            class="flex cursor-pointer items-center gap-3 border rounded-lg p-3 dark:border-gray-600"
           >
-            {{ question.text }}
-          </button>
+            <input v-model="selectedAnswer" type="radio" name="quiz-answer" :value="idx" class="h-5 w-5">
+            <span>{{ question.text }}</span>
+          </label>
         </div>
-      </div>
-    </template>
+        <div class="mt-5 flex justify-end">
+          <el-button color="#626aef" :disabled="selectedAnswer === null" @click="sendAnswer">
+            回答を送信
+          </el-button>
+        </div>
+      </template>
+    </ProblemDetailDialog>
   </div>
 </template>
 

@@ -80,6 +80,7 @@ function chatSubscribeStart() {
       chatList.value.push({
         id: payload.id,
         quiz_id: payload.quiz_id,
+        exam_id: payload.exam_id,
         content: payload.content,
         fixed: payload.fixed,
         favorite: payload.favorite,
@@ -138,6 +139,7 @@ async function chatInsert(content: string, question: boolean) {
     content,
     reply: null,
     quiz_id: null,
+    exam_id: null,
     question,
     anon_id: anonId.value,
   })
@@ -169,7 +171,9 @@ async function questionnaireSubmit(form: Record<string, any>) {
 
 <template>
   <div v-loading.fullscreen.lock="loading" h-full w-full items="center" flex flex-col>
-    <CommonHeader />
+    <CommonHeader>
+      <ProblemManagement v-if="authenticated" :chat-id="chatId" :state="chatState" @update="onStateUpdate" />
+    </CommonHeader>
 
     <template v-if="chatState === ChatState.WAITING">
       <label class="mb-6 mt-12 text-center">開催をお待ちください。</label>
@@ -210,12 +214,6 @@ async function questionnaireSubmit(form: Record<string, any>) {
           <ChatStampPopup :stamp-insert="stampInsertFn" />
         </template>
       </ChatText>
-    </template>
-
-    <template v-if="authenticated">
-      <QuizNavigation :chat-id="chatId" />
-
-      <ChatStateController :chat-id="chatId" :state="chatState" @update="onStateUpdate" />
     </template>
   </div>
 </template>

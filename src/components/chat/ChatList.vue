@@ -62,6 +62,9 @@ defineExpose({
           <div v-if="item.quiz_id">
             <ChatQuizCard :chat-id="props.chatId" :quiz-id="item.quiz_id" />
           </div>
+          <div v-else-if="item.exam_id">
+            <ChatExamCard :exam-id="item.exam_id" />
+          </div>
           <ChatListItem v-else :authenticated="authenticated" :anon-id="anonId" :item="item" :submit="submit" @favorite="onClickFavorite" @fixed="onClickFixed" @reply="onClickReply" @question="onClickQuestion" />
         </template>
       </div>

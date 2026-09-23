@@ -1,6 +1,7 @@
 export * from './supabase/auth'
 export * from './supabase/chat'
 export * from './supabase/chat-detail'
+export * from './supabase/exam'
 export * from './supabase/questionnaire'
 export * from './supabase/questionnaire-detail'
 export * from './supabase/quiz'

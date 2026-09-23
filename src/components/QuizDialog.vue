@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Close, Plus } from '@element-plus/icons-vue'
+import type { ChoiceQuestionDraft } from '~/composables'
+import { choiceQuestionFromStrings, validateChoiceQuestion } from '~/composables'
 
 const props = defineProps<{
   id: string | undefined
@@ -13,43 +14,26 @@ const qDialogVisible = defineModel<boolean>({ default: false })
 const { loading, withLoadingFn } = useLoading()
 
 const hasError = ref(false)
-const qDialogForm = reactive({
-  title: '',
-  questions: ['', '', '', ''],
-})
-
-function addQuestion() {
-  if (qDialogForm.questions.length >= 8) {
-    setError()
-    return
-  }
-  qDialogForm.questions.push('')
-}
-
-function removeQuestion(idx: number) {
-  if (qDialogForm.questions.length <= 2) {
-    setError()
-    return
-  }
-  qDialogForm.questions.splice(idx, 1)
-}
+const errorMessage = ref('')
+const question = ref<ChoiceQuestionDraft>(choiceQuestionFromStrings('', ['', '', '', '']))
 
 function onOpen() {
-  qDialogForm.title = props.title
-  qDialogForm.questions = props.questions
+  question.value = choiceQuestionFromStrings(props.title, props.questions)
+  errorMessage.value = ''
 }
 
 function ok() {
-  const questions = qDialogForm.questions.filter(q => !!q)
-  if (questions.length < 2) {
+  const errors = validateChoiceQuestion(question.value)
+  if (errors.length > 0) {
+    errorMessage.value = errors[0]
     setError()
     return
   }
   withLoadingFn(async () => {
     await props.submit({
       id: props.id,
-      title: qDialogForm.title,
-      questions,
+      title: question.value.prompt.trim(),
+      questions: question.value.choices.map(choice => choice.text.trim()),
     })
     qDialogVisible.value = false
   })
@@ -62,20 +46,13 @@ function setError() {
 </script>
 
 <template>
-  <el-dialog v-model="qDialogVisible" title="Quiz" width="90%" max-w="600px" :class="{ shake: hasError }" @open="onOpen">
-    <el-form v-loading="loading" :model="qDialogForm" label-width="auto">
-      <el-form-item label="Title">
-        <el-input v-model="qDialogForm.title" autocomplete="off" input-style="font-size: 16px" />
-      </el-form-item>
-      <el-form-item v-for="(_, idx) in qDialogForm.questions" :key="idx" :label="`option ${idx + 1}`">
-        <el-input v-model="qDialogForm.questions[idx]" input-style="font-size: 16px">
-          <template #append>
-            <el-button :icon="Close" @click="removeQuestion(idx)" />
-          </template>
-        </el-input>
-      </el-form-item>
-      <el-button :icon="Plus" @click="addQuestion" />
-    </el-form>
+  <el-dialog v-model="qDialogVisible" title="投票問題" width="90%" max-w="600px" :class="{ shake: hasError }" @open="onOpen">
+    <div v-loading="loading">
+      <ChoiceQuestionEditor v-model:question="question" :removable="false" />
+      <p v-if="errorMessage" class="mt-2 text-sm text-red-600">
+        {{ errorMessage }}
+      </p>
+    </div>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="qDialogVisible = false">

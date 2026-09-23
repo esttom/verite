@@ -5,6 +5,7 @@ interface ChatDetailInsertParam {
   content: string
   reply: Record<string, any>[] | null
   quiz_id: string | null
+  exam_id?: string | null
   question: boolean
   anon_id: string
 }

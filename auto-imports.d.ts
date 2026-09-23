@@ -12,6 +12,8 @@ declare global {
   const REALTIME_SYMBOL: typeof import('./src/composables/supabase/realtime')['REALTIME_SYMBOL']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
+  const choiceQuestionFromStrings: typeof import('./src/composables/problem/editor')['choiceQuestionFromStrings']
+  const cloneChoiceQuestion: typeof import('./src/composables/problem/editor')['cloneChoiceQuestion']
   const computed: typeof import('vue')['computed']
   const computedAsync: typeof import('@vueuse/core')['computedAsync']
   const computedEager: typeof import('@vueuse/core')['computedEager']
@@ -21,6 +23,8 @@ declare global {
   const controlledRef: typeof import('@vueuse/core')['controlledRef']
   const copyToClipboard: typeof import('./src/composables/utils/copy')['copyToClipboard']
   const createApp: typeof import('vue')['createApp']
+  const createChoiceQuestionDraft: typeof import('./src/composables/problem/editor')['createChoiceQuestionDraft']
+  const createDraftId: typeof import('./src/composables/problem/editor')['createDraftId']
   const createEventHook: typeof import('@vueuse/core')['createEventHook']
   const createGlobalState: typeof import('@vueuse/core')['createGlobalState']
   const createInjectionState: typeof import('@vueuse/core')['createInjectionState']
@@ -253,6 +257,7 @@ declare global {
   const useSupabaseAuth: typeof import('./src/composables/supabase/auth')['useSupabaseAuth']
   const useSupabaseChat: typeof import('./src/composables/supabase/chat')['useSupabaseChat']
   const useSupabaseChatDetail: typeof import('./src/composables/supabase/chat-detail')['useSupabaseChatDetail']
+  const useSupabaseExam: typeof import('./src/composables/supabase/exam')['useSupabaseExam']
   const useSupabaseQuestionnaire: typeof import('./src/composables/supabase/questionnaire')['useSupabaseQuestionnaire']
   const useSupabaseQuestionnaireDetail: typeof import('./src/composables/supabase/questionnaire-detail')['useSupabaseQuestionnaireDetail']
   const useSupabaseQuiz: typeof import('./src/composables/supabase/quiz')['useSupabaseQuiz']
@@ -294,6 +299,7 @@ declare global {
   const useWindowFocus: typeof import('@vueuse/core')['useWindowFocus']
   const useWindowScroll: typeof import('@vueuse/core')['useWindowScroll']
   const useWindowSize: typeof import('@vueuse/core')['useWindowSize']
+  const validateChoiceQuestion: typeof import('./src/composables/problem/editor')['validateChoiceQuestion']
   const watch: typeof import('vue')['watch']
   const watchArray: typeof import('@vueuse/core')['watchArray']
   const watchAtMost: typeof import('@vueuse/core')['watchAtMost']
@@ -329,6 +335,8 @@ declare module 'vue' {
     readonly REALTIME_SYMBOL: UnwrapRef<typeof import('./src/composables/supabase/realtime')['REALTIME_SYMBOL']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
+    readonly choiceQuestionFromStrings: UnwrapRef<typeof import('./src/composables/problem/editor')['choiceQuestionFromStrings']>
+    readonly cloneChoiceQuestion: UnwrapRef<typeof import('./src/composables/problem/editor')['cloneChoiceQuestion']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly computedAsync: UnwrapRef<typeof import('@vueuse/core')['computedAsync']>
     readonly computedEager: UnwrapRef<typeof import('@vueuse/core')['computedEager']>
@@ -338,6 +346,8 @@ declare module 'vue' {
     readonly controlledRef: UnwrapRef<typeof import('@vueuse/core')['controlledRef']>
     readonly copyToClipboard: UnwrapRef<typeof import('./src/composables/utils/copy')['copyToClipboard']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
+    readonly createChoiceQuestionDraft: UnwrapRef<typeof import('./src/composables/problem/editor')['createChoiceQuestionDraft']>
+    readonly createDraftId: UnwrapRef<typeof import('./src/composables/problem/editor')['createDraftId']>
     readonly createEventHook: UnwrapRef<typeof import('@vueuse/core')['createEventHook']>
     readonly createGlobalState: UnwrapRef<typeof import('@vueuse/core')['createGlobalState']>
     readonly createInjectionState: UnwrapRef<typeof import('@vueuse/core')['createInjectionState']>
@@ -570,6 +580,7 @@ declare module 'vue' {
     readonly useSupabaseAuth: UnwrapRef<typeof import('./src/composables/supabase/auth')['useSupabaseAuth']>
     readonly useSupabaseChat: UnwrapRef<typeof import('./src/composables/supabase/chat')['useSupabaseChat']>
     readonly useSupabaseChatDetail: UnwrapRef<typeof import('./src/composables/supabase/chat-detail')['useSupabaseChatDetail']>
+    readonly useSupabaseExam: UnwrapRef<typeof import('./src/composables/supabase/exam')['useSupabaseExam']>
     readonly useSupabaseQuestionnaire: UnwrapRef<typeof import('./src/composables/supabase/questionnaire')['useSupabaseQuestionnaire']>
     readonly useSupabaseQuestionnaireDetail: UnwrapRef<typeof import('./src/composables/supabase/questionnaire-detail')['useSupabaseQuestionnaireDetail']>
     readonly useSupabaseQuiz: UnwrapRef<typeof import('./src/composables/supabase/quiz')['useSupabaseQuiz']>
@@ -611,6 +622,7 @@ declare module 'vue' {
     readonly useWindowFocus: UnwrapRef<typeof import('@vueuse/core')['useWindowFocus']>
     readonly useWindowScroll: UnwrapRef<typeof import('@vueuse/core')['useWindowScroll']>
     readonly useWindowSize: UnwrapRef<typeof import('@vueuse/core')['useWindowSize']>
+    readonly validateChoiceQuestion: UnwrapRef<typeof import('./src/composables/problem/editor')['validateChoiceQuestion']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchArray: UnwrapRef<typeof import('@vueuse/core')['watchArray']>
     readonly watchAtMost: UnwrapRef<typeof import('@vueuse/core')['watchAtMost']>
